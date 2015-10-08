@@ -3,10 +3,10 @@
 #  Base data prep script for the Kaggle Rain project.  This will read the CSVs in and then 
 #  save the as Rdata files locally, then only re-load CSVs when the Rdata files are not there.
 #
-#  You can conditionally call this from other scripts you write in your sub-directory by 
-#  including this at the top of your script:
+#  You can call this from other scripts you write in your sub-directory by 
+#  including this at the top of your script, and it will load data if necessary:
 #         #load and prep the data if this hasn't been done
-#         if (!exists("train")) source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
+#         source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
 #
 #  Output data frames:
 #  - train:  training data set with NAs filtered out
