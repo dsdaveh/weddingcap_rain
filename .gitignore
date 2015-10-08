@@ -47,3 +47,7 @@ Temporary Items
 
 test.csv
 train.csv
+*/.Rdata
+
+*.Rhistory
+*.Rdata
