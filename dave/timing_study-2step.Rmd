@@ -1,0 +1,127 @@
+---
+title: "Kaggle Rain Training Set Timing Study"
+author: "Dave Hurst"
+date: "October 7, 2015"
+output: html_document
+---
+```{r}
+library(data.table)
+library(dplyr)
+
+Sys.info()
+
+tx <- list( proc.time())
+tcheck <- function(t=1) {
+    # t=0 to reset counter, t=1 incremental time output,  t=n time difference from n intervals
+    t <- min( t, length(tx))
+    pt <- proc.time()
+    if (t == 0) { 
+        tx <<- list( proc.time()) 
+    } else {
+        tx <<- c( tx, list(pt))
+        tn <- length(tx)
+        print ( tx[[tn]] - tx[[tn-t]]) 
+    }
+}
+
+tcheck(0)
+train <- fread("../train.csv")
+object.size(train)
+tcheck()
+
+summary(train); tcheck()   #benchmark operation
+
+#data table way
+train[, median(Expected)] ; tcheck()   #median of entire set
+train[,mean(Expected),Id][,median(V1)]; tcheck()  #median of station means
+
+#dplyr way (no pipe)
+summarise( summarise( group_by( train, Id ), mean = mean(Expected)), median(mean)); tcheck()
+
+#dplyr way (with pipe)
+train %>% group_by(Id) %>% 
+    summarise( V1 = mean(Expected)) %>% 
+    summarise( median(V1))
+tcheck()
+
+#dplyr way after converting to tbl_df
+tbl_df(train) %>% group_by(Id) %>% 
+    summarise( V1 = mean(Expected)) %>% 
+    summarise( median(V1))
+tcheck()
+
+#remove NA's   ## in two parts, since my laptop runs out of RAM
+cpt <- floor(nrow(train)/2) #cutpoint
+object.size(train)
+na_obs_1 <- train[ 1:cpt, ] %>% 
+    select( starts_with("Ref"), starts_with("Rho"), starts_with("Zdr"), starts_with("Kdp")) %>%
+    .[, is.na(.SD)] %>% 
+    rowSums() == 20
+tcheck()
+na_obs_2 <- train[ (cpt+1):nrow(train), ]%>% 
+    select( starts_with("Ref"), starts_with("Rho"), starts_with("Zdr"), starts_with("Kdp")) %>%
+    .[, is.na(.SD)] %>% 
+    rowSums() == 20
+tcheck()
+na_obs <- c( na_obs_1, na_obs_2)
+sum(na_obs) / length(na_obs)
+train <- train[ ! na_obs, ] 
+object.size(train)
+tcheck()
+
+summary(train); tcheck()   #benchmark operation
+
+train %>% group_by(Id) %>% 
+    summarise( V1 = mean(Expected)) %>% 
+    summarise( median(V1))
+tcheck()
+
+save( train, file="train.Rdata ");tcheck()
+load( "train.Rdata"); tcheck()
+
+summary(train); tcheck()   #benchmark operation
+
+train %>% group_by(Id) %>% 
+    summarise( V1 = mean(Expected)) %>% 
+    summarise( median(V1))
+tcheck()
+
+#total script time
+tcheck(999)
+```
+
+## Discussion
+
+data.table is faster than dplyer, which converts to a data.frame (I think), but its a lot less intuitive to work with (for me anyway).  Removing the NA's reduces the size of the train data from 2.5 GB, to 1.5 GB and dplyr seems to perform okay on the latter.  
+
+On my PC (12GB on and AMD Athlon II X4 630 @2.8 GHz) working with the entire dataset eventually brings it to its knees.  Removing the NA's makes the dataframe much more manageable and things like `summary` operations are much more manageable.
+
+## Recommendation
+
+Run at least this part of the script one time
+
+```
+library(data.table)
+library(dplyr)
+
+#load the data
+train <- fread("../train.csv")
+
+#remove the lines that are all NA
+object.size(train)
+na_obs <- train %>% 
+    select( starts_with("Ref"), starts_with("Rho"), starts_with("Zdr"), starts_with("Kdp")) %>%
+    .[, is.na(.SD)] %>% 
+    rowSums() == 20
+tcheck()
+sum(na_obs) / length(na_obs)
+train <- train[ ! na_obs, ] 
+object.size(train)
+
+save( train, file="train.Rdata ")
+```
+
+Then load the data into your scripts using
+```
+load( "train.Rdata"); tcheck()
+```
