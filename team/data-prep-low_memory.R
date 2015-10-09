@@ -27,17 +27,17 @@ if (!exists("train")) {
     load("../train.Rdata")
   } else {
     cat("loading train from CSV...\n")
-    if (file.exists("tmp_train_full.RData")) {
+    if (file.exists("tmp_train_full.Rdata")) {
       cat("using existing tmp file to start...\n")
-      load("tmp_train_full.RData")
+      load("tmp_train_full.Rdata")
     } else {
       train <- fread("../train.csv")
-      save( train, file="tmp_train_full.RData")
+      save( train, file="tmp_train_full.Rdata")
     }
     last <- nrow(train)
     
     train <- train[ -(1:nrow(train)), ]   #empty the data frame to start
-    save( train, file="tmp_train_part.RData")
+    save( train, file="tmp_train_part.Rdata")
     
     if ( ! exists("chunks") ) chunks <- 5  # how many divisions to process the data in
     cut_pts <- seq( 1, last, round( last/chunks ))
@@ -45,7 +45,7 @@ if (!exists("train")) {
     
     for (i in 1:chunks ) {
       cat( sprintf("chunk %d...\n", i))
-      load( file="tmp_train_full.RData")
+      load( file="tmp_train_full.Rdata")
       train <- train[ cut_pts[i]:cut_pts[i+1], ]
       
       na_obs <- train %>% 
@@ -55,12 +55,12 @@ if (!exists("train")) {
       
       
       train_next <- train[ ! na_obs, ]
-      load( file="tmp_train_part.RData")
+      load( file="tmp_train_part.Rdata")
       train <- rbind( train, train_next)
-      save( train, file="tmp_train_part.RData")
+      save( train, file="tmp_train_part.Rdata")
       rm( train_next)
     }
-    load( file="tmp_train_part.RData")
+    load( file="tmp_train_part.Rdata")
     
     save(train, file="../train.Rdata")
   }
