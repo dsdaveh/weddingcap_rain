@@ -1,0 +1,65 @@
+---
+title: "Kaggle Rain Training Set - Radar Distributions"
+author: "Scott Mark"
+date: "October 10, 2015"
+output: pdf_document
+classoption: landscape
+---
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(lattice)
+
+#load and prep the data if this hasn't been done
+source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
+```
+
+
+# Densities by Measurement Group #
+
+## Ref ##
+```{r fig.width=10, fig.height=4}
+train.refstack <- stack(as.data.frame(train)[,vars.refcols])
+ggplot(train.refstack, aes(x=values)) +
+  geom_density(aes(group=ind, colour=ind, fill=ind, alpha=0.3))
+
+```
+
+## Rho ##
+```{r fig.width=10, fig.height=4}
+train.rhostack <- stack(as.data.frame(train)[,vars.rhocols])
+ggplot(train.rhostack, aes(x=values)) +
+  geom_density(aes(group=ind, colour=ind, fill=ind, alpha=0.3))
+
+```
+
+## Zdr ##
+```{r fig.width=10, fig.height=4}
+train.zdrstack <- stack(as.data.frame(train)[,vars.zdrcols])
+ggplot(train.zdrstack, aes(x=values)) +
+  geom_density(aes(group=ind, colour=ind, fill=ind, alpha=0.3))
+
+```
+
+## Kdp ##
+```{r fig.width=10, fig.height=4}
+train.kdpstack <- stack(as.data.frame(train)[,vars.kdpcols])
+ggplot(train.kdpstack, aes(x=values)) +
+  geom_density(aes(group=ind, colour=ind, fill=ind, alpha=0.3))
+
+```
+
+# Histograms by Variable #
+```{r}
+histos <- apply(train,2,histogram)
+
+#TODO:  ideally would set xlab on the plots as well
+for (i in 1:(length(histos))) {
+  cat(paste("## ", colnames(train)[i], " ## \n"))
+  plot(histos[[i]])
+  cat("\n\n")
+}
+```
+
+
+
