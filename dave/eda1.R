@@ -1,25 +1,25 @@
 library(data.table)
 library(Metrics)
 library(dplyr)
+library(tidyr)
+library(ggvis)
 
-train <- fread("../train.csv")
-summary(train)
+source( "../team/data-prep.R")
 
-train[, median(Expected)]
-t0b <- proc.time()
-train[,mean(Expected),Id][,median(V1)]
-t1b <- proc.time()
-t1b-t0b
+refs <- train %>%
+  select( starts_with("Ref") ) %>%
+  gather( Refxxx, Value, starts_with("Ref")) %>%
+  group_by(Refxxx)
 
-#mae <- function( y, yhat) mean( abs( y-yhat ))
+refs %>% ggvis( ~Value) %>%
+  layer_densities( fill = ~Refxxx, density_args = list( na.rm=TRUE))
 
-train.df <- tbl_df(train)
-t0 <- proc.time()
-train %>% group_by(Id) %>% summarise( V1 = mean(Expected)) %>% summarise( median(V1))
-t1 <- proc.time()
-t1-t0
+rm(refs)
 
-xx <- train %>% 
-    select( starts_with("Ref"), starts_with("Rho"), starts_with("Zdr"), starts_with("Kdp") ) %>%
-    transmute( allNA = all(is.na(Ref), is.na(Kdp)))
-transmute( allNA = any(! is.na(Ref)))
+rhos <- train %>%
+  select( starts_with("Rho") ) %>%
+  gather( Rhoxxx, Value, starts_with("Rho")) %>%
+  group_by(Rhoxxx)
+
+rhos %>% ggvis( ~Value) %>%
+  layer_densities( fill = ~Rhoxxx, density_args = list( na.rm=TRUE))
