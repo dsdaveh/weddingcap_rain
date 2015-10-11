@@ -20,10 +20,10 @@ library(dplyr)
 # load train
 if (!exists("train")) {
   if (file.exists("../train.Rdata")) {
-    cat("loading train from Rdata file")
+    cat("loading train from Rdata file\n")
     load("../train.Rdata")
   } else {
-    cat("loading train from CSV")
+    cat("loading train from CSV\n")
     train <- fread("../train.csv")
     
     #remove the obs that are all NA for measurement columns
@@ -54,10 +54,10 @@ if (!exists("train.sample1000")) {
 #load test
 if (!exists("test")) {
   if (file.exists("../test.Rdata")) {
-    cat("loading test from Rdata file")
+    cat("loading test from Rdata file\n")
     load("../test.Rdata")
   } else {
-    cat("loading test from CSV")
+    cat("loading test from CSV\n")
     test <- fread("../test.csv")
     save(test, file="../test.Rdata")
   }
