@@ -5,15 +5,23 @@ date: "October 10, 2015"
 output: html_document
 ---
 
-```{r warning=FALSE }
+```{r prep, warning=FALSE, message=FALSE }
 library(data.table)
 library(Metrics)
 library(dplyr)
 library(tidyr)
 library(ggvis)
 
-source( "../team/data-prep.R")
 source( "../team/rain_utils.R")
+
+tcheck(0)
+source( "../team/data-prep.R")   ;tcheck()
+
+```
+
+## Reflectivity
+
+```{r ref}
 
 refs <- train %>%
     select( starts_with("Ref") ) %>%
@@ -23,18 +31,26 @@ refs <- train %>%
 refs %>% ggvis( ~Value) %>%
     layer_densities( fill = ~Refxxx, density_args = list( na.rm=TRUE))
 
-rm(refs)
+rm(refs)    ;tcheck()
+```
 
+## Correlation coefficient
+
+```{r rho} 
 rhos <- train %>%
     select( starts_with("Rho") ) %>%
     gather( Rhoxxx, Value, starts_with("Rho")) %>%
-    group_by(Rhoxxx)rm
+    group_by(Rhoxxx)
 
 rhos %>% ggvis( ~Value) %>%
     layer_densities( fill = ~Rhoxxx, density_args = list( na.rm=TRUE))
 
-rm(rhos)
+rm(rhos)   ;tcheck()
+```
 
+## Differential Reflectivity in dB
+
+```{r zdr}
 zdrs <- train %>%
     select( starts_with("Zdr") ) %>%
     gather( Zdrxxx, Value, starts_with("Zdr")) %>%
@@ -43,8 +59,12 @@ zdrs <- train %>%
 zdrs %>% ggvis( ~Value) %>%
     layer_densities( fill = ~Zdrxxx, density_args = list( na.rm=TRUE))
 
-rm(zdrs)
+rm(zdrs)   ;tcheck()
+```
 
+## Specific Differential Phase (deg/km)
+
+```{r kdp}
 kdps <- train %>%
     select( starts_with("Kdp") ) %>%
     gather( Kdpxxx, Value, starts_with("Kdp")) %>%
@@ -53,8 +73,7 @@ kdps <- train %>%
 kdps %>% ggvis( ~Value) %>%
     layer_densities( fill = ~Kdpxxx, density_args = list( na.rm=TRUE))
 
-rm(kdps)```
-
-You can also embed plots, for example:
-
+rm(kdps)   ;tcheck()
+tcheck(5)
 ```
+
