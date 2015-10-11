@@ -56,6 +56,11 @@ dp(train$minutes_past)
 dp(train$radardist_km)
 ```
 
+## Ref
+```{r, echo=FALSE}
+dp(train$Ref)
+```
+
 ## Ref_5x5_10th
 ```{r, echo=FALSE}
 dp(train$Ref_5x5_10th)

@@ -37,6 +37,13 @@ if (!exists("train")) {
   }
 }
 
+#create variable lists for use in later function calls
+vars.refcols <- c("Ref", "Ref_5x5_10th", "Ref_5x5_50th", "Ref_5x5_90th",
+                  "RefComposite", "RefComposite_5x5_10th", "RefComposite_5x5_50th", "RefComposite_5x5_90th")
+vars.rhocols <- c("RhoHV", "RhoHV_5x5_10th", "RhoHV_5x5_50th", "RhoHV_5x5_90th")
+vars.zdrcols <- c("Zdr", "Zdr_5x5_10th", "Zdr_5x5_50th", "Zdr_5x5_90th")
+vars.kdpcols <- c("Kdp", "Kdp_5x5_10th", "Kdp_5x5_50th", "Kdp_5x5_90th")
+
 #create random sample of 1000 Ids (and then all associated rows) for testing ops
 if (!exists("train.sample1000")) {
   set.seed(498)
