@@ -24,7 +24,7 @@ source( "../team/rain_utils.R")
 
 tcheck(0)
 source( "../team/data-prep.R")   ;tcheck()
-train <- train.sample1000
+#train <- train.sample1000  
 
 #NA stats (hard code train to save time)
 n_obs <- c(13765201L, 8022756L)  # train/test
@@ -35,12 +35,13 @@ n_na <- c( 5288235L, 3165860L)  # train/test
 
 The kaggle rain contest data consists of separate training and test datasets with identical variables.  The training dataset contains a 'ground truth' value in the form of rain guage measurement.
 
-Measurement metadata: 3 columns (integer)
+*Measurement metadata:* 3 columns (integer)
+
 * Id - Station ID for a particular hour ( anonymized ).  Observations are grouped by ID/hour 
 * minutes_past - the minutes past the hour the data was measured 
 * radardist_km - the distance between the rain guage and the radar associated with each observation (rounded to the nearest km)
 
-Observation Measurements: 20 columns (continuous)
+*Observation Measurements:* 20 columns (continuous)
 There are 4 primary measurement types
 
 * Ref - Radar reflectivity in km
@@ -90,5 +91,6 @@ tcheck()
 tcheck(2)
 
 ```
-    
+
+
 
