@@ -1,0 +1,116 @@
+---
+title: "Kaggle Rain Training Set - 'Expected' Distributions"
+author: "Scott Mark"
+date: "October 11, 2015"
+output: 
+  pdf_document: 
+    latex_engine: xelatex
+classoption: landscape
+---
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(lattice)
+library(dplyr)
+
+#load and prep the data if this hasn't been done
+source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
+
+#TODO:  an error somewhere in these lines that breaks PDF generation
+#  , which is `r length(unique(train.0to70$Expected))/nrow(train.0to70)`% of the data
+#  , which is `r nrow(train.70to2000)/nrow(train)` of the overall training data
+#  , which is `r format(nrow(train.2000to6000)/nrow(train), scientific = FALSE)` of the overall training data
+# , which is `r format(nrow(train.6000plus)/nrow(train), scientific=FALSE)` of the overall training data
+```
+
+There are `r length(unique(train$Expected))` unique values for 'Expected' in the `r nrow(train)` rows of the training data set.
+
+There are `r sum(is.na(train$Expected))` NA rows.
+
+# Overall Distribution #
+
+The overall distribution is heavily skewed right due to extreme outlier values.
+
+```{r}
+plot(histogram(train$Expected))
+ggplot(train, aes(x=Expected)) +
+  geom_density()
+```
+
+
+# Subset Distributions #
+
+## 0 - 70 ##
+```{r}
+train.0to70 <- filter(train, Expected >=0, Expected <= 70)
+```
+The normally expected range is 0-70mm.  There are `r length(unique(train.0to70$Expected))` unique values for 'Expected' in the `r nrow(train.0to70)` rows of this subset.
+
+The following plots show distributions within this range.
+
+```{r}
+plot(histogram(train.0to70$Expected))
+ggplot(train.0to70, aes(x=Expected)) +
+  geom_density()
+```
+
+
+## 70 - 2000 ##
+```{r}
+train.70to2000 <- filter(train, Expected >=70, Expected <= 2000)
+```
+
+The next subset range is 70-2000mm, as there is a slight peak above 2000.  There are `r length(unique(train.70to2000$Expected))` unique values for 'Expected' in the `r nrow(train.70to2000)` rows of this subset.
+
+
+The following plots show distributions within this range.
+
+```{r}
+plot(histogram(train.70to2000$Expected))
+ggplot(train.70to2000, aes(x=Expected)) +
+  geom_density()
+```
+
+## 2000 - 6000 ##
+```{r}
+train.2000to6000 <- filter(train, Expected >=2000, Expected <= 6000)
+```
+The next subset range is 2000-6000mm.  There are `r length(unique(train.2000to6000$Expected))` unique values for 'Expected' in the `r nrow(train.2000to6000)` rows of this subset.
+
+The following table shows the distribution of values in this range.
+
+```{r}
+table(train.2000to6000$Expected)
+```
+
+The following plots show distributions within this range.
+
+```{r}
+plot(histogram(train.2000to6000$Expected))
+ggplot(filter(train, Expected >=2000, Expected <= 6000), aes(x=Expected)) +
+  geom_density()
+```
+
+
+## Over 6000 ##
+```{r}
+train.6000plus <- filter(train, Expected >= 6000)
+```
+
+The next subset range is above 6000.  There are `r length(unique(train.6000plus$Expected))` unique values for 'Expected' in the `r nrow(train.6000plus)` rows of this subset.
+
+
+The following table shows the distribution of values in this range.
+
+```{r}
+table(train.6000plus$Expected)
+```
+
+
+The following plots show distributions within this range.
+
+```{r}
+plot(histogram(train.6000plus$Expected))
+ggplot(train.6000plus, aes(x=Expected)) +
+  geom_density()
+```

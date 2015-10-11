@@ -4,6 +4,8 @@ library(MASS)
 #load and prep the data if this hasn't been done
 source("../team/data-prep.R")
 
+#TODO:  work in progress, nonfunctional at this point
+
 model.all <- lm(Expected ~ minutes_past + radardist_km + Ref + Ref_5x5_10th + 
                   Ref_5x5_50th + Ref_5x5_90th + RefComposite + RefComposite_5x5_10th + 
                   RefComposite_5x5_50th + RefComposite_5x5_90th + RhoHV + RhoHV_5x5_10th + 
@@ -14,14 +16,15 @@ plot.residuals(step.bwd, train.sample1000)
 
 step.fwd <- stepAIC(model.all, direction = "forward")
 model.res <- resid(step.fwd)
+jpeg("../scott/plots/lm-minutes-past-res.jpg")
 plot.residuals(step.fwd, train.sample1000)
+dev.off()
 
 train.sample1000.naomit <- na.omit(train.sample1000)
-jpeg("../scott/plots/lm-minutes-past-res.jpg")
+
 plot(train.sample1000.naomit$minutes_past, model.res, ylab="Residuals",
      xlab="minutes_past", main="res") 
-abline(0, 0)
-dev.off()
+
 
 
 
