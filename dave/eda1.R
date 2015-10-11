@@ -1,45 +1,50 @@
 library(data.table)
 library(Metrics)
 library(dplyr)
+library(tidyr)
+library(ggvis)
 
-train <- fread("../train.csv")
-object.size(train)
-#summary(train)
+source( "../team/data-prep.R")
+source("../team/rain_utils.R")
+tcheck(0)
 
-train[, median(Expected)]
-t0 <- proc.time()
-train[,mean(Expected),Id][,median(V1)]
-t1 <- proc.time()
-t1-t0
+refs <- train %>%
+    select( starts_with("Ref") ) %>%
+    gather( Refxxx, Value, starts_with("Ref")) %>%
+    group_by(Refxxx)
 
-#mae <- function( y, yhat) mean( abs( y-yhat ))
+refs %>% ggvis( ~Value) %>%
+    layer_densities( fill = ~Refxxx, density_args = list( na.rm=TRUE))
 
-t0 <- proc.time()
-train %>% group_by(Id) %>% 
-    summarise( V1 = mean(Expected)) %>% 
-    summarise( median(V1))
-t1 <- proc.time()
-t1-t0
+rm(refs); tcheck()
 
-object.size(train)
-t0 <- proc.time()
-na_obs <- train %>% 
-    select( starts_with("Ref"), starts_with("Rho"), starts_with("Zdr"), starts_with("Kdp")) %>%
-    .[, is.na(.SD)] %>% 
-    rowSums() == 20
-t1 <- proc.time()
-sum(na_obs) / length(na_obs)
-train <- train[ ! na_obs, ]
-t2 <- proc.time()
-t1-t0
-t2-t1
-object.size(train)
+rhos <- train %>%
+    select( starts_with("Rho") ) %>%
+    gather( Rhoxxx, Value, starts_with("Rho")) %>%
+    group_by(Rhoxxx)rm
 
-t0 <- proc.time()
-train %>% group_by(Id) %>% 
-    summarise( V1 = mean(Expected)) %>% 
-    summarise( median(V1))
-t1 <- proc.time()
-t1-t0
+rhos %>% ggvis( ~Value) %>%
+    layer_densities( fill = ~Rhoxxx, density_args = list( na.rm=TRUE))
 
+rm(rhos); tcheck()
 
+zdrs <- train %>%
+    select( starts_with("Zdr") ) %>%
+    gather( Zdrxxx, Value, starts_with("Zdr")) %>%
+    group_by(Zdrxxx)
+
+zdrs %>% ggvis( ~Value) %>%
+    layer_densities( fill = ~Zdrxxx, density_args = list( na.rm=TRUE))
+
+rm(zdrs); tcheck()
+
+kdps <- train %>%
+    select( starts_with("Kdp") ) %>%
+    gather( Kdpxxx, Value, starts_with("Kdp")) %>%
+    group_by(Kdpxxx)
+
+kdps %>% ggvis( ~Value) %>%
+    layer_densities( fill = ~Kdpxxx, density_args = list( na.rm=TRUE))
+
+rm(kdps); tcheck()
+tcheck(4)
