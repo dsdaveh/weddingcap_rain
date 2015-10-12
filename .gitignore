@@ -53,3 +53,5 @@ train.csv
 *.Rdata
 .Rproj.user
 *cache*
+dave/.Rhistory
+dave/.RDataTmp

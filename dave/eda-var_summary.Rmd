@@ -69,7 +69,7 @@ na_table %>% xtable( ) %>% print( type='html', sanitize.colnames.function=transf
 
 The following table summarizes the measurement variables in the training dataset.  Observations with no valid values have been removed.
 
-```{r echo=FALSE, results='asis', cache=TRUE }
+```{r echo=FALSE, results='asis', cache=FALSE }
 
 vs <- data.frame() %>%
     rbind(  train[, lapply(.SD, function(x) 100 * sum(is.na(x)) / nrow(train) )]) %>%
@@ -91,6 +91,18 @@ tcheck()
 tcheck(2)
 
 ```
+```{r}
+train[,max(Expected), Id]  %>% 
+    rename(Expected = V1) %>% 
+    compute_bin( ~Expected, width=100) %>%
+    mutate( log_count = log(count_ +1) ) %>%
+    rename( Expected = x_ ) %>%
+    mutate( Plausibility = ifelse ( Expected >= 300, "Implausible", "Plausible")) %>%
+    ggvis( ~Expected, ~log_count) %>%
+    layer_bars( fill := "skyblue")
+#fill = ~as.factor(Plausibility) )
+```
+
 
 
 
