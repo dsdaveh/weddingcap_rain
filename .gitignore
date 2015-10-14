@@ -47,3 +47,16 @@ Temporary Items
 
 test.csv
 train.csv
+<<<<<<< HEAD
+*/.Rdata
+
+*.Rhistory
+*.Rdata
+.Rproj.user
+*cache*
+dave/.Rhistory
+dave/.RDataTmp
+=======
+
+carl/.Rhistory
+>>>>>>> origin/master

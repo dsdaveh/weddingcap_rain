@@ -1,0 +1,55 @@
+del {
+    color: blue;
+    text-decoration: none;
+}
+
+.resolved { color: green; }
+
+.footer {
+    font-size: 1.0em;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
+}
+
+.draft_warn {
+    color: red;
+    font-size: 18px;
+}
+table {
+    font-size: 13px;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height:100%;
+  }
+
+table, th, td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    font-size: 13px;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height:110%;
+ }
+ 
+td p  {
+    font-size: 13px;
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height:110%;
+  }
+
+th {
+    font-size: 15px;
+    padding: 1px 5px ;
+ }
+ 
+td {
+    padding: 5px;
+  }
+ 
+ .capitalize {
+    text-transform: capitalize;
+}
+  
+ .risk_Low { color: green; font-weight: bold; }
+ .risk_Medium { color: orange; font-weight: bold;}
+ .risk_High { color: red; font-weight: bold;}

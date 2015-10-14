@@ -1,0 +1,165 @@
+---
+title: "Kaggle Rain Training Set - Variable Summary"
+author: "Scott Mark"
+date: "October 7, 2015"
+output: pdf_document
+classoption: landscape
+---
+
+```{r, echo=FALSE}
+library(lattice)
+#load and prep the data if this hasn't been done
+source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
+```
+Summary of the Kaggle Rain *training* data set, which has `r nrow(train)` rows and `r ncol(train)` columns.
+
+There are `r sum(!complete.cases(train))` rows with at least one NA, which is `r (sum(!complete.cases(train))/nrow(train))*100`% of the data set.
+
+There are `r length(unique(train$Id))` unique Ids in the data set, representing an hourly rain gauge measurement.
+
+**Variable Summary**
+
+```{r, echo=FALSE}
+
+my.summary <- t(data.frame(lapply( train[,] , function(x) rbind( 
+  nmiss = sum(is.na(x)),
+  min = round(min(x, na.rm=TRUE),2),
+  mean = round(mean(x,na.rm=TRUE),2),
+  max = round(max(x, na.rm=TRUE),2),
+  P01 = round(quantile(x,.01,na.rm=TRUE,names=FALSE),3),
+  P05 = round(quantile(x,.05,na.rm=TRUE,names=FALSE),3),
+  P25 = round(quantile(x,.25,na.rm=TRUE,names=FALSE),3),
+  P50 = round(quantile(x,.50,na.rm=TRUE,names=FALSE),3),
+  P75 = round(quantile(x,.75,na.rm=TRUE,names=FALSE),3),
+  P95 = round(quantile(x,.95,na.rm=TRUE,names=FALSE),3),
+  P99 = round(quantile(x,.99,na.rm=TRUE,names=FALSE),3),
+  variance = round(var(x, na.rm=TRUE),2),
+  stdev = round(sd(x,na.rm=TRUE),2)))))
+
+my.summary
+
+dp <- function(x)
+{
+  densityplot(~x,data=train, plot.points = FALSE,
+              auto.key= list(space="right",title="Density"),xlab=substitute(x))
+}
+
+```
+
+## minutes_past
+```{r, echo=FALSE}
+dp(train$minutes_past)
+```
+
+## radardist_km
+```{r, echo=FALSE}
+dp(train$radardist_km)
+```
+
+## Ref
+```{r, echo=FALSE}
+dp(train$Ref)
+```
+
+## Ref_5x5_10th
+```{r, echo=FALSE}
+dp(train$Ref_5x5_10th)
+```
+
+## Ref_5x5_50th
+```{r, echo=FALSE}
+dp(train$Ref_5x5_50th)
+```
+
+## Ref_5x5_90th
+```{r, echo=FALSE}
+dp(train$Ref_5x5_90th)
+```
+
+## RefComposite
+```{r, echo=FALSE}
+dp(train$RefComposite)
+```
+
+## RefComposite_5x5_10th
+```{r, echo=FALSE}
+dp(train$RefComposite_5x5_10th)
+```
+
+## RefComposite_5x5_50th
+```{r, echo=FALSE}
+dp(train$RefComposite_5x5_50th)
+```
+
+## RefComposite_5x5_90th
+```{r, echo=FALSE}
+dp(train$RefComposite_5x5_90th)
+```
+
+## RhoHV
+```{r, echo=FALSE}
+dp(train$RhoHV)
+```
+
+## RhoHV_5x5_10th
+```{r, echo=FALSE}
+dp(train$RhoHV_5x5_10th)
+```
+
+## RhoHV_5x5_50th
+```{r, echo=FALSE}
+dp(train$RhoHV_5x5_50th)
+```
+
+## RhoHV_5x5_90th
+```{r, echo=FALSE}
+dp(train$RhoHV_5x5_90th)
+```
+
+## Zdr
+```{r, echo=FALSE}
+dp(train$Zdr)
+```
+
+## Zdr_5x5_10th
+```{r, echo=FALSE}
+dp(train$Zdr_5x5_10th)
+```
+
+## Zdr_5x5_50th
+```{r, echo=FALSE}
+dp(train$Zdr_5x5_50th)
+```
+
+## Zdr_5x5_90th
+```{r, echo=FALSE}
+dp(train$Zdr_5x5_90th)
+```
+
+## Kdp
+```{r, echo=FALSE}
+dp(train$Kdp)
+```
+
+## Kdp_5x5_10th
+```{r, echo=FALSE}
+dp(train$Kdp_5x5_10th)
+```
+
+## Kdp_5x5_50th
+```{r, echo=FALSE}
+dp(train$Kdp_5x5_50th)
+```
+
+## Kdp_5x5_90th
+```{r, echo=FALSE}
+dp(train$Kdp_5x5_90th)
+```
+
+## Expected
+```{r, echo=FALSE}
+dp(train$Expected)
+```
+
+ 
+
