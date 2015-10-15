@@ -47,6 +47,16 @@ histogram(~ log(Expected), train, nint = 100)
 head(train)
 summary(train)
 
+
+###########
+#
+# Correlation matrix
+#
+###########
+train.complete.cases <- train.complete.cases # FIX THIS !!!!!!!!!!!!!!
+cm1 <- cor(sample_n(train.complete.cases, 100000))
+pimage(cm1)
+
 ###########
 #
 # Density plot of Expected
@@ -118,9 +128,6 @@ corrplot(train.sample1000, method="color")
 ##############################
 #sample_n(train.complete.cases, 100)
 
-c(1,5:10)
 
 
-train.complete.cases <- train.complete.cases # FIX THIS !!!!!!!!!!!!!!
-cm1 <- cor(sample_n(train.complete.cases, 100000))
-pimage(cm1)
+
