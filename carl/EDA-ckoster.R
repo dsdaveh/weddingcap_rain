@@ -4,6 +4,8 @@ library(dplyr)
 library(lattice)
 library(rpart)
 library(randomForest)
+#library(corrplot)
+library(seriation)
 
 # References:
 # https://github.com/joewie/probabilistic-rain-prediction
@@ -21,6 +23,9 @@ source("rain_utils.R")
 setwd("/Users/carlkoster/Documents/weddingcap_rain/carl")
 source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
 #source("/Users/carlkoster/Documents/weddingcap_rain/team/data-prep.R", echo=FALSE, print.eval=FALSE)
+
+# There are only 2769088 records with complete cases.
+train.complete.cases <- train[complete.cases(train),]
 
 # Import the entire training set
 train_org <- fread("../train.csv", stringsAsFactors = FALSE) 
@@ -104,4 +109,18 @@ fit.rf.train2 <- randomForest(frmla, data=train2, na.action=na.roughfix)
 ###########
 
 # Reference: https://www.youtube.com/watch?v=Heh7Nv4qimU
-head(train)
+m <- cbind(train.sample1000, 2:23)
+#pairs(m)
+corrplot(train.sample1000, method="color")
+# Are the predictors highly correlated with one another?
+
+
+##############################
+#sample_n(train.complete.cases, 100)
+
+c(1,5:10)
+
+
+train.complete.cases <- train.complete.cases # FIX THIS !!!!!!!!!!!!!!
+cm1 <- cor(sample_n(train.complete.cases, 100000))
+pimage(cm1)
