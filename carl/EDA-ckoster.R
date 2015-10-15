@@ -87,7 +87,7 @@ fit.rf.train2 <- randomForest(frmla, data=train2, na.action=na.roughfix)
 ###########
 #
 # Naive Bayes
-#
+# 
 ###########
 
 
