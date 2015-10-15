@@ -1,44 +1,50 @@
+
 library(data.table)
 library(Metrics)
 library(dplyr)
 library(lattice)
 library(rpart)
 library(randomForest)
+
 #library(corrplot)
 library(seriation)
 
 # References:
 # https://github.com/joewie/probabilistic-rain-prediction
 
+
+# References:
+# https://github.com/joewie/probabilistic-rain-prediction
+# 
+
+
 # 13,765,201 records
 # 24 Columns
 # load strings as factors
+
 
 setwd("/Users/carlkoster/Documents/weddingcap_rain/team")
 source("rain_utils.R")
 
 # Import the training sets
-# Loads the standard data set with team pre-processing done for you
-# NAs are removed
-setwd("/Users/carlkoster/Documents/weddingcap_rain/carl")
-source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
-#source("/Users/carlkoster/Documents/weddingcap_rain/team/data-prep.R", echo=FALSE, print.eval=FALSE)
-
-# There are only 2769088 records with complete cases.
-train.complete.cases <- train[complete.cases(train),]
-
-# Import the entire training set
-train_org <- fread("../train.csv", stringsAsFactors = FALSE) 
-
-# Remove unreasonable Expected headvalues
-train2 <- subset(train, Expected <= 70) 
-
-# Lets look at a simple histogram of the expected values
-# Note that the distribution appears to be centered near zero
-# The median is 1.02
-# Should remote all Expected valiues that are less than zero
-histogram(~ Expected, train, nint = 100)
-histogram(~ log(Expected), train, nint = 100)
+    # Loads the standard data set with team pre-processing done for you
+    # Some NAs are removed
+    setwd("/Users/carlkoster/Documents/weddingcap_rain/carl")
+    source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
+    #source("/Users/carlkoster/Documents/weddingcap_rain/team/data-prep.R", echo=FALSE, print.eval=FALSE)
+    
+    # There are only 2769088 records with complete cases.
+    # Removes any row with at least one NA
+    train.complete.cases <- train[complete.cases(train),]
+    
+    # Import the entire training set
+    train_org <- fread("../train.csv", stringsAsFactors = FALSE) 
+    
+    # Import the full training set
+    train_org <- fread("../train.csv", stringsAsFactors = FALSE) 
+    
+    # Remove unreasonable Expected headvalues
+    train2 <- subset(train, Expected <= 70) 
 
 
 # Summary statistics indicates that almost every field appears to 
@@ -46,16 +52,15 @@ histogram(~ log(Expected), train, nint = 100)
 # of the radar or the measurement.
 head(train)
 summary(train)
+    
 
+# Histogram of the expected values
+# Note that the distribution appears to be centered near zero
+# The median is 1.02
+# Should remove all Expected valiues that are less than zero
+histogram(~ Expected, train, nint = 100)
+histogram(~ log(Expected), train, nint = 100)
 
-###########
-#
-# Correlation matrix
-#
-###########
-train.complete.cases <- train.complete.cases # FIX THIS !!!!!!!!!!!!!!
-cm1 <- cor(sample_n(train.complete.cases, 100000))
-pimage(cm1)
 
 ###########
 #
@@ -66,6 +71,18 @@ pimage(cm1)
 d <- density(train2$Expected)
 plot(d, main="Kernel Density of Expected (mm/hr)")
 #polygon(d, col="blue", border="red")
+
+
+###########
+#
+# Correlation matrix
+#
+###########
+cm1 <- cor(sample_n(train.complete.cases, 200000))
+pimage(cm1)
+
+
+
 
 
 ###########
@@ -119,15 +136,22 @@ fit.rf.train2 <- randomForest(frmla, data=train2, na.action=na.roughfix)
 ###########
 
 # Reference: https://www.youtube.com/watch?v=Heh7Nv4qimU
-m <- cbind(train.sample1000, 2:23)
-#pairs(m)
-corrplot(train.sample1000, method="color")
-# Are the predictors highly correlated with one another?
+# https://onlinecourses.science.psu.edu/stat505/node/54
 
+arc.pca1 <- princomp((sample_n(train.complete.cases, 200000)), scores=TRUE, COR=TRUE)
+summary(arc.pca1)
+
+# Plot the scree plot
+plot(arc.pca1)
+
+# Print the biplot
+biplot(arc.pca1, scale = 1)
+# Print the loadings
+arc.pca1$loadings
+
+# print the scores (projections)
+arc.pca1$scores
 
 ##############################
-#sample_n(train.complete.cases, 100)
-
-
-
-
+#
+###########

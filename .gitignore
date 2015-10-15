@@ -48,6 +48,7 @@ Temporary Items
 test.csv
 train.csv
 <<<<<<< HEAD
+<<<<<<< HEAD
 */.Rdata
 
 *.Rhistory
@@ -56,6 +57,10 @@ train.csv
 *cache*
 dave/.Rhistory
 dave/.RDataTmp
+=======
+
+carl/.Rhistory
+>>>>>>> origin/master
 =======
 
 carl/.Rhistory
