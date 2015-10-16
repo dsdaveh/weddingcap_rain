@@ -1,0 +1,108 @@
+---
+title: "EDA - Variable Summary"
+author: "Dave Hurst"
+date: "October 10, 2015"
+output: 
+    html_document:
+        css: standard.css
+
+---
+
+```{r libs, echo=FALSE, warning=FALSE, message=FALSE }
+library(data.table)
+library(Metrics)
+library(dplyr)
+library(tidyr)
+library(ggvis)
+library(xtable)
+library(stringr)
+library(magrittr)
+```
+```{r prep, echo=FALSE, cache=TRUE }
+
+source( "../team/rain_utils.R")
+
+tcheck(0)
+source( "../team/data-prep.R")   ;tcheck()
+#train <- train.sample1000  
+
+#NA stats (hard code train to save time)
+n_obs <- c(13765201L, 8022756L)  # train/test
+n_na <- c( 5288235L, 3165860L)  # train/test
+```
+<span class="draft_warn">WIP: See dave/eda-var_summary.html for latest </span>
+
+
+The kaggle rain contest data consists of separate training and test datasets with identical variables.  The training dataset contains a 'ground truth' value in the form of rain guage measurement.
+
+*Measurement metadata:* 3 columns (integer)
+
+* Id - Station ID for a particular hour ( anonymized ).  Observations are grouped by ID/hour 
+* minutes_past - the minutes past the hour the data was measured 
+* radardist_km - the distance between the rain guage and the radar associated with each observation (rounded to the nearest km)
+
+*Observation Measurements:* 20 columns (continuous)
+There are 4 primary measurement types
+
+* Ref - Radar reflectivity in km
+* RefComposite - Maximum vertical reflectivity above the guage in dBZ
+* RhoHV - Correlation coefficient
+* Zdr - Differential reflectivity in dB
+* Kdp - Specific differential phase (deg/km)
+
+Each primary measure has 4 values and is indicated by a suffix
+
+* Nominal (no suffix)
+* _5x5_10th - 10th percentile measurements in 5x5 neighborhood around the guage.
+* _5x5_50th - 50th percentile
+* _5x5_90th - 90th percentile
+
+Both datasets contain a large number of observations with no valid values for any of the 20 measurements.  
+```{r echo=FALSE, results='asis'}
+na_table <- data.frame( dataset = c("train", "test")
+                        , '_hash__of_observations' = n_obs
+                        , '_hash__w_slash_o_any_values' = n_na
+                        , '_percent__w_slash_o_any_values' = sprintf("%4.1f%%", 100*n_na/n_obs ))
+na_table %>% xtable( ) %>% print( type='html', sanitize.colnames.function=transform.header, include.rownames = FALSE)
+
+```
+
+The following table summarizes the measurement variables in the training dataset.  Observations with no valid values have been removed.
+
+```{r echo=FALSE, results='asis', cache=FALSE }
+
+vs <- data.frame() %>%
+    rbind(  train[, lapply(.SD, function(x) 100 * sum(is.na(x)) / nrow(train) )]) %>%
+    rbind(  train[, lapply(.SD, min, na.rm=TRUE)]) %>%
+    rbind(  train[, lapply(.SD, mean, na.rm=TRUE)]) %>%
+    rbind(  train[, lapply(.SD, max, na.rm=TRUE)]) 
+vs <- as.data.frame(vs)[, -c(1,2,3,24)]
+tcheck()
+
+cat('<br><span class="draft_warn">These values are currently for the training sample </span><br>')
+
+vs_table <- data.frame( Variable = colnames(vs)
+                        , '_percent__NA_Values' =      as.numeric(vs[1,]) 
+                        , 'Min_Value' =  as.numeric(vs[2,])
+                        , 'Mean' =           as.numeric(vs[3,])
+                        , 'Max_Value' =  as.numeric(vs[4,]) )
+vs_table %>% xtable( ) %>% print( type='html', sanitize.colnames.function=transform.header, include.rownames = FALSE)
+tcheck()
+tcheck(2)
+
+```
+```{r}
+train[,max(Expected), Id]  %>% 
+    rename(Expected = V1) %>% 
+    compute_bin( ~Expected, width=100) %>%
+    mutate( log_count = log(count_ +1) ) %>%
+    rename( Expected = x_ ) %>%
+    mutate( Plausibility = ifelse ( Expected >= 300, "Implausible", "Plausible")) %>%
+    ggvis( ~Expected, ~log_count) %>%
+    layer_bars( fill := "skyblue")
+#fill = ~as.factor(Plausibility) )
+```
+
+
+
+
