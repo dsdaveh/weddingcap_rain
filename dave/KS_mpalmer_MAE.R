@@ -53,8 +53,17 @@ mpalmer <- function(ref, minutes_past) {
     
 }
 
-tcheck(0)
-train <- fread('../train.csv'); tcheck()
+rdata_file <- "full_train.RData"
+if (!exists("train")) {
+    tcheck(0)
+    if (file.exists( rdata_file )) {
+        cat("loading train from RData file\n")
+        load( rdata_file )
+    } else {
+        cat("loading train from CSV\n")
+        train <- fread("../train.csv")
+    }
+}
 
 yhat <- train %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
 y <- train[, max(Expected), Id]
@@ -66,12 +75,13 @@ tcheck()
 
 set.seed(498)
 n_id <- length( unique(train$Id) )
-n_fold <- 2
+n_fold <- 20
+fraction <- 0.1
 scores <- numeric()
 
 tcheck(0)
 for (i in 1:n_fold) {
-    rand_id <- sample(unique(train$Id), round( n_id * 0.6 ))
+    rand_id <- sample(unique(train$Id), round( n_id * fraction ))
     ts <- train[Id== rand_id,]
     
     yhat <- ts %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
@@ -79,7 +89,7 @@ for (i in 1:n_fold) {
     na_id <- which( yhat$Expected == -1 )
     yhat <- yhat[-na_id, ]
     y    <- y[-na_id, ]
-    scores[i] <- mae( y$V1, yhat$Expected)  
+    scores <- c(scores, mae( y$V1, yhat$Expected)  )
     tcheck()
 }
 
