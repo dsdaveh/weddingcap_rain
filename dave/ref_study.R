@@ -58,6 +58,13 @@ ref_valid %>% ggvis( ~lnabs_err ) %>% layer_histograms()
 sd( ref_valid$lnabs_err)
 exp(3) # ~20 mm of error is 2 sigma
 
+ref_valid <- ref_valid %>%
+    mutate( na_fraction = naCounts/records ) %>%
+    mutate( na_level = as.factor( ifelse( na_fraction <= .3, "Low"
+                               , ifelse( na_fraction <= .6, "Medium", "High") ) ) )
+ref_valid %>% ggvis( ~na_fraction ) %>% layer_histograms(  )
+
 r5p <- sample_frac( ref_valid, size = .05)
 r5p %>% ggvis(~mean, ~Measured) %>%
-    layer_points( fill := 'green', opacity := 0.5)
+    layer_points( fill = ~na_level, opacity := 0.5)
+
