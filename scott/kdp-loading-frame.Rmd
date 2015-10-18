@@ -1,0 +1,46 @@
+---
+title: "Kdp data load - frame"
+author: "Scott Mark"
+date: "October 18, 2015"
+output: pdf_document
+---
+
+
+
+```{r}
+library(dplyr)
+library(data.table)
+library(ggvis)
+
+source("../team/rain_utils.R")
+
+train <- fread('../train.csv')
+
+tcheck(0)
+
+kdp <- train %>% group_by(Id) %>% summarize(
+    kdp.mean = mean(Kdp, na.rm=TRUE)
+    ,kdp.median = median(Kdp, na.rm=TRUE)
+    ,kdp.min = min(Kdp, na.rm=TRUE)
+    ,kdp.max = max(Kdp, na.rm=TRUE)
+    ,kdp.sd = sd(Kdp, na.rm=TRUE)
+    ,kdp.records = .N
+    ,kdp.naCounts = sum(is.na(Kdp))
+    ,Measured = max(Expected)
+    ,m.palmer=mpalmer(Ref, minutes_past)
+  ) %>% mutate(m.palmer.err=m.palmer-Measured)
+
+tcheck()
+
+head(kdp)
+  
+# kdp_valid <- kdp[ ! is.nan(kdp.mean) & (Measured < 70), ]
+# 
+# range(kdp_valid$kdp.mean)
+# hist(kdp_valid$kdp.mean)
+# sd(kdp_valid$kdp.mean)
+# mean(kdp_valid$kdp.mean)
+# median(kdp_valid$kdp.mean)
+
+```
+
