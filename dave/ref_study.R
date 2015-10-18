@@ -12,7 +12,7 @@ make_ref_data <- function() {
     train <- fread('../train.csv')
     results <- train %>% group_by(Id) %>% summarize(yhat=mpalmer(Ref, minutes_past))
     
-    ref <- train[ , .(
+    ref <- results[ , .(
             rd = mean( radardist_km, na.rm=TRUE)
             ,mean = mean(Ref, na.rm=TRUE)
             ,median = median(Ref, na.rm=TRUE)
