@@ -12,15 +12,17 @@ make_ref_data <- function() {
     train <- fread('../train.csv')
     results <- train %>% group_by(Id) %>% summarize(yhat=mpalmer(Ref, minutes_past))
     
-    ref <- train %>% 
-        select(Id, var=Ref, Expected) %>%
-        group_by(Id) %>% summarize(
-            mean=mean(var, na.rm=TRUE), 
-            median=median(var, na.rm=TRUE),
-            min=min(var, na.rm=TRUE),
-            max=max(var, na.rm=TRUE),
-            Std=sd(var, na.rm=TRUE),
-            Measured=max(Expected) ) %>% 
+    ref <- train[ , .(
+            rd = mean( radardist_km, na.rm=TRUE)
+            ,mean = mean(Ref, na.rm=TRUE)
+            ,median = median(Ref, na.rm=TRUE)
+            ,min = min(Ref, na.rm=TRUE)
+            ,max = max(Ref, na.rm=TRUE)
+            ,sd = sd(Ref, na.rm=TRUE)
+            ,records = .N
+            ,naCounts = sum(is.na(Ref))
+            ,Measured = max(Expected) 
+            ), Id] %>% 
         left_join(results, by="Id") %>% 
         mutate(err=yhat-Measured)
     
@@ -55,3 +57,7 @@ ref_valid$lnabs_err <- log( abs( ref_valid$err))
 ref_valid %>% ggvis( ~lnabs_err ) %>% layer_histograms()
 sd( ref_valid$lnabs_err)
 exp(3) # ~20 mm of error is 2 sigma
+
+r5p <- sample_frac( ref_valid, size = .05)
+r5p %>% ggvis(~mean, ~Measured) %>%
+    layer_points( fill := 'green', opacity := 0.5)
