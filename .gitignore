@@ -55,3 +55,4 @@ train.csv
 *cache*
 dave/.Rhistory
 dave/.RDataTmp
+*.history
