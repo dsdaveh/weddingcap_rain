@@ -1,5 +1,8 @@
 #######
 #
+#  DEPRECATED: this script is not recommended, as it removes too many NAs and does not
+#  have an ID-collapsed view of the data set.
+# 
 #  Base data prep script for the Kaggle Rain project.  This will read the CSVs in and then 
 #  save the as Rdata files locally, then only re-load CSVs when the Rdata files are not there.
 #

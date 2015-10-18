@@ -9,6 +9,10 @@ classoption: landscape
 ---
 
 ```{r, echo=FALSE}
+#TODO:
+# - should really group these by ID first, then find unique values
+# - plot histos with raw numbers and log scale (where needed)
+
 library(ggplot2)
 library(lattice)
 library(dplyr)
