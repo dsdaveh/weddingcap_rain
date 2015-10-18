@@ -103,7 +103,7 @@ The full training set contains `r length(unique(train$Id))` records, and is unwe
 ```{r setup}
 set.seed(2015)
 n_id <- length( unique(train$Id) )
-n_fold <- 11
+n_fold <- 20
 fraction <- 0.1
 scores <- numeric()
 ```
@@ -125,7 +125,7 @@ for (i in 1:n_fold) {
 }
 
 summary(scores)
-hist( scores ) #, breaks= seq(21,26,.5))
+hist( scores , breaks= seq(20,26,.5))
 
 tcheck( n_fold + 1)
 ```
