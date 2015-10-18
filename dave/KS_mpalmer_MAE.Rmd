@@ -1,12 +1,25 @@
-## This is an R implementation of sample_dask.py. It uses the Marshall-Palmer relation
-## to calculate hourly rain rates for each Id. It produces a submission file identical 
-## to the 'sample_solution.csv' file provided in the Data section of this competition
-## to at least 9 decimal places. It earns a MAE score of 24.06968 on the leaderboard 
-## exactly equal to the sample solution benchmark. And it's faster ;)
+---
+title: "MAE calculation with Bootstrapping example"
+author: "Dave Hurst"
+date: "October 17, 2015"
+output: 
+    html_document:
+        css: standard.css
 
-## This may be useful in training, I'm just not sure exactly how yet. 
+---
 
-## Someone better in R than me could probably clean up/refactor the code a bit.
+Starts with the Kaggle Script mpalmer.R  Original comments are below:
+
+This file calculates the MAE of the entire training set, using the Marshall-Palmer as the predicted values.  MAE for the training set is 23.4304 versus 24.0697 for the test set.
+
+Next I recalulate for 20 random samples of 10% of the dataset.  I plot the resulting histogram.  This technique is essentially bootstrapping, and the median value should be a close approximation of the original (training population).  It should give us an idea of the spread we would expect to see from random samples of the same size.
+
+```{r libs, messages=FALSE, warnings=FALSE}
+# > This is an R implementation of sample_dask.py. It uses the Marshall-Palmer relation
+# > to calculate hourly rain rates for each Id. It produces a submission file identical 
+# > to the 'sample_solution.csv' file provided in the Data section of this competition
+# > to at least 9 decimal places. It earns a MAE score of 24.06968 on the leaderboard 
+# > exactly equal to the sample solution benchmark. And it's faster ;)
 
 
 library(dplyr)
@@ -14,6 +27,9 @@ library(data.table)
 library(Metrics)
 
 source("../team/rain_utils.R")
+```
+
+```{r}
 
 mpalmer <- function(ref, minutes_past) {
     
@@ -95,4 +111,12 @@ for (i in 1:n_fold) {
 
 summary(scores)
 hist(scores)
+
+tcheck(21)
+```
+
+* Mean of Bootstrapped samples = `r mean(scores)`  
+* Median of Bootstrapped samples = `r median(scores)`  
+* StDev of Bootstrapped samples = `r sd(scores)`  
+
 
