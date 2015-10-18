@@ -82,7 +82,7 @@ if (!exists("kdp")) {
   }
 }
 
-#create random sample of 1000 Ids (and then all associated rows) for testing ops
+#create random sample of 1000 Ids (and then all associated rows) for testing code
 if (!exists("kdp.sample1000")) {
   set.seed(498)
   Ids.sample1000 <- sample(unique(kdp$Id), 1000)
@@ -100,5 +100,15 @@ median(kdp_valid$kdp.mean) # 0.02916335
 range(kdp_valid$rr.kdp) # -2221.086  1975.011
 hist(kdp_valid$rr.kdp)
 
+#create random sample of 50,000 valid Ids (and then all associated rows) for testing plots
+if (!exists("kdp.sample50k")) {
+  set.seed(498)
+  Ids.sample50k <- sample(unique(kdp_valid$Id), 50000)
+  kdp.sample50k <- kdp_valid[Id==Ids.sample50k,]
+}
 
-
+#Plot values vs. Expected
+kdp.sample50k %>% ggvis( ~kdp.mean, ~Measured) %>% layer_points()
+kdp.sample50k %>% ggvis( ~kdp.median, ~Measured) %>% layer_points()
+kdp.sample50k %>% ggvis( ~kdp.sd, ~Measured) %>% layer_points()
+kdp.sample50k %>% ggvis( ~rr.kdp, ~Measured) %>% layer_points()
