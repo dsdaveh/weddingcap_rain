@@ -1,7 +1,7 @@
 ---
 title: "MAE calculation with Bootstrapping example"
 author: "Dave Hurst"
-date: "October 17, 2015"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: 
     html_document:
         css: standard.css
@@ -14,22 +14,22 @@ This file calculates the MAE of the entire training set, using the Marshall-Palm
 
 Next I recalulate for 20 random samples of 10% of the dataset.  I plot the resulting histogram.  This technique is essentially bootstrapping, and the median value should be a close approximation of the original (training population).  It should give us an idea of the spread we would expect to see from random samples of the same size.
 
-```{r libs, messages=FALSE, warnings=FALSE}
+```{r comments}
+
 # > This is an R implementation of sample_dask.py. It uses the Marshall-Palmer relation
 # > to calculate hourly rain rates for each Id. It produces a submission file identical 
 # > to the 'sample_solution.csv' file provided in the Data section of this competition
 # > to at least 9 decimal places. It earns a MAE score of 24.06968 on the leaderboard 
 # > exactly equal to the sample solution benchmark. And it's faster ;)
+```
 
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
 
 library(dplyr)
 library(data.table)
 library(Metrics)
 
 source("../team/rain_utils.R")
-```
-
-```{r}
 
 mpalmer <- function(ref, minutes_past) {
     
@@ -80,40 +80,57 @@ if (!exists("train")) {
         train <- fread("../train.csv")
     }
 }
-
-yhat <- train %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
-y <- train[, max(Expected), Id]
-na_id <- which( yhat$Expected == -1 )
-yhat <- yhat[-na_id, ]
-y    <- y[-na_id, ]
-mae( y$V1, yhat$Expected)  #23.4304
 tcheck()
+```
 
-set.seed(498)
+Here's the code and results to check the MAE of the entire population
+```{r pop}
+rainfall <- train[ ,.(
+    yhat = mpalmer(Ref, minutes_past)
+    , y = max(Expected)
+), Id][ yhat >= 0, ]
+
+mae_trn <- with(rainfall, mae( yhat, y)  )  #23.4304
+mae_trn
+
+tcheck()
+```
+
+MAE for the entire population of the training set is `r mae_trn` which compares reasonable to the MAE of 24.06968 for the mpalmer script on the public leader board (LB).  
+
+The full training set contains `r length(unique(train$Id))` records, and is unweildy to work with so we want to see what the range MAE values for smaller sets.
+
+```{r setup}
+set.seed(2015)
 n_id <- length( unique(train$Id) )
-n_fold <- 20
+n_fold <- 11
 fraction <- 0.1
 scores <- numeric()
+```
 
+Here I'm sampling a fraction = `r fraction*100`% of the data `r n_fold` times and recording the MAE for the sample in `scores`
+
+```{r boot, echo=FALSE}
 tcheck(0)
 for (i in 1:n_fold) {
     rand_id <- sample(unique(train$Id), round( n_id * fraction ))
-    ts <- train[Id== rand_id,]
-    
-    yhat <- ts %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
-    y <- ts[, max(Expected), Id]
-    na_id <- which( yhat$Expected == -1 )
-    yhat <- yhat[-na_id, ]
-    y    <- y[-na_id, ]
-    scores <- c(scores, mae( y$V1, yhat$Expected)  )
+
+    rainfall <- train[ Id== rand_id ,.(
+        yhat = mpalmer(Ref, minutes_past)
+        , y = max(Expected)
+    ), Id][ yhat >= 0, ]
+
+    scores <- c( scores, with(rainfall, mae( yhat, y)  ) )
     tcheck()
 }
 
 summary(scores)
-hist(scores)
+hist( scores ) #, breaks= seq(21,26,.5))
 
-tcheck(21)
+tcheck( n_fold + 1)
 ```
+
+This is essentially bootstrapping, so the following values should be decent approximations of our training (and hopefully test) population.
 
 * Mean of Bootstrapped samples = `r mean(scores)`  
 * Median of Bootstrapped samples = `r median(scores)`  
