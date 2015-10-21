@@ -1,0 +1,101 @@
+---
+title: "What is the impact of chasing high error"
+author: "Dave Hurst"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+    html_document:
+        css: standard.css
+
+---
+
+## Should we be trying to chase the large error or improve the plausible predictions?
+
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(dplyr)
+library(data.table)
+library(Metrics)
+library(ggvis)
+
+source("../team/rain_utils.R")
+
+
+rdata_file <- "full_train.RData"
+if (!exists("train")) {
+    tcheck(0)
+    if (file.exists( rdata_file )) {
+        cat("loading train from RData file\n")
+        load( rdata_file )
+    } else {
+        cat("loading train from CSV\n")
+        train <- fread("../train.csv")
+    }
+}
+tcheck()
+```
+
+First let's look at the cummulative distribution by error 
+
+```{r pop}
+rainfall <- train[ ,.(
+    yhat = mpalmer(Ref, minutes_past)
+    , y = max(Expected)
+), Id][ yhat >= 0, ]
+
+rainfall$abs_err <- abs( rainfall$yhat - rainfall$y )
+
+setkey( rainfall, abs_err)
+rainfall$err_cdf_pct <- 100 * cumsum( rainfall$abs_err) / sum( rainfall$abs_err)
+
+# plot( rainfall$err_cdf, type = "l",)
+rainfall %>% mutate( index=row_number( err_cdf_pct ) ) %>% ggvis( ~index, ~err_cdf_pct ) %>%
+    layer_lines() 
+
+
+mae_trn <- with(rainfall, mae( yhat, y)  )  #23.4304
+mae_trn
+
+tcheck()
+```
+
+MAE for the entire population of the training set is `r mae_trn` which compares reasonable to the MAE of 24.06968 for the mpalmer script on the public leader board (LB).  
+
+The full training set contains `r length(unique(train$Id))` records, and is unweildy to work with so we want to see what the range MAE values for smaller sets.
+
+```{r setup}
+set.seed(2015)
+n_id <- length( unique(train$Id) )
+n_fold <- 20
+fraction <- 0.1
+scores <- numeric()
+```
+
+Here I'm sampling a fraction = `r fraction*100`% of the data `r n_fold` times and recording the MAE for the sample in `scores`
+
+```{r boot, echo=FALSE}
+tcheck(0)
+for (i in 1:n_fold) {
+    rand_id <- sample(unique(train$Id), round( n_id * fraction ))
+
+    rainfall <- train[ Id == rand_id ,.(
+        yhat = mpalmer(Ref, minutes_past)
+        , y = max(Expected)
+    ), Id][ yhat >= 0, ]
+
+    scores <- c( scores, with(rainfall, mae( yhat, y)  ) )
+    tcheck()
+}
+
+summary(scores)
+hist( scores , breaks= seq(20,26,.5))
+
+tcheck( n_fold + 1)
+```
+
+This is essentially bootstrapping, so the following values should be decent approximations of our training (and hopefully test) population.
+
+* Mean of Bootstrapped samples = `r mean(scores)`  
+* Median of Bootstrapped samples = `r median(scores)`  
+* StDev of Bootstrapped samples = `r sd(scores)`  
+
+
