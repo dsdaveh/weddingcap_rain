@@ -18,13 +18,12 @@ library(seriation)
 # 13,765,201 records
 # 24 Columns
 
-setwd("/Users/carlkoster/Documents/weddingcap_rain/team")
+setwd("/Users/carlkoster/Documents/GitHub Repositories/weddingcap_rain/team")
 source("rain_utils.R")
 
 # Import the training sets
 # Loads the standard data set with team pre-processing done for you
 # Some NAs are removed
-setwd("/Users/carlkoster/Documents/weddingcap_rain/carl")
 source("../team/data-prep.R", echo=FALSE, print.eval=FALSE)
 #source("/Users/carlkoster/Documents/weddingcap_rain/team/data-prep.R", echo=FALSE, print.eval=FALSE)
 
@@ -68,7 +67,7 @@ plot(d, main="Kernel Density of Expected (mm/hr)")
 ###########
 # Correlation matrix
 ###########
-cm1 <- cor(sample_n(train.complete.cases, 200))
+cm1 <- cor(sample_n(train.complete.cases, 2000000))
 pimage(cm1)
 
 ###########
