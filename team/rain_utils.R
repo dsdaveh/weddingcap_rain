@@ -29,6 +29,9 @@ tcheck <- function(t=1) {
 
 mpalmer <- function(ref, minutes_past) {
     
+    #is there at least one valid ref value
+    if ( sum( is.na(ref)) == length(ref) ) return ( -1 )
+    
     # order reflectivity values and minutes_past
     sort_min_index = order(minutes_past)
     minutes_past <- minutes_past[sort_min_index]
