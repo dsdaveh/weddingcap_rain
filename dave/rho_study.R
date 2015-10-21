@@ -9,7 +9,7 @@ if (!exists("Rho")) {
     load("../Rho.Rdata")
   } else {
     cat("loading train from CSV\n")
-    train <- fread('../train.csv')
+    train <- fread('./train.csv')
     mpalmer <- function(ref, minutes_past) {
         
         # order reflectivity values and minutes_past
