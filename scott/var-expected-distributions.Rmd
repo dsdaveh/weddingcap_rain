@@ -2,13 +2,14 @@
 title: "Kaggle Rain Training Set - 'Expected' Distributions"
 author: "Scott Mark"
 date: "October 11, 2015"
-output: 
-  pdf_document: 
-    latex_engine: xelatex
+output:
+  html_document: default
 classoption: landscape
 ---
 
 ```{r, echo=FALSE}
+#   pdf_document:
+#     latex_engine: xelatex
 #TODO:
 # - should really group these by ID first, then find unique values
 # - plot histos with raw numbers and log scale (where needed)
