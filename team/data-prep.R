@@ -1,7 +1,8 @@
 #######
 #
-#  DEPRECATED: this script is not recommended, as it removes too many NAs and does not
-#  have an ID-collapsed view of the data set.
+#  10/22/2015 UPDATE:  this is making a comeback!  now adds a 'duration' column, then deletes NAs
+#                      but you should use some method/algorithm to collapse measurement columns
+#                      and group into one row per Id before you do anything interesting
 # 
 #  Base data prep script for the Kaggle Rain project.  This will read the CSVs in and then 
 #  save the as Rdata files locally, then only re-load CSVs when the Rdata files are not there.
@@ -28,6 +29,12 @@ if (!exists("train")) {
   } else {
     cat("loading train from CSV\n")
     train <- fread("../train.csv")
+    
+    #sort by Id then chronological
+    setkey(train, Id, minutes_past)
+    
+    #add duration of measurements
+    train <- train[ , duration := duration(minutes_past), Id]
     
     #remove the obs that are all NA for measurement columns
     na_obs <- train %>% 

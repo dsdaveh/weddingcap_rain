@@ -10,7 +10,7 @@ source("../team/rain_utils.R")
 
 #run once
 train <- fread('../train.csv')
-results <- train %>% group_by(Id) %>% summarize(m.palmer=mpalmer(Ref, minutes_past))
+#results <- train %>% group_by(Id) %>% summarize(m.palmer=mpalmer(Ref, minutes_past))
 
 #####
 #   Rain rate calculation based on Kdp, Rain rates are in mm/hr. 
@@ -19,7 +19,7 @@ results <- train %>% group_by(Id) %>% summarize(m.palmer=mpalmer(Ref, minutes_pa
 #   where kdp_aa = 40.6 and kdp_bb = 0.866
 #####
 rr_kdp <- function(kdpval) {
-  rate_kdp = sin(kdpval) * 40.6 * (abs(kdpval)^0.866)
+  rate_kdp = sign(kdpval) * 40.6 * (abs(kdpval)^0.866)
   return(rate_kdp)
 }
 
@@ -55,7 +55,8 @@ make_kdp_data_dtable <- function() {
   # 2: In max(Kdp, na.rm = TRUE) : no non-missing arguments to max; returning -Inf
   
   kdp <- train[ , .(
-    kdp.mean = mean(Kdp, na.rm=TRUE)
+    radardist_km = max(radardist_km, na.rm=TRUE)
+    ,kdp.mean = mean(Kdp, na.rm=TRUE)
     ,kdp.median = median(Kdp, na.rm=TRUE)
     ,kdp.min = min(Kdp, na.rm=TRUE)
     ,kdp.max = max(Kdp, na.rm=TRUE)
@@ -112,3 +113,27 @@ kdp.sample50k %>% ggvis( ~kdp.mean, ~Measured) %>% layer_points()
 kdp.sample50k %>% ggvis( ~kdp.median, ~Measured) %>% layer_points()
 kdp.sample50k %>% ggvis( ~kdp.sd, ~Measured) %>% layer_points()
 kdp.sample50k %>% ggvis( ~rr.kdp, ~Measured) %>% layer_points()
+
+kdp.sample50k %>% ggvis( ~rr.kdp, ~radardist_km) %>% layer_points()
+
+#look below 10
+kdp_below10 <- kdp[ ! is.nan(kdp.mean) & (Measured < 10), ]
+kdp_below10.sample50k <- kdp_below10[Id==Ids.sample50k,]
+
+kdp_below10 %>% ggvis( ~kdp.mean, ~Measured) %>% layer_points()
+kdp_below10 %>% ggvis( ~kdp.median, ~Measured) %>% layer_points()
+kdp_below10 %>% ggvis( ~kdp.sd, ~Measured) %>% layer_points()
+kdp_below10 %>% ggvis( ~rr.kdp, ~Measured) %>% layer_points()
+
+kdp_below10.sample50k %>% ggvis( ~kdp.mean, ~radardist_km) %>% layer_points()
+kdp_below10.sample50k %>% ggvis( ~kdp.median, ~radardist_km) %>% layer_points()
+kdp_below10.sample50k %>% ggvis( ~rr.kdp, ~radardist_km) %>% layer_points()
+kdp_below10.sample50k %>% ggvis( ~rr.kdp.err, ~radardist_km) %>% layer_points()
+
+# looking at various Kdp measures and a single ID to find the best value to use for
+# the above RR formula.  paper implies you need to average over a broader range
+# TODO:  add all Kdp columns below, then manually run RR to try to get close to Measured
+train %>% filter(Id==4054) %>% summarize(
+  mean(Kdp, na.rm=TRUE),
+  mean(Kdp, na.rm=TRUE),
+  )
