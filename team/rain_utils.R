@@ -27,6 +27,12 @@ tcheck <- function(t=1) {
     }
 }
 
+durationscaled <- function(duration) {
+  thefactor <- 1.0 / sum(duration)
+  scaled <- duration*thefactor
+  return(scaled)
+}
+
 duration <- function(minutes_past) {
   
   # calculate the length of time for which each reflectivity value is valid
