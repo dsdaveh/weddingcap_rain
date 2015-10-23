@@ -43,6 +43,9 @@ if (!exists("train")) {
       rowSums() == 20
     train <- train[ ! na_obs, ] 
     
+    #add a scaled duration of measurements after removing NAs
+    train <- train[ , duration.scaled := durationscaled(duration), Id]
+    
     save(train, file="../train.Rdata")
   }
 }
