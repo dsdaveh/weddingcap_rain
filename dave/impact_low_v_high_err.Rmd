@@ -134,13 +134,13 @@ mae_cut10px <- with(rainfall[yerr_10:Nrf, ], mae( yhat, y)  )
 
 ## Discussion
 
-Improving the meteorological predictions for the real data will have very low impact on improving the score on the contest leaderboard, since the MAE is introduced by the unrealistically high measured values.  We might still want to pursue this avenue since there would be business value, and it appears to be what the contest set out to accomplish.
+Improving the meteorological predictions for the real data will have very low impact on improving the score on the contest leaderboard, since the MAE is increased by the unrealistically high measured values.  We might still want to pursue this avenue since there would be business value, and it appears to be what the contest set out to accomplish.
 
 On the other hand, a small improvement on predicting the large error would yield a much higher leaderboard score, so if we want to do well in the contest we need to try and predict the stations that are more likely to yield unrealistically high measurement values.
 
 ## Recommendation
 
-Regardless of which route we take, we need to decide on the proper theshold.  The plot below zooms in on the cumulative err density for the highest measured values.  The measured (y) and predicted (y') are shown shown at cum err = 10%, 20%, 30% and 40%.  We can see that y and y' are well coordinated at 10% ( y = Expected ~ `r y_10p` mm), but at higher values the correlation doesn't hold.  This suggests the threshold we should use is around this value.  The MAE for measured observations below this value is `r mae_cut10p`, and `r mae_cut10px` above it.
+Regardless of which route we take, we need to decide on the proper threshold.  The plot below zooms in on the cumulative err density for the highest measured values.  The measured (y) and predicted (y') are shown shown at cum err = 10%, 20%, 30% and 40%.  We can see that y and y' are well correlated  at 10% ( y = Expected ~ `r y_10p` mm), but at higher values the correlation doesn't hold.  This suggests the threshold we should use is around this value.  The MAE for measured observations below this value is `r mae_cut10p`, and `r mae_cut10px` above it.
 
 ```{r zoom, echo=FALSE, message=FALSE}
 cut_10p <- yerr_10 - 500   # convenient cut point for plot
