@@ -1,0 +1,190 @@
+---
+title: "Strategy Question - Improve prediction accuracy or simulate spurious errors?"
+author: "Dave Hurst"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+    html_document:
+        css: standard.css
+
+---
+
+## Should we be trying to simulate the large error or improve the plausible predictions?
+
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(dplyr)
+library(data.table)
+library(Metrics)
+library(ggvis)
+library(xtable)
+
+source("../team/rain_utils.R")
+
+rdata_file <- "train_full.RData" # "train_10pct.RData" # 
+#rdata_file <- "train_10pct.RData" # 
+if (!exists("train")) {
+    tcheck(0)
+    if (file.exists( rdata_file )) {
+        cat("loading train from RData file ", rdata_file, "\n")
+        load( rdata_file )
+    } else {
+        cat("loading train from CSV\n")
+        train <- fread("../train.csv")
+    }
+}
+#tcheck()
+
+cuts <- c( 10, 30, 70 )
+
+```
+
+First let's look at the cumulative distribution of the error sorted by the measured rain value.  We can see that the extreme high error values account for well over 90% of the overall error and correspond to higher measured values.  The measured value thresholds are marked by the blue lines at y = Expected = `r cuts`;
+
+```{r pop, echo=FALSE, message=FALSE}
+rainfall <- train[ ,.(
+    yhat = mpalmer(Ref, minutes_past)
+    , y = max(Expected)
+), Id][ yhat >= 0, ]
+
+rainfall$abs_err <- abs( rainfall$yhat - rainfall$y )
+
+setkey( rainfall, y)
+cut1 <- which(rainfall$y >cuts[1])[1]
+cut2 <- which(rainfall$y >cuts[2])[1]
+cut3 <- which(rainfall$y >cuts[3])[1]
+
+rainfall$yerr_cdf_pct <- 100 * cumsum( rainfall$abs_err) / sum( rainfall$abs_err)
+
+plot( sort( rainfall$yerr_cdf_pct), type="l", ylab = "Cumulative Error %")
+abline( v = cut1, lty = 2, col = "blue")
+abline( v = cut2, lty = 3, col = "blue")
+abline( v = cut3, lty = 4, col = "blue")
+legend( "topleft", lty = c(2,3,4), legend = c("10 mm", "30 mm", "70mm"))
+# ggvis is slow and doesn't render for the full train in the .Rmd
+# rainfall %>% mutate( index=row_number( y ) ) %>% ggvis( ~index, ~yerr_cdf_pct ) %>%
+#     layer_lines() %>%
+#     layer_lines( x=cut1, stroke := "blue", strokeDash := 10) %>%
+#     layer_lines( x=cut2, stroke := "blue", strokeDash := 5 ) %>%
+#     layer_lines( x=cut3, stroke := "blue", strokeDash := 1 ) 
+
+mae_trn <- with(rainfall, mae( yhat, y)  )  #23.4304
+
+#tcheck()
+```
+
+The total MAE for the dataset is `r mae_trn`.  
+
+Let's take a look at the MAE for the dataset at the different thresholds of the measured rain value.  The table below gives the MAE below the threshold value (i.e. to the left of the threshold line in the plot above), above the value (to the right of the line).  The 'fix'  values below the threshold set error = 0 and calculate the threshold for the entire dateset.  Conversely, the 'fix' values above the dataset change the higher values by averaging between the predicted and measured values and calculate the MAE for the dataset with original predictions below the theshold.
+
+```{r cuts, echo=FALSE, results='asis'}
+
+cheat_full <- with(rainfall, mae( ( yhat + y) /2, y) )
+
+df <- data.frame()
+    df <- rbind( data.frame(
+        Threshold = 0
+        , Percent_Below = 0.0
+        , MAE_Below = 0
+        , MAE_Above = mae_trn
+        , MAE_After_Fix_Below = NA
+        , MAE_After_Fix_Above = cheat_full
+    ))
+
+for (i in 1:length(cuts)) {
+    cut_left <- rainfall[ y < cuts[i], ]
+    mae_left <- with(cut_left, mae( yhat, y)  )  
+
+    cut_right <- rainfall[ y >= cuts[i], ][ yhat >= 0, ]
+    mae_right <- with(cut_right, mae( yhat, y)  )  
+    
+    #fix left hand values 
+    cheat <- cut_left
+    cheat$yhat <- cheat$y
+    cheat <- rbind( cheat, cut_right)
+    cheat_left <- with(cheat, mae( yhat, y))
+    
+    #improve right hand values 
+    cheat <- cut_right
+    cheat$yhat <- ( cheat$y + cheat$yhat ) / 2
+    cheat <- rbind( cut_left, cheat)
+    cheat_right<- with(cheat, mae( yhat, y))
+    
+    df <- rbind( df, data.frame(
+        Threshold = cuts[i]
+        , Percent_Below = 100*nrow(cut_left) / nrow(rainfall)
+        , MAE_Below = mae_left
+        , MAE_Above = mae_right
+        , MAE_After_Fix_Below = cheat_left
+        , MAE_After_Fix_Above = cheat_right
+    ))
+}
+       print( xtable( df ), type='html', include.rownames = FALSE )
+
+
+Nrf <- nrow(rainfall)
+yerr_10 <- which(rainfall$yerr_cdf_pct > 10)[1] 
+yerr_20 <- which(rainfall$yerr_cdf_pct > 20)[1] 
+yerr_30 <- which(rainfall$yerr_cdf_pct > 30)[1] 
+yerr_40 <- which(rainfall$yerr_cdf_pct > 40)[1] 
+
+y_10p <- round( rainfall[yerr_10, ]$y )
+mae_cut10p <- with(rainfall[1:yerr_10, ], mae( yhat, y)  ) 
+mae_cut10px <- with(rainfall[yerr_10:Nrf, ], mae( yhat, y)  ) 
+```
+
+## Discussion
+
+Improving the meteorological predictions for the real data will have very low impact on improving the score on the contest leaderboard, since the MAE is increased by the unrealistically high measured values.  We might still want to pursue this avenue since there would be business value, and it appears to be what the contest set out to accomplish.
+
+On the other hand, a small improvement on predicting the large error would yield a much higher leaderboard score, so if we want to do well in the contest we need to try and predict the stations that are more likely to yield unrealistically high measurement values.
+
+## Recommendation
+
+Regardless of which route we take, we need to decide on the proper threshold.  The plot below zooms in on the cumulative err density for the highest measured values.  The measured (y) and predicted (y') are shown shown at cum err = 10%, 20%, 30% and 40%.  We can see that y and y' are well correlated  at 10% ( y = Expected ~ `r y_10p` mm), but at higher values the correlation doesn't hold.  This suggests the threshold we should use is around this value.  The MAE for measured observations below this value is `r mae_cut10p`, and `r mae_cut10px` above it.
+
+```{r zoom, echo=FALSE, message=FALSE}
+cut_10p <- yerr_10 - 500   # convenient cut point for plot
+
+zoom <- sprintf ( "Index - top %4.2f%% values (y = Expected, y' = M-Palmer)"
+                  , 100*(Nrf - cut_10p)/Nrf )
+plot( sort( rainfall$yerr_cdf_pct)[cut_10p:Nrf], type="l"
+      , ylab = "Cumulative Error %", xlab = zoom )
+ 
+yerr_zoom <- c( yerr_10, yerr_20, yerr_30, yerr_40) - cut_10p
+points ( yerr_zoom, c(10,20,30,40) )
+
+par.orig <- par( cex = 0.6) 
+ytext = c(  sprintf("y = %4.2f", rainfall$y[yerr_zoom + cut_10p]) )
+text ( yerr_zoom, c(10,20,30,40), labels = ytext, pos = 4 )
+yhat_text = c(  sprintf("                 y' = %4.2f", rainfall$yhat[yerr_zoom + cut_10p]) )
+text ( yerr_zoom, c(10,20,30,40), labels = yhat_text ,  pos = 3, col="red" )
+par( par.orig)
+
+```
+
+## Further Observations
+
+Here's  plot of the ratio of y' / y.  
+
+```{r lowe, message=FALSE}
+rainfall$yrat <- with( rainfall, yhat / y)
+
+i_5p <- round(Nrf/20)
+
+par.orig <- par( mfrow = c(1,2)) 
+    plot( rainfall$yrat, type ="l", main = "Error ratio (all values)")
+    plot( rainfall$yrat[1:i_5p], type = "l", main = "Error ratio (lowest 5% y)")
+par( par.orig)
+
+mae_5p <- with(rainfall[1:i_5p, ], mae( yhat, y)  ) 
+mae_5px <- with(rainfall[i_5p:yerr_10, ], mae( yhat, y)  ) 
+
+```
+
+Note that y' is extremely high in the first few percent of the records (sorted by measured rain).  This is driven by the very low values of y ( .01 in = 0.254mm ).  The MAE for the values in the first 5% is quite low ( MAE = `r mae_5p`) and implies there is little value in trying to improve the model in this area (at least from the perspective of the leaderboard).  
+
+--------
+
+File = dave/impact_low_v_high_err.Rmd
+
+

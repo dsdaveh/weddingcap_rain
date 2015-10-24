@@ -69,7 +69,7 @@ mpalmer <- function(ref, minutes_past) {
     
 }
 
-rdata_file <- "full_train.RData"
+rdata_file <- "train_full.RData"
 if (!exists("train")) {
     tcheck(0)
     if (file.exists( rdata_file )) {
@@ -110,7 +110,7 @@ scores <- numeric()
 
 Here I'm sampling a fraction = `r fraction*100`% of the data `r n_fold` times and recording the MAE for the sample in `scores`
 
-```{r boot, echo=FALSE}
+```{r boot, echo=FALSE, message=FALSE}
 tcheck(0)
 for (i in 1:n_fold) {
     rand_id <- sample(unique(train$Id), round( n_id * fraction ))
@@ -123,7 +123,8 @@ for (i in 1:n_fold) {
     scores <- c( scores, with(rainfall, mae( yhat, y)  ) )
     tcheck()
 }
-
+```
+```{r boot2, echo=FALSE }
 summary(scores)
 hist( scores , breaks= seq(20,26,.5))
 
