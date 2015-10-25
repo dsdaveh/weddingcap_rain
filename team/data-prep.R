@@ -72,6 +72,16 @@ if (!exists("test")) {
   } else {
     cat("loading test from CSV\n")
     test <- fread("../test.csv")
+    
+    #sort by Id then chronological
+    setkey(test, Id, minutes_past)
+    
+    #add duration of measurements
+    test <- test[ , duration := duration(minutes_past), Id]
+    
+    #add a scaled duration of measurements after removing NAs
+    test <- test[ , duration.scaled := durationscaled(duration), Id]
+    
     save(test, file="../test.Rdata")
   }
 }

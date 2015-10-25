@@ -102,3 +102,45 @@ transform.header <- function(str) {
         str_replace_all("_slash_", "/")  %>%     
         str_replace_all("_" , "&nbsp;")              # single underscore -> <space>
 }
+
+#####
+#   Rain rate calculation based on Kdp, Rain rates are in mm/hr. 
+#   sourced from https://www.eol.ucar.edu/projects/dynamo/spol/parameters/rain_rate/rain_rates.html
+#     RATE_KDP = sign(KDP) * kdp_aa * (|KDP| ** kdp_bb).
+#   where kdp_aa = 40.6 and kdp_bb = 0.866
+#####
+rr_kdp <- function(kdpval, minutes_past) {
+  
+  # order reflectivity values and minutes_past
+  sort_min_index = order(minutes_past)
+  minutes_past <- minutes_past[sort_min_index]
+  kdpval <- kdpval[sort_min_index]
+  
+  # calculate the length of time for which each reflectivity value is valid
+  valid_time <- rep(0, length(minutes_past))
+  valid_time[1] <- minutes_past[1]
+  if (length(valid_time) > 1) {
+    for (i in seq(2, length(minutes_past))) {
+      valid_time[i] <- minutes_past[i] - minutes_past[i-1]
+    }
+    valid_time[length(valid_time)] = valid_time[length(valid_time)] + 60 - sum(valid_time)
+  } else {
+    # if only 1 observation, make it valid for the entire hour
+    valid_time <- 60
+  }
+  
+  valid_time = valid_time / 60
+  
+  # calculate hourly rain rates using kdp formula weighted by valid times
+  sum <- 0
+  for (i in seq(length(kdpval))) {
+    if (!is.na(kdpval[i])) {
+      mmperhr <- sign(kdpval[i]) * 40.6 * (abs(kdpval[i])^0.866)
+      sum <- sum + mmperhr * valid_time[i]
+    }
+  }
+  
+  return(sum)
+  
+}
+
