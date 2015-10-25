@@ -1,0 +1,65 @@
+---
+title: "Vignette - Cumulative Probability by Measured Rainfall (Expected)"
+author: "Dave Hurst"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+    html_document:
+        css: standard.css
+
+---
+
+## What percent of the data is below a specific measured rainfall value?
+
+*TODO*: I am throwing out values where all Ref = NA.  In reality the contest only throws out values when all variables ar NA -- I'm not sure if there are records with valid Rho,Kdp etc, but no Ref values, but this should be checked/corrected for completeness.
+
+```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(dplyr)
+library(data.table)
+library(Metrics)
+library(ggvis)
+library(xtable)
+
+source("../team/rain_utils.R")
+
+rdata_file <- "train_full.RData" # "train_10pct.RData" # 
+rdata_file <- "train_10pct.RData" # 
+if (!exists("train")) {
+    tcheck(0)
+    if (file.exists( rdata_file )) {
+        cat("loading train from RData file ", rdata_file, "\n")
+        load( rdata_file )
+    } else {
+        cat("loading train from CSV\n")
+        train <- fread("../train.csv")
+    }
+}
+#tcheck()
+
+
+```
+
+rf <- train[ ,duration := duration(minutes_past), Id][ , .(
+    Refm = sum( Ref * duration, na.rm = TRUE ) / sum( duration, na.rm = TRUE )
+    , Refx = mean(Ref, na.rm = TRUE )
+    , yhat = mpalmer(Ref, minutes_past)
+    , y = max(Expected)
+), Id][ yhat >= 0, ]
+setkey( rf, y)
+nobs <- nrow(rf)
+
+rf$index <- 1:nobs
+cum_plot <- rf[ , .(
+    Measured_Rainfall = max(y)
+    , pct = max(index)/nobs
+), y]
+
+with( cum_plot, plot( Measured_Rainfall, pct, type="l"))
+with( cum_plot[ pct > .98 ], plot( Measured_Rainfall, pct, type="l"))
+with( cum_plot[ pct <= .98 ], plot( Measured_Rainfall, pct, type="l"))
+
+--------
+
+File = dave/vignette-cum_p_of_expected.Rmd
+
+
