@@ -1,0 +1,1830 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<workbook source-platform='mac' version='9.0' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <!-- build 9000.15.0720.1008                                -->
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption='Tableau Rain Extract' inline='true' name='dataengine.42298.950098182900' version='9.0'>
+      <connection class='dataengine' dbname='/Users/jmalin/Documents/Personal/School/Capstone/Tableau Rain.tde' schema='Extract' tablename='Extract'>
+        <relation name='Extract' table='[Extract].[Extract]' type='table' />
+        <calculations>
+          <calculation column='[Number of Records]' formula='1' />
+        </calculations>
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>Expected</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Expected]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Expected</remote-alias>
+            <ordinal>0</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>2649</approx-count>
+            <contains-null>false</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.010000004999999999</statistic>
+              <statistic aggregation='Max' datatype='real'>33017.730000000003</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>18</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Id</remote-name>
+            <remote-type>3</remote-type>
+            <local-name>[Id]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Id</remote-alias>
+            <ordinal>1</ordinal>
+            <family>train#csv</family>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>false</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='integer'>1</statistic>
+              <statistic aggregation='Max' datatype='integer'>1180945</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;sint32&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kdp</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Kdp]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Kdp</remote-alias>
+            <ordinal>2</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>7292</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-96.040000000000006</statistic>
+              <statistic aggregation='Max' datatype='real'>179.75</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>21</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kdp_5x5_10th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Kdp_5x5_10th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Kdp_5x5_10th</remote-alias>
+            <ordinal>3</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>3796</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-80.790000000000006</statistic>
+              <statistic aggregation='Max' datatype='real'>3.5199889999999998</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>19</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kdp_5x5_50th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Kdp_5x5_50th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Kdp_5x5_50th</remote-alias>
+            <ordinal>4</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>4520</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-78.770004</statistic>
+              <statistic aggregation='Max' datatype='real'>12.800003</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>20</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kdp_5x5_90th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Kdp_5x5_90th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Kdp_5x5_90th</remote-alias>
+            <ordinal>5</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>8632</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-100.200005</statistic>
+              <statistic aggregation='Max' datatype='real'>144.59999999999999</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>22</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Number of Records</remote-name>
+            <remote-type>16</remote-type>
+            <local-name>[Number of Records]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Number of Records</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>1</approx-count>
+            <contains-null>false</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='integer'>1</statistic>
+              <statistic aggregation='Max' datatype='integer'>1</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteMetadata (ordered)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;sint8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RefComposite</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[RefComposite]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RefComposite</remote-alias>
+            <ordinal>7</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>230</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+              <statistic aggregation='Max' datatype='real'>92.5</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>8</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RefComposite_5x5_10th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[RefComposite_5x5_10th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RefComposite_5x5_10th</remote-alias>
+            <ordinal>8</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>193</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-31.0</statistic>
+              <statistic aggregation='Max' datatype='real'>66.0</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>3</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RefComposite_5x5_50th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[RefComposite_5x5_50th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RefComposite_5x5_50th</remote-alias>
+            <ordinal>9</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>197</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-27.5</statistic>
+              <statistic aggregation='Max' datatype='real'>71.0</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>4</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RefComposite_5x5_90th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[RefComposite_5x5_90th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RefComposite_5x5_90th</remote-alias>
+            <ordinal>10</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>233</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-25.0</statistic>
+              <statistic aggregation='Max' datatype='real'>93.5</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>9</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ref</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Ref]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Ref</remote-alias>
+            <ordinal>11</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>204</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-31.0</statistic>
+              <statistic aggregation='Max' datatype='real'>71.0</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>7</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ref_5x5_10th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Ref_5x5_10th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Ref_5x5_10th</remote-alias>
+            <ordinal>12</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>188</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+              <statistic aggregation='Max' datatype='real'>62.5</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>2</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ref_5x5_50th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Ref_5x5_50th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Ref_5x5_50th</remote-alias>
+            <ordinal>13</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>198</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+              <statistic aggregation='Max' datatype='real'>69.0</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>5</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ref_5x5_90th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Ref_5x5_90th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Ref_5x5_90th</remote-alias>
+            <ordinal>14</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>201</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-28.5</statistic>
+              <statistic aggregation='Max' datatype='real'>72.5</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>6</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RhoHV</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[RhoHV]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RhoHV</remote-alias>
+            <ordinal>15</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+              <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>10</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RhoHV_5x5_10th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[RhoHV_5x5_10th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RhoHV_5x5_10th</remote-alias>
+            <ordinal>16</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+              <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>11</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RhoHV_5x5_50th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[RhoHV_5x5_50th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RhoHV_5x5_50th</remote-alias>
+            <ordinal>17</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+              <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>12</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>RhoHV_5x5_90th</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[RhoHV_5x5_90th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>RhoHV_5x5_90th</remote-alias>
+            <ordinal>18</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+              <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>13</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Zdr</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Zdr]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Zdr</remote-alias>
+            <ordinal>19</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+              <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>14</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Zdr_5x5_10th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Zdr_5x5_10th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Zdr_5x5_10th</remote-alias>
+            <ordinal>20</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+              <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>15</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Zdr_5x5_50th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Zdr_5x5_50th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Zdr_5x5_50th</remote-alias>
+            <ordinal>21</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+              <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>16</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Zdr_5x5_90th</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[Zdr_5x5_90th]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>Zdr_5x5_90th</remote-alias>
+            <ordinal>22</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>255</approx-count>
+            <contains-null>true</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+              <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>17</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>minutes_past</remote-name>
+            <remote-type>16</remote-type>
+            <local-name>[minutes_past]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>minutes_past</remote-alias>
+            <ordinal>23</ordinal>
+            <family>train#csv</family>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>60</approx-count>
+            <contains-null>false</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='integer'>0</statistic>
+              <statistic aggregation='Max' datatype='integer'>59</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>1</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;sint8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>radardist_km</remote-name>
+            <remote-type>4</remote-type>
+            <local-name>[radardist_km]</local-name>
+            <parent-name>[Extract]</parent-name>
+            <remote-alias>radardist_km</remote-alias>
+            <ordinal>24</ordinal>
+            <family>train#csv</family>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <approx-count>22</approx-count>
+            <contains-null>false</contains-null>
+            <statistics>
+              <statistic aggregation='Min' datatype='real'>0.0</statistic>
+              <statistic aggregation='Max' datatype='real'>21.0</statistic>
+            </statistics>
+            <attributes>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+              <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (ordered)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>0</attribute>
+              <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+              <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='integer' name='[Id]' role='dimension' type='ordinal'>
+      </column>
+      <column caption='Kdp 5x5 10th' datatype='real' name='[Kdp_5x5_10th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Kdp 5x5 50th' datatype='real' name='[Kdp_5x5_50th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Kdp 5x5 90th' datatype='real' name='[Kdp_5x5_90th]' role='measure' type='quantitative'>
+      </column>
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column datatype='integer' name='[Ref (bin)]' role='dimension' type='ordinal'>
+        <calculation class='bin' decimals='1' formula='[Ref]' peg='0' size='10' />
+      </column>
+      <column caption='Ref Composite' datatype='real' name='[RefComposite]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RefComposite 5x5 10th' datatype='real' name='[RefComposite_5x5_10th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RefComposite 5x5 50th' datatype='real' name='[RefComposite_5x5_50th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RefComposite 5x5 90th' datatype='real' name='[RefComposite_5x5_90th]' role='measure' type='quantitative'>
+      </column>
+      <column datatype='real' name='[Ref]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Ref 5x5 10th' datatype='real' name='[Ref_5x5_10th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Ref 5x5 50th' datatype='real' name='[Ref_5x5_50th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Ref 5x5 90th' datatype='real' name='[Ref_5x5_90th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Rho HV' datatype='real' name='[RhoHV]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RhoHV 5x5 10th' datatype='real' name='[RhoHV_5x5_10th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RhoHV 5x5 50th' datatype='real' name='[RhoHV_5x5_50th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='RhoHV 5x5 90th' datatype='real' name='[RhoHV_5x5_90th]' role='measure' type='quantitative'>
+      </column>
+      <column datatype='integer' name='[Zdr (bin)]' role='dimension' type='ordinal'>
+        <calculation class='bin' decimals='0' formula='[Zdr]' peg='0' size='2' />
+      </column>
+      <column datatype='integer' name='[Zdr 5x5 90th (bin)]' role='dimension' type='ordinal'>
+        <calculation class='bin' decimals='0' formula='[Zdr_5x5_90th]' peg='0' size='2' />
+      </column>
+      <column datatype='real' name='[Zdr]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Zdr 5x5 10th' datatype='real' name='[Zdr_5x5_10th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Zdr 5x5 50th' datatype='real' name='[Zdr_5x5_50th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Zdr 5x5 90th' datatype='real' name='[Zdr_5x5_90th]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Minutes Past' datatype='integer' name='[minutes_past]' role='measure' type='quantitative'>
+      </column>
+      <column caption='Radardist Km' datatype='real' name='[radardist_km]' role='measure' type='quantitative'>
+      </column>
+      <extract count='-1' enabled='true' units='records'>
+        <connection class='dataengine' dbname='/Users/jmalin/Documents/Personal/School/Capstone/Tableau Rain Extract.tde' schema='Extract' tablename='Extract' update-time='10/22/2015 05:48:24 AM'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <calculations>
+            <calculation column='[Number of Records]' formula='1' />
+          </calculations>
+          <refresh>
+            <refresh-event add-from-file-path='' increment-value='%null%' refresh-type='create' rows-inserted='13765201' timestamp-start='2015-10-22 05:48:24.585' />
+          </refresh>
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>Expected</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[Expected]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Expected</remote-alias>
+              <ordinal>0</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>2649</approx-count>
+              <contains-null>false</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.010000004999999999</statistic>
+                <statistic aggregation='Max' datatype='real'>33017.730000000003</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>18</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Id</remote-name>
+              <remote-type>3</remote-type>
+              <local-name>[Id]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Id</remote-alias>
+              <ordinal>1</ordinal>
+              <family>train#csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <contains-null>false</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='integer'>1</statistic>
+                <statistic aggregation='Max' datatype='integer'>1180945</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;sint32&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Kdp</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[Kdp]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Kdp</remote-alias>
+              <ordinal>2</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>7292</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-96.040000000000006</statistic>
+                <statistic aggregation='Max' datatype='real'>179.75</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>21</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Kdp_5x5_10th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[Kdp_5x5_10th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Kdp_5x5_10th</remote-alias>
+              <ordinal>3</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>3796</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-80.790000000000006</statistic>
+                <statistic aggregation='Max' datatype='real'>3.5199889999999998</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>19</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Kdp_5x5_50th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[Kdp_5x5_50th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Kdp_5x5_50th</remote-alias>
+              <ordinal>4</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>4520</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-78.770004</statistic>
+                <statistic aggregation='Max' datatype='real'>12.800003</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>20</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Kdp_5x5_90th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[Kdp_5x5_90th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Kdp_5x5_90th</remote-alias>
+              <ordinal>5</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>8632</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-100.200005</statistic>
+                <statistic aggregation='Max' datatype='real'>144.59999999999999</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>22</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Number of Records</remote-name>
+              <remote-type>16</remote-type>
+              <local-name>[Number of Records]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Number of Records</remote-alias>
+              <ordinal>6</ordinal>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>false</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='integer'>1</statistic>
+                <statistic aggregation='Max' datatype='integer'>1</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='string' name='DebugRemoteMetadata (ordered)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;sint8&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RefComposite</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[RefComposite]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RefComposite</remote-alias>
+              <ordinal>7</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>230</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+                <statistic aggregation='Max' datatype='real'>92.5</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>8</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RefComposite_5x5_10th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[RefComposite_5x5_10th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RefComposite_5x5_10th</remote-alias>
+              <ordinal>8</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>193</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-31.0</statistic>
+                <statistic aggregation='Max' datatype='real'>66.0</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>3</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RefComposite_5x5_50th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[RefComposite_5x5_50th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RefComposite_5x5_50th</remote-alias>
+              <ordinal>9</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>197</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-27.5</statistic>
+                <statistic aggregation='Max' datatype='real'>71.0</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>4</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RefComposite_5x5_90th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[RefComposite_5x5_90th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RefComposite_5x5_90th</remote-alias>
+              <ordinal>10</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>233</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-25.0</statistic>
+                <statistic aggregation='Max' datatype='real'>93.5</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>9</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ref</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Ref]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ref</remote-alias>
+              <ordinal>11</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>204</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-31.0</statistic>
+                <statistic aggregation='Max' datatype='real'>71.0</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>7</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ref_5x5_10th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Ref_5x5_10th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ref_5x5_10th</remote-alias>
+              <ordinal>12</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>188</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+                <statistic aggregation='Max' datatype='real'>62.5</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>2</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ref_5x5_50th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Ref_5x5_50th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ref_5x5_50th</remote-alias>
+              <ordinal>13</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>198</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-32.0</statistic>
+                <statistic aggregation='Max' datatype='real'>69.0</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>5</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Ref_5x5_90th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Ref_5x5_90th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Ref_5x5_90th</remote-alias>
+              <ordinal>14</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>201</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-28.5</statistic>
+                <statistic aggregation='Max' datatype='real'>72.5</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>6</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RhoHV</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[RhoHV]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RhoHV</remote-alias>
+              <ordinal>15</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+                <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>10</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RhoHV_5x5_10th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[RhoHV_5x5_10th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RhoHV_5x5_10th</remote-alias>
+              <ordinal>16</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+                <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>11</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RhoHV_5x5_50th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[RhoHV_5x5_50th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RhoHV_5x5_50th</remote-alias>
+              <ordinal>17</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+                <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>12</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>RhoHV_5x5_90th</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[RhoHV_5x5_90th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>RhoHV_5x5_90th</remote-alias>
+              <ordinal>18</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.20833333000000001</statistic>
+                <statistic aggregation='Max' datatype='real'>1.0516667</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>8</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>13</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;double&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Zdr</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Zdr]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Zdr</remote-alias>
+              <ordinal>19</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+                <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>14</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Zdr_5x5_10th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Zdr_5x5_10th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Zdr_5x5_10th</remote-alias>
+              <ordinal>20</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+                <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>15</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Zdr_5x5_50th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Zdr_5x5_50th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Zdr_5x5_50th</remote-alias>
+              <ordinal>21</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+                <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>16</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Zdr_5x5_90th</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[Zdr_5x5_90th]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Zdr_5x5_90th</remote-alias>
+              <ordinal>22</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>255</approx-count>
+              <contains-null>true</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>-7.875</statistic>
+                <statistic aggregation='Max' datatype='real'>7.9375</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>17</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>minutes_past</remote-name>
+              <remote-type>16</remote-type>
+              <local-name>[minutes_past]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>minutes_past</remote-alias>
+              <ordinal>23</ordinal>
+              <family>train#csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>60</approx-count>
+              <contains-null>false</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='integer'>0</statistic>
+                <statistic aggregation='Max' datatype='integer'>59</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>1</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;sint8&quot;</attribute>
+              </attributes>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>radardist_km</remote-name>
+              <remote-type>4</remote-type>
+              <local-name>[radardist_km]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>radardist_km</remote-alias>
+              <ordinal>24</ordinal>
+              <family>train#csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>22</approx-count>
+              <contains-null>false</contains-null>
+              <statistics>
+                <statistic aggregation='Min' datatype='real'>0.0</statistic>
+                <statistic aggregation='Max' datatype='real'>21.0</statistic>
+              </statistics>
+              <attributes>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (comparable)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (compression)'>&quot;array&quot;</attribute>
+                <attribute datatype='boolean' name='DebugRemoteMetadata (distinct)'>true</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (ordered)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (size)'>4</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (sort-position)'>0</attribute>
+                <attribute datatype='string' name='DebugRemoteMetadata (sort-sense)'>&quot;asc&quot;</attribute>
+                <attribute datatype='integer' name='DebugRemoteMetadata (storagewidth)'>1</attribute>
+                <attribute datatype='string' name='DebugRemoteType'>&quot;float&quot;</attribute>
+              </attributes>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' dim-percentage='0.5' measure-ordering='alphabetic' measure-percentage='0.4' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <table>
+        <view>
+          <datasources>
+          </datasources>
+          <aggregation value='true' />
+        </view>
+        <style>
+        </style>
+        <panes>
+          <pane>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows></rows>
+        <cols></cols>
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 2'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Tableau Rain Extract' name='dataengine.42298.950098182900' />
+          </datasources>
+          <datasource-dependencies datasource='dataengine.42298.950098182900'>
+            <column datatype='integer' name='[Id]' role='dimension' type='ordinal'>
+            </column>
+            <column datatype='integer' name='[Zdr 5x5 90th (bin)]' role='dimension' type='ordinal'>
+              <calculation class='bin' decimals='0' formula='[Zdr_5x5_90th]' peg='0' size='2' />
+            </column>
+            <column datatype='real' name='[Zdr]' role='measure' type='quantitative'>
+            </column>
+            <column caption='Zdr 5x5 10th' datatype='real' name='[Zdr_5x5_10th]' role='measure' type='quantitative'>
+            </column>
+            <column caption='Zdr 5x5 50th' datatype='real' name='[Zdr_5x5_50th]' role='measure' type='quantitative'>
+            </column>
+            <column caption='Zdr 5x5 90th' datatype='real' name='[Zdr_5x5_90th]' role='measure' type='quantitative'>
+            </column>
+            <column-instance column='[Zdr_5x5_90th]' derivation='Count' name='[cnt:Zdr_5x5_90th:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Id]' derivation='None' name='[none:Id:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Zdr]' derivation='Sum' name='[sum:Zdr:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Zdr_5x5_10th]' derivation='Sum' name='[sum:Zdr_5x5_10th:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Zdr_5x5_50th]' derivation='Sum' name='[sum:Zdr_5x5_50th:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[dataengine.42298.950098182900].[none:Id:ok]'>
+            <groupfilter from='1' function='range' level='[none:Id:ok]' to='1180945' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[dataengine.42298.950098182900].[none:Id:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+        </style>
+        <panes>
+          <pane>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+          <pane id='1' y-axis-name='[dataengine.42298.950098182900].[sum:Zdr_5x5_50th:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+          <pane id='2' y-axis-name='[dataengine.42298.950098182900].[cnt:Zdr_5x5_90th:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+          <pane id='3' y-axis-name='[dataengine.42298.950098182900].[sum:Zdr_5x5_10th:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+          <pane id='4' y-axis-name='[dataengine.42298.950098182900].[sum:Zdr:qk]'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>([dataengine.42298.950098182900].[sum:Zdr:qk] + ([dataengine.42298.950098182900].[sum:Zdr_5x5_10th:qk] + ([dataengine.42298.950098182900].[sum:Zdr_5x5_50th:qk] + [dataengine.42298.950098182900].[cnt:Zdr_5x5_90th:qk])))</rows>
+        <cols>[dataengine.42298.950098182900].[Zdr 5x5 90th (bin)]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <windows>
+    <window class='schema' source-height='-1' />
+    <window auto-hidden='0' class='worksheet' maximized='0' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window auto-hidden='0' class='worksheet' maximized='1' name='Sheet 2'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+      <highlight>
+        <color-one-way>
+          <field>[dataengine.42298.950098182900].[Zdr (bin)]</field>
+          <field>[dataengine.42298.950098182900].[none:Id:ok]</field>
+        </color-one-way>
+      </highlight>
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='384' name='Sheet 2' width='384'>
+      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
+      ETk2/P+d65gHLCB3rAAAAABJRU5ErkJggg==
+    </thumbnail>
+  </thumbnails>
+</workbook>

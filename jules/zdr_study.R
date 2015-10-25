@@ -63,6 +63,7 @@ range(zdrclean$mean)
 hist(zdrclean$mean)
 sd(zdrclean$mean)
 mean(zdrclean$mean)
+scatterplot3d(zdrclean$mean)
 
 with(zdrclean, plot(mean,Measured, type="p"))
 
