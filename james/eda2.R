@@ -5,8 +5,8 @@ library(tidyr)
 library(ggvis)
 library(magrittr)
 
-source("/Users/jamesramadan/Documents/Kaggle/Rain2/R Code/data-prep.R")
-source("/Users/jamesramadan/Documents/Kaggle/Rain2/R Code/rain_utils.R")
+source("../team/data-prep.R")
+source("../team/rain_utils.R")
 tcheck(0)
 
 #summary of train dataset (no nulls)
