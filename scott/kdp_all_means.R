@@ -9,8 +9,9 @@ library(dplyr)
 library(data.table)
 library(ggvis)
 library(h2o)
+library(Metrics)
 
-source("../team/data_prep.R")
+source("../team/data-prep.R")
 source("../team/rain_utils.R")
 
 #base data set with duration-weighted means of all KDP columns
@@ -33,7 +34,8 @@ kdp <- train[ , .(
                      rr.kdp50th.err = rr.kdp50th-Measured,
                      rr.kdp90th.err = rr.kdp90th-Measured)
 
-save(kdp, file="../kdp.RData")
+#save(kdp, file="../kdp.RData")
+#load(file="../kdp.RData")
 
 # subsets
 #create random sample of 50,000 valid Ids (and then all associated rows) for testing plots
@@ -136,6 +138,7 @@ pred.above70 = as.data.frame(prediction.above70)
 
 # way better than MP above 70
 mae(kdp_above70$Measured, pred.above70$predict) # 579.4121
+mae(kdp_above70$Measured, kdp_above70$m.palmer) # 1037.117
 
 # use the above 70 model to predict all
 prediction.alluseabove70 = h2o.predict(gbmHex.above70, newdata=trainHex.all)
@@ -145,20 +148,29 @@ pred.alluseabove70 = as.data.frame(prediction.alluseabove70)
 
 # worse than using MP on everything
 mae(kdp$Measured, pred.alluseabove70$predict) # 671.6192
+mae(kdp$Measured, kdp$m.palmer) # 38.07877
 
 #####
 # Ensembles
 #####
 
 #build various ensembles that combine mpalmer and Kdp to generate a prediction
-ensembleall.frame <- data.frame(kdp$Measured, kdp$ref.mean, kdp$m.palmer, pred.all$predict, pred.alluseabove70$predict)
-#ens1 - use Ref=20 as a cutoff
+#uses tree model predictions from classify-RF-above70.R
+ensembleall.frame <- data.frame(kdp$Id, kdp$Measured, kdp$ref.mean, kdp$m.palmer, pred.alluseabove70$predict, treemodel.pred.train)
+ 
+#ens1 - test whether using new prediction above 70 helps overall MAE
 ensembleall.frame$ens1 <- ifelse(is.nan(ensembleall.frame$kdp.ref.mean), ensembleall.frame$kdp.m.palmer,
-                              ifelse(ensembleall.frame$kdp.ref.mean < 20, ensembleall.frame$kdp.m.palmer,
+                              ifelse(ensembleall.frame$kdp.Measured < 70, ensembleall.frame$kdp.m.palmer,
                                 ensembleall.frame$pred.alluseabove70.predict))
-#ens2 - use a ratio
-ensembleall.frame$ens2 <- ifelse((ensembleall.frame$pred.alluseabove70.predict/ensembleall.frame$pred.all.predict)<20, ensembleall.frame$pred.alluseabove70.predict,
+mae(ensembleall.frame[! is.nan(ensembleall.frame$kdp.ref.mean),]$kdp.Measured, ensembleall.frame[! is.nan(ensembleall.frame$kdp.ref.mean),]$ens1) # 15.13404
+mae(ensembleall.frame[! is.nan(ensembleall.frame$kdp.ref.mean),]$kdp.Measured, ensembleall.frame[! is.nan(ensembleall.frame$kdp.ref.mean),]$kdp.m.palmer) # 23.29586
+
+#ens2 - same approach but use the tree prediction to pick which prediction to use
+ensembleall.frame$ens2 <- ifelse(ensembleall.frame$treemodel.pred.train==1, ensembleall.frame$pred.alluseabove70.predict,
                                  ensembleall.frame$kdp.m.palmer)
+mae(ensembleall.frame$kdp.Measured, ensembleall.frame$ens2) # 406.7659
+# add this row selector to both to mirror comp metric?  [! is.nan(ensembleall.frame$kdp.ref.mean),]
+
 
 #####
 # generate test predictions to submit
