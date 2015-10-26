@@ -8,9 +8,11 @@ output:
 
 ---
 
-## What percent of the data is below a specific measured rainfall value?
+## What percent of the training data is below a specific measured rainfall value?
 
-*TODO*: I am throwing out values where all Ref = NA.  In reality the contest only throws out values when all variables ar NA -- I'm not sure if there are records with valid Rho,Kdp etc, but no Ref values, but this should be checked/corrected for completeness.
+* ~80% of the data is around 4mm or under
+* ~3% of the data has measured rainfall > 40
+* ~2.5% of the data has measured rainfall > 40
 
 ```{r libs, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -23,7 +25,7 @@ library(xtable)
 source("../team/rain_utils.R")
 
 rdata_file <- "train_full.RData" # "train_10pct.RData" # 
-rdata_file <- "train_10pct.RData" # 
+#rdata_file <- "train_10pct.RData" # 
 if (!exists("train")) {
     tcheck(0)
     if (file.exists( rdata_file )) {
@@ -37,7 +39,7 @@ if (!exists("train")) {
 #tcheck()
 
 
-```
+
 
 rf <- train[ ,duration := duration(minutes_past), Id][ , .(
     Refm = sum( Ref * duration, na.rm = TRUE ) / sum( duration, na.rm = TRUE )
@@ -51,12 +53,31 @@ nobs <- nrow(rf)
 rf$index <- 1:nobs
 cum_plot <- rf[ , .(
     Measured_Rainfall = max(y)
-    , pct = max(index)/nobs
+    , pct = 100*max(index)/nobs
 ), y]
 
-with( cum_plot, plot( Measured_Rainfall, pct, type="l"))
-with( cum_plot[ pct > .98 ], plot( Measured_Rainfall, pct, type="l"))
-with( cum_plot[ pct <= .98 ], plot( Measured_Rainfall, pct, type="l"))
+par.orig <- par( mfrow=c(2,2), mar=c(3,2,1,1))
+with( cum_plot, plot( Measured_Rainfall, pct, type="l", ylab = "Percent of dataset <= Measured"))
+with( cum_plot[ pct > 98 ], plot( Measured_Rainfall, pct, type="l"))
+
+get_pct <- function (mm) {
+    out <- numeric()
+    for (i in 1:length(mm)) {
+      out <- c(out, with(cum_plot, pct[ which( Measured_Rainfall > mm[i])[1] ] ))
+    }
+    out
+}
+cuts <- c(10,40,70)
+vals <- get_pct(cuts)
+
+with( cum_plot[ pct <= 98 ], plot( Measured_Rainfall, pct, type="l"))
+abline( v= cuts, lty=2)
+text( cuts, vals, labels = round(vals,2), pos=4 )
+with( cum_plot[ pct <= 80 ], plot( Measured_Rainfall, pct, type="l"))
+
+par( par.orig)
+
+```
 
 --------
 
