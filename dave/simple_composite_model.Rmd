@@ -34,7 +34,7 @@ library(Hmisc)
 source("../team/rain_utils.R")
 
 rdata_file <- "train_full.RData" # 
-rdata_file <- "train_10pct.RData" # 
+#rdata_file <- "train_10pct.RData" # 
 if (!exists("train")) {
     tcheck(0)
     if (file.exists( rdata_file )) {
@@ -125,8 +125,8 @@ bins <- seq(-10,40,10)
 mp_range <- c ( "[ 20, 30)", "[ 30, 40)")
 
 bin_fit <- med_fit  (train[  cv_ix_trn, ], bins)           ;zzz <- tcheck( desc="fit binned medians")
-med_trn <- med_pred (train[  cv_ix_trn, ], bin_fit, bins)  ;zzz <- tcheck( desc="predict binned medians - cv_train")
-med_res <- med_pred (train[ !cv_ix_trn, ], bin_fit, bins)  ;zzz <- tcheck( desc="predict binned medians - cv_test")
+med_trn <- med_pred (train[  cv_ix_trn, ], bin_fit, bins)  ;zzz <- tcheck( desc="predict binned-cv_train")
+med_res <- med_pred (train[ !cv_ix_trn, ], bin_fit, bins)  ;zzz <- tcheck( desc="predict binned-cv_test")
 comp_trn <- comp_med_pred( med_trn, mp_range)              ;zzz <- tcheck( desc="ensemble cv_train")
 comp_res <- comp_med_pred( med_res, mp_range)              ;zzz <- tcheck( desc="ensemble cv_test")
 
@@ -137,11 +137,6 @@ results[1, 3] <- with(comp_res , mae( y, mpalmer))
 results[2, 3] <- with(comp_res , mae( y, med) )
 results[3, 3] <- with(comp_res , mae( y, yhat))
 results
-
-# cat ("   ...MAE(mpalmer) =", with( comp_res, mae( y, mpalmer)), "\n" )
-# cat ("   ...MAE(bin_med) =", with( comp_res, mae( y, med)), "\n" )  
-# cat ("   ...MAE(comp_med) =", with( comp_res, mae( y, yhat)), "\n" )
-
 
 tcheck.df %>% mutate( delta=c( 0, diff(elapsed)) ) %>% select( desc, delta)
 
