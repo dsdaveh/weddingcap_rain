@@ -54,7 +54,7 @@ duration <- function(minutes_past) {
   
 }
 
-mpalmer <- function(ref, minutes_past) {
+old_mpalmer <- function(ref, minutes_past) {
     
     #is there at least one valid ref value
     if ( sum( is.na(ref)) == length(ref) ) return ( -1 )
@@ -92,6 +92,52 @@ mpalmer <- function(ref, minutes_past) {
     
 }
 
+new_mpalmer <- function(ref, minutes_past) {
+    #is there at least one valid ref value
+    if ( sum( is.na(ref)) == length(ref) ) return ( -1 )
+
+#data frame is too slow    
+#     df <- data.frame( ref=ref, mp=minutes_past ) %>%
+#         filter( ! is.na( ref )) %>%
+#         arrange( mp )
+    
+    #filter
+    valid <- ! is.na(ref)
+    ref <- ref[valid]
+    mp <- minutes_past[valid] 
+    
+    #arrange
+    sort_min_index = order(mp)
+    mp <- mp[sort_min_index]
+    ref <- ref[sort_min_index]
+    
+    
+    n <- length(ref)
+    if ( mp[1] != 0  ) { 
+        mp <-  c(0, mp)
+        ref <- c( ref[1], ref)
+        n <- n + 1
+    }
+    
+    if ( mp[n] != 60 ) {
+        mp <- c( mp, 60 )
+        ref <- c( ref, ref[n])
+        n <- n + 1
+    }
+    
+    ref_int <- ( ref[-1] + ref[-n] ) /2
+    hr_int <- diff( mp ) / 60
+    
+    mm <- sum( ((( 10^ (ref_int/10) )/200) ^ 0.625 ) * hr_int  )
+
+#     plot( 0:60, c( 0, rep( max(ref), 60)), type="n", ylab="Ref")
+#     lines( mp,  ref, type="b" )
+#     data.frame( ref_int, mmperhr = ((( 10^ (ref_int/10) )/200) ^ 0.625 ), hr_int )
+    
+    return(mm)
+}
+
+mpalmer <- new_mpalmer #   revert with mpalmer <- old_mpalmer
 
 transform.header <- function(str) {
     # use this for xtable with special chars in header
