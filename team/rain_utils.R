@@ -4,8 +4,10 @@
 library(stringr)
 library(magrittr)
 
-tcheck.tx <- list( proc.time())
-tcheck <- function(t=1) {
+tcheck.tx <- list( proc.time())  #deprecated
+tcheck.df <- data.frame( stringsAsFactors = FALSE)
+tcheck.default_string <- function() sprintf( "t=%d", nrow(tcheck.df))
+tcheck <- function(t=1, desc = tcheck.default_string() ) {
     # t=0 to reset counter, t=1 incremental time output,  t=n time difference from n intervals
     #
     # use:
@@ -20,10 +22,20 @@ tcheck <- function(t=1) {
     pt <- proc.time()
     if (t == 0) { 
         tcheck.tx <<- list( proc.time()) 
+        tcheck.df <<- data.frame( elapsed = pt[3], desc = desc,stringsAsFactors = FALSE )
     } else {
         tcheck.tx <<- c( tcheck.tx, list(pt))
-        tn <- length(tcheck.tx)
-        print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
+        tcheck.df <<- rbind( tcheck.df, data.frame( elapsed = pt[3], desc = desc, stringsAsFactors = FALSE ) )
+        tn <- nrow( tcheck.df )
+        elapsed_delta <- diff( tcheck.df[ c(tn-t, tn),]$elapsed )
+       out_str <- ifelse ( t == 1
+                            , sprintf("%f elapsed for %s", elapsed_delta
+                                      , tcheck.df[tn, "desc"] )
+                            , sprintf("%f elapsed from %s:%s", elapsed_delta
+                                      , tcheck.df[tn, "desc"], tcheck.df[tn-t, "desc"]) )
+        return( out_str )
+#         tn <- length(tcheck.tx)
+#         print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
     }
 }
 
