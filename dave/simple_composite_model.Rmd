@@ -45,7 +45,7 @@ if (!exists("train")) {
         train <- fread("../train.csv")
     }
 }
-tcheck()
+zzz <- tcheck( desc = 'load training data')
 
 unmp <- function (r) log( (r ^ 1.6) * 200, 10) * 10  #back out Ref from M-P prediction
 
@@ -62,7 +62,6 @@ agg_id <- function ( df ) {
     return(agg)
 }
 
-med_fit.mae <- 0  #global
 med_fit <- function ( df, cuts ) {
     rf <- agg_id( df )  # aggregate by Id
 
@@ -77,7 +76,6 @@ med_fit <- function ( df, cuts ) {
     setkey( rf, ref_bin)
     setkey( ref_desc, ref_bin)
     rf <- merge( rf, ref_desc, all.x = TRUE)
-    med_fit.mae <<- with( rf, mae( y, med))
 
     return (ref_desc)
 }
@@ -108,7 +106,7 @@ comp_med_pred <- function ( df, mp_range ) {
     
 ```
 
-```{r model}
+```{r model_prep, echo=FALSE}
 
 ids <- unique(train$Id)
 cv_frac_trn <- .7
@@ -119,8 +117,9 @@ cv_ix_trn <- train$Id %in% cv_ids_trn
 results <- data.frame( model = c("M-Palmer", "bin_ref_med", "ensemble 20<Ref<40")
                        , MAE_train.cv = numeric(3)
                        , MAE_test.cv  = numeric(3) )
-cat ("training...\n")
 
+```
+```{r model}
 bins <- seq(-10,40,10)
 mp_range <- c ( "[ 20, 30)", "[ 30, 40)")
 
@@ -130,6 +129,8 @@ med_res <- med_pred (train[ !cv_ix_trn, ], bin_fit, bins)  ;zzz <- tcheck( desc=
 comp_trn <- comp_med_pred( med_trn, mp_range)              ;zzz <- tcheck( desc="ensemble cv_train")
 comp_res <- comp_med_pred( med_res, mp_range)              ;zzz <- tcheck( desc="ensemble cv_test")
 
+```
+```{r model_res, echo=FALSE}
 results[1, 2] <- with(comp_trn , mae( y, mpalmer))
 results[2, 2] <- with(comp_trn , mae( y, med) )
 results[3, 2] <- with(comp_trn , mae( y, yhat))
@@ -138,7 +139,24 @@ results[2, 3] <- with(comp_res , mae( y, med) )
 results[3, 3] <- with(comp_res , mae( y, yhat))
 results
 
+
+train_NA <- train[ , .( 
+    refNA = all(is.na(Ref)), Expected = max(Expected)), Id][ refNA == TRUE, median(Expected)]
+
+load("../test.Rdata")
+test_NAs <- test[ , .( refNA = all(is.na(Ref))), Id][ refNA == TRUE, .(Id = Id, Expected = train_NA)]
+
+med_submit <- med_pred (test, bin_fit, bins) %>%
+    transmute( Id = Id, Expected = med) %>%
+    bind_rows( test_NAs) %>%
+    arrange( Id )
+
+zzz <- tcheck( desc="build submission file")
 tcheck.df %>% mutate( delta=c( 0, diff(elapsed)) ) %>% select( desc, delta)
+
+submission_file <- 'median_bin10_Ref_20_40.csv'
+cat ("write submission file", submission_file, "\n")
+write.csv(med_submit, file=submission_file, row.names=FALSE)
 
 ```
 
