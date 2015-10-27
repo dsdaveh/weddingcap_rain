@@ -160,6 +160,8 @@ write.csv(med_submit, file=submission_file, row.names=FALSE)
 
 ```
 
+scores 23.98989 on LB
+
 ## Key functions
 
 ```{r funcs}
