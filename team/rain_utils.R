@@ -38,6 +38,7 @@ tcheck <- function(t=1, desc = tcheck.default_string() ) {
 #         print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
     }
 }
+get_tcheck <- function() tcheck.df %>% mutate( delta=c( 0, diff(elapsed)) ) %>% select( desc, delta)
 
 durationscaled <- function(duration) {
   thefactor <- 1.0 / sum(duration)
