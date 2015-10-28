@@ -4,8 +4,10 @@
 library(stringr)
 library(magrittr)
 
-tcheck.tx <- list( proc.time())
-tcheck <- function(t=1) {
+tcheck.tx <- list( proc.time())  #deprecated
+tcheck.df <- data.frame( stringsAsFactors = FALSE)
+tcheck.default_string <- function() sprintf( "t=%d", nrow(tcheck.df))
+tcheck <- function(t=1, desc = tcheck.default_string() ) {
     # t=0 to reset counter, t=1 incremental time output,  t=n time difference from n intervals
     #
     # use:
@@ -20,12 +22,23 @@ tcheck <- function(t=1) {
     pt <- proc.time()
     if (t == 0) { 
         tcheck.tx <<- list( proc.time()) 
+        tcheck.df <<- data.frame( elapsed = pt[3], desc = desc,stringsAsFactors = FALSE )
     } else {
         tcheck.tx <<- c( tcheck.tx, list(pt))
-        tn <- length(tcheck.tx)
-        print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
+        tcheck.df <<- rbind( tcheck.df, data.frame( elapsed = pt[3], desc = desc, stringsAsFactors = FALSE ) )
+        tn <- nrow( tcheck.df )
+        elapsed_delta <- diff( tcheck.df[ c(tn-t, tn),]$elapsed )
+       out_str <- ifelse ( t == 1
+                            , sprintf("%f elapsed for %s", elapsed_delta
+                                      , tcheck.df[tn, "desc"] )
+                            , sprintf("%f elapsed from %s:%s", elapsed_delta
+                                      , tcheck.df[tn, "desc"], tcheck.df[tn-t, "desc"]) )
+        return( out_str )
+#         tn <- length(tcheck.tx)
+#         print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
     }
 }
+get_tcheck <- function() tcheck.df %>% mutate( delta=c( 0, diff(elapsed)) ) %>% select( desc, delta)
 
 durationscaled <- function(duration) {
   thefactor <- 1.0 / sum(duration)
@@ -54,7 +67,7 @@ duration <- function(minutes_past) {
   
 }
 
-mpalmer <- function(ref, minutes_past) {
+old_mpalmer <- function(ref, minutes_past) {
     
     #is there at least one valid ref value
     if ( sum( is.na(ref)) == length(ref) ) return ( -1 )
@@ -92,6 +105,52 @@ mpalmer <- function(ref, minutes_past) {
     
 }
 
+new_mpalmer <- function(ref, minutes_past) {
+    #is there at least one valid ref value
+    if ( sum( is.na(ref)) == length(ref) ) return ( -1 )
+
+#data frame is too slow    
+#     df <- data.frame( ref=ref, mp=minutes_past ) %>%
+#         filter( ! is.na( ref )) %>%
+#         arrange( mp )
+    
+    #filter
+    valid <- ! is.na(ref)
+    ref <- ref[valid]
+    mp <- minutes_past[valid] 
+    
+    #arrange
+    sort_min_index = order(mp)
+    mp <- mp[sort_min_index]
+    ref <- ref[sort_min_index]
+    
+    
+    n <- length(ref)
+    if ( mp[1] != 0  ) { 
+        mp <-  c(0, mp)
+        ref <- c( ref[1], ref)
+        n <- n + 1
+    }
+    
+    if ( mp[n] != 60 ) {
+        mp <- c( mp, 60 )
+        ref <- c( ref, ref[n])
+        n <- n + 1
+    }
+    
+    ref_int <- ( ref[-1] + ref[-n] ) /2
+    hr_int <- diff( mp ) / 60
+    
+    mm <- sum( ((( 10^ (ref_int/10) )/200) ^ 0.625 ) * hr_int  )
+
+#     plot( 0:60, c( 0, rep( max(ref), 60)), type="n", ylab="Ref")
+#     lines( mp,  ref, type="b" )
+#     data.frame( ref_int, mmperhr = ((( 10^ (ref_int/10) )/200) ^ 0.625 ), hr_int )
+    
+    return(mm)
+}
+
+mpalmer <- new_mpalmer #   revert with mpalmer <- old_mpalmer
 
 transform.header <- function(str) {
     # use this for xtable with special chars in header
