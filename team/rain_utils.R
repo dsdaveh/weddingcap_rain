@@ -203,3 +203,41 @@ rr_kdp <- function(kdpval, minutes_past) {
   
 }
 
+vimpute_var <- function( xvar, mph, allNA = xvar, min_val = NULL ) {
+    
+    n_valid <- sum( ! is.na(xvar))  #count the number of non-NA's
+    n <- length(xvar)
+    
+    #special cases
+    if ( n_valid == 0 ) return(allNA)  # no non-NA's -- give up
+    if ( n_valid == 1 ) return( rep( mean(xvar, na.rm=TRUE), length(xvar))) #only one value
+    
+    valids <- which( ! is.na( xvar ))
+    d_mph <- diff( mph )
+    slope <- diff( xvar[ valids ]) / diff( mph[ valids ])  # known slopes
+    slope <- c( slope, slope[n_valid-1] )
+    start_pt <- c( valids, 61)
+    
+    y_t <- xvar  #output vector
+    
+    #extrapolate first point if necessary
+    if ( is.na(xvar[1]))  y_t[1] <- 
+        y_t[ start_pt[1] ] -  slope[1] * ( mph[ start_pt[1]] - mph[1] )
+    
+    #extrapolate last point if necessary
+    if ( is.na(xvar[n]))  {
+        last_valid <- valids[ length(valids) ]
+        y_t[n] <- y_t[ last_valid ] +  slope[n_valid-1] * ( mph[ n] - mph[ last_valid] )
+    }
+    
+    iseg <- 1
+    for ( i in 2:(n-1)) {
+        if (i < start_pt[iseg + 1] ) {
+            y_t[i] <- slope[iseg] * d_mph[i] + y_t[i-1]
+        } else {
+            iseg <- iseg + 1
+        }
+    }
+    
+    return(y_t)
+}
