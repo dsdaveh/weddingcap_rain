@@ -1,9 +1,9 @@
 library(data.table)
 
 source("../team/rain_utils.R")
-# data.frame( xvar, mph, y_t)
+source("../team/data-prep.R")
 
-data <- test
+data <- train.sample1000
 par( mar=c(2,2,2,1))
 # test_vv(id)
     
