@@ -71,7 +71,7 @@ tr <- tr_raw[, .(
     target = log1p(mean(Expected, na.rm = T)),
     ref = mean(dt * Ref, na.rm = T),
     ref1 = mean(dt * RefComposite, na.rm = T),
-    mp = sum(dt * mp, na.rm = T),
+    mp = mpalmer(Ref, minutes_past), #mp = sum(dt * mp, na.rm = T),  # #replaced dah
     rd = mean(radardist_km, na.rm = T),
     records = .N,
     naCounts = sum(is.na(Ref))
@@ -121,7 +121,7 @@ if (cv_frac_trn < 1) {
         noRef = all( is.na(Ref)),
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
-        mp = sum(dt * mp, na.rm = T),
+        mp = mpalmer(Ref, minutes_past),  #mp = sum(dt * mp, na.rm = T), #replaced dah
         rd = mean(radardist_km),
         records = .N,
         y = max(Expected)
@@ -161,7 +161,7 @@ if (exists("test")) {
         noRef = all( is.na(Ref)),
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
-        mp = sum(dt * mp, na.rm = T),
+        mp = mpalmer(Ref, minutes_past),  #replaced dah#mp = sum(dt * mp, na.rm = T), #
         rd = mean(radardist_km),
         records = .N
     ),Id][ noRef == FALSE , ]
