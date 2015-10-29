@@ -1,6 +1,6 @@
 library(data.table)
 
-source("../team/rain_utils")
+source("../team/rain_utils.R")
 # data.frame( xvar, mph, y_t)
 
 data <- test
