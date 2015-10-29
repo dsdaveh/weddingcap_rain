@@ -18,12 +18,14 @@ def_cv_frac_trn <- 0.7  # standard 70/30 split for CV
 
 def_create_submission <- FALSE
 
+seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
+
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
 
 ####################################################
-cat ("KS_gbm_cv.R runtime ", format(Sys.time()), "\n")
+cat ( sprintf( "KS_gbm_cv.R runtime %s (seed = %d)\n", format(Sys.time()), seed) )
 cat ("Training data will be loaded from ", rdata_file, "\n")
 
 cv_txt <- ifelse( cv_frac_trn < 1, "", "NOT")
@@ -75,7 +77,7 @@ train_NA <- train[ , .(
 
 if (cv_frac_trn < 1) {
     ids <- unique(train$Id)
-    set.seed( 1999)
+    set.seed( seed )
     cv_ids_trn <- sample( ids, round(cv_frac_trn * length(ids)) )
     cv_ix_trn <- train$Id %in% cv_ids_trn
     train <- train[ cv_ix_trn,  ] ;zzz <- tcheck( desc='partition cv_train'); print(zzz)
