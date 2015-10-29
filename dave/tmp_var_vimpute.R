@@ -5,6 +5,24 @@ source("../team/data-prep.R")
 
 data <- train.sample1000
 par( mar=c(2,2,2,1))
+test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE ) {
+    print(id)
+    qd <- data[ Id == id, .( xvar=Ref, mph=minutes_past) ]
+    qd$imputed_var <- vimpute_var( qd$xvar, qd$mph )
+    print(qd)
+    
+    if( show_plot ) {
+        if ( all(is.na(qd$xvar))) qd$imputed_var = 0 
+        
+        plot( c(0,60), c( min( 0, min(qd$imputed_var)), max(qd$imputed_var))
+              , type="n", ylab="Var", xlab="minutes_past", main = sprintf("Id = %d", id)) 
+        
+        with(qd, points( mph, imputed_var) )
+        with(qd, points( mph, xvar, pch=16) )
+        with(qd, lines( mph, imputed_var, col="red") )
+    }
+}
+# test_vv(id)
 # test_vv(id)
     
 na_counts <- data[, .( n = .N, n_NA = sum(is.na(Ref))), Id]
