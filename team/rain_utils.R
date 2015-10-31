@@ -277,5 +277,5 @@ vimpute_agg <- function( xvar, mph, allNA=xvar, method=2, fun=identity ) {
 }
 
 ref_to_mm <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
-kdp_to_mm <- function(kdp)  sign(kdpval[i]) * 40.6 * (abs(kdpval[i])^0.866)
+kdp_to_mm <- function(kdp)  sign(kdp) * 40.6 * (abs(kdp)^0.866)
 
