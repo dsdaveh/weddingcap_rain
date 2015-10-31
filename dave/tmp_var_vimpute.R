@@ -68,3 +68,4 @@ set.seed(6841)
 set.seed(6841)
 # run12( extend = TRUE ) 
 
+# run12( extend = TRUE, vname="Kdp")
