@@ -203,7 +203,19 @@ rr_kdp <- function(kdpval, minutes_past) {
   
 }
 
-vimpute_var <- function( xvar, mph, allNA = xvar, min_val = NULL ) {
+extend_var_pair <- function( var_df ) {
+    # expects 2 columns, 1st is var, 2nd is minutes_past ... names don't matter
+    # returns a data.frame
+    df <- as.data.frame (var_df)
+    add_rows <- data.frame( var = c(NA,NA), mph = c(0,60))
+    colnames(add_rows) <- colnames( df )
+        
+    if (df[ 1       , 2] !=  0)  df <- rbind(     add_rows[1, ], df)
+    if (df[ nrow(df), 2] != 60)  df <- rbind( df, add_rows[2, ]    )
+    return (df)
+}
+
+vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
     
     n_valid <- sum( ! is.na(xvar))  #count the number of non-NA's
     n <- length(xvar)
@@ -221,19 +233,28 @@ vimpute_var <- function( xvar, mph, allNA = xvar, min_val = NULL ) {
     y_t <- xvar  #output vector
     
     #extrapolate first point if necessary
-    if ( is.na(xvar[1]))  y_t[1] <- 
-        y_t[ start_pt[1] ] -  slope[1] * ( mph[ start_pt[1]] - mph[1] )
+    if ( is.na(xvar[1]))  {
+        y_t[1] <- ifelse(
+            method == 1, y_t[ start_pt[1] ] -  slope[1] * ( mph[ start_pt[1]] - mph[1] ), ifelse (
+            method == 2, y_t[ start_pt[1] ] ,
+            "ERROR NO DEFAULT METHOD"
+        ))
+    }
     
     #extrapolate last point if necessary
     if ( is.na(xvar[n]))  {
         last_valid <- valids[ length(valids) ]
-        y_t[n] <- y_t[ last_valid ] +  slope[n_valid-1] * ( mph[ n] - mph[ last_valid] )
+        y_t[n] <- ifelse( 
+            method == 1, y_t[ last_valid ] +  slope[n_valid-1] * ( mph[ n] - mph[ last_valid] ), ifelse (
+            method == 2, y_t[ last_valid ] ,
+            "ERROR NO DEFAULT METHOD"
+        ))
     }
     
     iseg <- 1
     for ( i in 2:(n-1)) {
         if (i < start_pt[iseg + 1] ) {
-            y_t[i] <- slope[iseg] * d_mph[i] + y_t[i-1]
+            y_t[i] <- slope[iseg] * d_mph[i-1] + y_t[i-1]
         } else {
             iseg <- iseg + 1
         }
@@ -241,3 +262,11 @@ vimpute_var <- function( xvar, mph, allNA = xvar, min_val = NULL ) {
     
     return(y_t)
 }
+
+vimpute_agg <- function( xvar, mph, allNA=xvar, method=1, fun=identity ) {
+    x2 <- extend_var_pair ( data.frame( xvar, mph ) )
+    x2$imputed <- vimpute_var( x2$xvar, x2$mph, allNA=allNA, method=method )
+    agg <- sum( fun(  ((x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60 ) )
+    return( agg )
+}
+
