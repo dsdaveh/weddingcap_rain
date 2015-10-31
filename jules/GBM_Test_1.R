@@ -35,7 +35,7 @@ marshall_palmer <- function(dbz) {
 valid_vals <- 0.254 * 1:300
 
 ######Training Data############
-tr_raw <- fread("../jules/train.csv", select = c(
+tr_raw <- fread("../train.csv", select = c(
   "Id", 
   "minutes_past", 
   "radardist_km",

@@ -56,3 +56,4 @@ train.csv
 dave/.Rhistory
 dave/.RDataTmp
 *.history
+*.NOGIT
