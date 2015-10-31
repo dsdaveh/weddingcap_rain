@@ -227,7 +227,8 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
     valids <- which( ! is.na( xvar ))
     d_mph <- diff( mph )
     slope <- diff( xvar[ valids ]) / diff( mph[ valids ])  # known slopes
-    slope <- c( slope, slope[n_valid-1] )
+    if ( method == 1 ) slope <- c( slope, slope[n_valid-1] )
+    if ( method == 2 ) slope <- c( slope, 0 )
     start_pt <- c( valids, 61)
     
     y_t <- xvar  #output vector
@@ -266,6 +267,7 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
 
 vimpute_agg <- function( xvar, mph, allNA=xvar, method=1, fun=identity ) {
     x2 <- extend_var_pair ( data.frame( xvar, mph ) )
+    if ( identical( xvar, allNA)) allNA = x2$xvar
     x2$imputed <- vimpute_var( x2$xvar, x2$mph, allNA=allNA, method=method )
     agg <- sum( fun(  ((x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60 ) )
     return( agg )
