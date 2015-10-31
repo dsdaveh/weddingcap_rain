@@ -56,4 +56,4 @@ train.csv
 dave/.Rhistory
 dave/.RDataTmp
 *.history
-dave/KS_gbm_cv_NOGIT.csv
+*.NOGIT
