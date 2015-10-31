@@ -235,22 +235,25 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
     
     #extrapolate first point if necessary
     if ( is.na(xvar[1]))  {
-        y_t[1] <- ifelse(
-            method == 1, y_t[ start_pt[1] ] -  slope[1] * ( mph[ start_pt[1]] - mph[1] ), ifelse (
-            method == 2, y_t[ start_pt[1] ] ,
-            "ERROR NO DEFAULT METHOD"
-        ))
-        if (method == 2) slope[1] <- 0
+        if (method == 1) {
+            y_t[1] <- y_t[ start_pt[1] ] -  slope[1] * ( mph[ start_pt[1]] - mph[1] )
+        }
+        if (method == 2) {
+            y_t[1] <- y_t[ start_pt[1] ]
+            slope <- c( 0, slope)
+            start_pt <- c( 1, start_pt)
+        } 
     }
     
     #extrapolate last point if necessary
     if ( is.na(xvar[n]))  {
         last_valid <- valids[ length(valids) ]
-        y_t[n] <- ifelse( 
-            method == 1, y_t[ last_valid ] +  slope[n_valid-1] * ( mph[ n] - mph[ last_valid] ), ifelse (
-            method == 2, y_t[ last_valid ] ,
-            "ERROR NO DEFAULT METHOD"
-        ))
+        if (method == 1) {
+            y_t[n] <- y_t[ last_valid ] +  slope[n_valid-1] * ( mph[ n] - mph[ last_valid] )
+        }
+        if (method == 2) {
+            y_t[n] <- y_t[ last_valid ]
+        } 
     }
     
     iseg <- 1
