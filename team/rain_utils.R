@@ -239,6 +239,7 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
             method == 2, y_t[ start_pt[1] ] ,
             "ERROR NO DEFAULT METHOD"
         ))
+        if (method == 2) slope[1] <- 0
     }
     
     #extrapolate last point if necessary
