@@ -272,7 +272,8 @@ vimpute_agg <- function( xvar, mph, allNA=xvar, method=1, fun=identity ) {
     x2 <- extend_var_pair ( data.frame( xvar, mph ) )
     if ( identical( xvar, allNA)) allNA = x2$xvar
     x2$imputed <- vimpute_var( x2$xvar, x2$mph, allNA=allNA, method=method )
-    agg <- sum( fun(  ((x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60 ) )
+    agg <- sum( fun(  (x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60  )
     return( agg )
 }
+
 

@@ -5,9 +5,10 @@ source("../team/data-prep.R")
 
 data <- train.sample1000
 par( mar=c(2,2,2,1))
-test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE, extend=TRUE ) {
+test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE, extend=TRUE, vname = "Ref" ) {
     print(id)
-    qd <- data[ Id == id, .( xvar=Ref, mph=minutes_past) ]
+    if (vname == "Ref" ) qd <- data[ Id == id, .( xvar=Ref, mph=minutes_past) ]
+    if (vname == "Kdp" ) qd <- data[ Id == id, .( xvar=Kdp, mph=minutes_past) ]
     print(qd)
     
     if (extend) {
@@ -24,7 +25,8 @@ test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE, extend=TR
         if ( all(is.na(qd$xvar))) qd$imputed_m1 <- qd$imputed_m2 <- 0 
         
         plot( c(0,60), c( min( 0, min(qd$imputed_m1)), max(qd$imputed_m1))
-              , type="n", ylab="Var", xlab="minutes_past", main = sprintf("Id = %d", id)) 
+              , type="n", ylab="Var", xlab="minutes_past"
+              , main = sprintf("Id = %d, vname=%s", id, vname)) 
         
         with(qd, points( mph, imputed_m1) )
         with(qd, points( mph, xvar, pch=16) )
@@ -55,9 +57,9 @@ setup_dbg <- function( id ) {
 }
 # setup_dbg( id )
 
-run12 <- function( extend=FALSE ) {
+run12 <- function( extend=FALSE, ... ) {
     par( mfrow=c(4,3) )
-    for( i in 1:12 ) test_vv( extend=extend )
+    for( i in 1:12 ) test_vv( extend=extend, ... )
     par( mfrow=c(1,1) )
 }
 
