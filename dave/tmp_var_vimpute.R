@@ -28,10 +28,10 @@ test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE ) {
 na_counts <- data[, .( n = .N, n_NA = sum(is.na(Ref))), Id]
 case_1 <- na_counts[ (n-n_NA) == 1, ]$Id
 
-id <- 666296 # Ref: 5/8 NA  t0=NA
-id <- 525038 # Ref: 6/14 NA t0=NA tn=NA
-id <- 114141 # Ref: 12/14 NA t0=NA tn=NA
-id=365923
+# id <- 666296 # Ref: 5/8 NA  t0=NA
+# id <- 525038 # Ref: 6/14 NA t0=NA tn=NA
+# id <- 114141 # Ref: 12/14 NA t0=NA tn=NA
+# id=365923
 
 
 xvar <- 0
