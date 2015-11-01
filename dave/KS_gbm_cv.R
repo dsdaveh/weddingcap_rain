@@ -62,6 +62,18 @@ marshall_palmer <- function(dbz) {
     ((10**(dbz/10))/200) ** 0.625
 }
 
+get_raw( df ) {
+    if (! grepl( 'Expected', colnames(df))) df$Expected = 0  #so test data runs pass through
+    df %>%  select(
+        Id, 
+        minutes_past, 
+        radardist_km,
+        Kdp,
+        Ref, 
+        RefComposite, 
+        Expected)
+}
+
 ##Valid values based on 0.01in measurements
 valid_vals <- 0.254 * 1:300
 
@@ -83,13 +95,7 @@ if (cv_frac_trn < 1) {
     train <- train[ cv_ix_trn,  ] ;zzz <- tcheck( desc='partition cv_train'); print(zzz)
 }
 
-tr_raw <- train %>%  select(
-    Id, 
-    minutes_past, 
-    radardist_km,
-    Ref, 
-    RefComposite, 
-    Expected)
+tr_raw <- train %>%  get_raw()
 
 tr_raw <- subset(tr_raw, Expected <= 65)
 tr_raw <- tr_raw[round(Expected, 4) %fin% valid_vals]
@@ -102,14 +108,14 @@ tr <- tr_raw[, .(
     ref = mean(dt * Ref, na.rm = T),
     ref1 = mean(dt * RefComposite, na.rm = T),
     mp = mpalmer(Ref, minutes_past), #mp = sum(dt * mp, na.rm = T),  # #replaced dah
+    kdp = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
     rd = mean(radardist_km, na.rm = T),
     records = .N,
     naCounts = sum(is.na(Ref))
 ), Id]
 
 
-print("training model...")
-cs <- c("ref", "ref1",   "mp", "rd", "records")
+cs <- c("ref", "ref1",   "mp", "kdp",  "rd", "records")
 y<-tr$target
 tr<-as.data.frame(tr)
 tr<-tr[,cs]
@@ -134,13 +140,7 @@ cat( "MAE for model data =", mae_xgb_trn, "\n")
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file ) ; zzz <- tcheck( desc='reload data'); print(zzz)
 
-te_raw<- train[ cv_ix_trn,  ] %>%  select(
-    Id, 
-    minutes_past, 
-    radardist_km,
-    Ref, 
-    RefComposite, 
-    Expected)
+te_raw<- train[ cv_ix_trn,  ] %>%  %>%  get_raw()
 
 te_raw$dt <- time_difference(te_raw$minutes_past)
 te_raw$mp <- marshall_palmer(te_raw$Ref)
@@ -150,6 +150,7 @@ tecv <- te_raw[, .(
     ref = mean(dt * Ref, na.rm = T),
     ref1 = mean(dt * RefComposite, na.rm = T),
     mp = mpalmer(Ref, minutes_past),  #mp = sum(dt * mp, na.rm = T), #replaced dah
+    kdp = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
     rd = mean(radardist_km),
     records = .N,
     y = max(Expected)
@@ -171,13 +172,7 @@ cat( "MAE for CV train data =", mae_xgb, "\n")
 
 if (cv_frac_trn < 1) {
     
-    te_raw<- train[ ! cv_ix_trn,  ] %>%  select(
-        Id, 
-        minutes_past, 
-        radardist_km,
-        Ref, 
-        RefComposite, 
-        Expected)
+    te_raw<- train[ ! cv_ix_trn,  ] %>%  get_raw()
     
     te_raw$dt <- time_difference(te_raw$minutes_past)
     te_raw$mp <- marshall_palmer(te_raw$Ref)
@@ -187,6 +182,7 @@ if (cv_frac_trn < 1) {
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
         mp = mpalmer(Ref, minutes_past),  #mp = sum(dt * mp, na.rm = T), #replaced dah
+        kdp = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
         rd = mean(radardist_km),
         records = .N,
         y = max(Expected)
@@ -215,13 +211,7 @@ if ( create_submission) {
     
     test_NAs <- test[ , .( refNA = all(is.na(Ref))), Id][ refNA == TRUE, .(Id = Id, Expected = train_NA)]
 
-    te_raw <- test %>%  select(
-        Id, 
-        minutes_past, 
-        radardist_km,
-        Ref, 
-        RefComposite
-        )
+    te_raw <- test %>%  get_raw()
     
     te_raw$dt <- time_difference(te_raw$minutes_past)
     te_raw$mp <- marshall_palmer(te_raw$Ref)
@@ -231,6 +221,7 @@ if ( create_submission) {
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
         mp = mpalmer(Ref, minutes_past),  #replaced dah#mp = sum(dt * mp, na.rm = T), #
+        kdp = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
         rd = mean(radardist_km),
         records = .N
     ),Id][ noRef == FALSE , ]
@@ -254,5 +245,7 @@ if ( create_submission) {
     
 }
 
-print( get_tcheck())
+time_df <- get_tcheck()
+print( time_df )
+print( sum( time_df$delta ))
 
