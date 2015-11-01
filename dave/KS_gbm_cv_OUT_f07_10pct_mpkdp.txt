@@ -1,0 +1,39 @@
+> rdata_file <- "train_10pct.RData"
+> source("KS_gbm_cv.R")   #KS_gbm_cv_OUT_f10_10pct_mpkdp.txt
+KS_gbm_cv.R runtime 2015-10-31 02:44:07 (seed = 1999)
+Training data will be loaded from  train_10pct.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = FALSE .  Submission file will NOT be created.
+ MPalmer signature =  0.1509727 
+loading train from RData file  train_10pct.RData 
+[1] "2.600000 elapsed for load data"
+[1] "1.260000 elapsed for partition cv_train"
+[1] "training model..."
+[1] "140.440000 elapsed for construct train matrix"
+[1] "130.230000 elapsed for xgb.train cv_train"
+[1] "0.000000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.677838 
+[1] "1.170000 elapsed for reload data"
+[1] "1.170000 elapsed for reload data"
+[1] "0.020000 elapsed for construct cv_train matrix"
+[1] "16.540000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.93842 
+[1] "16.540000 elapsed for predict logvals on cv_train"
+[1] "0.010000 elapsed for construct cv_test matrix"
+[1] "7.150000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 20.24162 
+                                     desc  delta
+1                                     t=0   0.00
+2                               load data   2.60
+3                      partition cv_train   1.26
+4                  construct train matrix 140.44
+5                      xgb.train cv_train 130.23
+6  predict logvals on scrubbed model data   0.00
+7                             reload data   1.17
+8                   prepare cv_train data 178.27
+9               construct cv_train matrix   0.02
+10            predict logvals on cv_train  16.54
+11                   prepare cv_test data  76.22
+12               construct cv_test matrix   0.01
+13             predict logvals on cv_test   7.15
+> 
