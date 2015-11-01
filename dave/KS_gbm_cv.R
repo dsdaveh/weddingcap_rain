@@ -89,6 +89,7 @@ tr_raw <- train %>%  select(
     radardist_km,
     Ref, 
     RefComposite, 
+    Kdp,
     Expected)
 
 tr_raw <- subset(tr_raw, Expected <= 65)
@@ -102,6 +103,7 @@ tr <- tr_raw[, .(
     ref = mean(dt * Ref, na.rm = T),
     ref1 = mean(dt * RefComposite, na.rm = T),
     mp = mpalmer(Ref, minutes_past), #mp = sum(dt * mp, na.rm = T),  # #replaced dah
+    kdprr = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
     rd = mean(radardist_km, na.rm = T),
     records = .N,
     naCounts = sum(is.na(Ref))
@@ -109,7 +111,7 @@ tr <- tr_raw[, .(
 
 
 print("training model...")
-cs <- c("ref", "ref1",   "mp", "rd", "records")
+cs <- c("ref", "ref1", "kdprr",  "mp", "rd", "records")
 y<-tr$target
 tr<-as.data.frame(tr)
 tr<-tr[,cs]
@@ -140,6 +142,7 @@ te_raw<- train[ cv_ix_trn,  ] %>%  select(
     radardist_km,
     Ref, 
     RefComposite, 
+    Kdp,
     Expected)
 
 te_raw$dt <- time_difference(te_raw$minutes_past)
@@ -150,6 +153,7 @@ tecv <- te_raw[, .(
     ref = mean(dt * Ref, na.rm = T),
     ref1 = mean(dt * RefComposite, na.rm = T),
     mp = mpalmer(Ref, minutes_past),  #mp = sum(dt * mp, na.rm = T), #replaced dah
+    kdprr = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
     rd = mean(radardist_km),
     records = .N,
     y = max(Expected)
@@ -177,6 +181,7 @@ if (cv_frac_trn < 1) {
         radardist_km,
         Ref, 
         RefComposite, 
+        Kdp,
         Expected)
     
     te_raw$dt <- time_difference(te_raw$minutes_past)
@@ -187,6 +192,7 @@ if (cv_frac_trn < 1) {
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
         mp = mpalmer(Ref, minutes_past),  #mp = sum(dt * mp, na.rm = T), #replaced dah
+        kdprr = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
         rd = mean(radardist_km),
         records = .N,
         y = max(Expected)
@@ -220,7 +226,8 @@ if ( create_submission) {
         minutes_past, 
         radardist_km,
         Ref, 
-        RefComposite
+        RefComposite,
+        Kdp
         )
     
     te_raw$dt <- time_difference(te_raw$minutes_past)
@@ -230,7 +237,8 @@ if ( create_submission) {
         noRef = all( is.na(Ref)),
         ref = mean(dt * Ref, na.rm = T),
         ref1 = mean(dt * RefComposite, na.rm = T),
-        mp = mpalmer(Ref, minutes_past),  #replaced dah#mp = sum(dt * mp, na.rm = T), #
+        mp = mpalmer(Ref, minutes_past),  #replaced dah#mp = sum(dt * mp, na.rm = T)
+        kdprr = vimpute_agg( Kdp, minutes_past, method=2, fun=kdp_to_mm, allNA=0),
         rd = mean(radardist_km),
         records = .N
     ),Id][ noRef == FALSE , ]
