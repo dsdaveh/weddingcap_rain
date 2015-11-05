@@ -45,18 +45,18 @@ train$Kdp_5x5_10th <- train[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_pas
 train$Kdp_5x5_50th <- train[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 train$Kdp_5x5_90th <- train[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
 
-save(train,file="train_imputed.RData") ; tcheck(desc="save RData file")
+save(train,file="../train_imputed.RData") ; tcheck(desc="save RData file")
 
 tdf <- get_tcheck()
 print( tdf )
 print( sum( tdf$delta))
 
 v_agg <- function( xvar, mph, fun=identity ) {
-    sum( fun(  (x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60  )
+    sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
 }
 
 tcheck(0)
-train_agg <- train[, Ref = v_agg( Ref, minutes_past), Id]; tcheck()
+train_agg <- train[, .(Ref = v_agg( Ref, minutes_past)), Id]; tcheck()
 train_agg <- train[, .(
     Ref = v_agg( Ref, minutes_past)
     , Kdp = v_agg( Ref, minutes_past)
