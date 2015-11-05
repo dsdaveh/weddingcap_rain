@@ -270,12 +270,15 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
 
 vimpute_agg <- function( xvar, mph, allNA=xvar, method=2, fun=identity ) {
     x2 <- extend_var_pair ( data.frame( xvar, mph ) )
-    if ( identical( xvar, allNA)) allNA = x2$xvar
+    if ( length( allNA != 1 )) allNA = x2$xvar    #this is an assumption, but faster than a check using identical()
     x2$imputed <- vimpute_var( x2$xvar, x2$mph, allNA=allNA, method=method )
     agg <- sum( fun(  (x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60  )
     return( agg )
 }
 
-ref_to_mm <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
+ref_to_mm_kaggle <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
+ref_to_mm_lit <- function(dbz) 0.0365*(10**(0.0625*dbz))
+ref_to_mm <- ref_to_mm_kaggle
 kdp_to_mm <- function(kdp)  sign(kdp) * 40.6 * (abs(kdp)^0.866)
 
+EOD <- 1

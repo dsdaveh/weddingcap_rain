@@ -3,7 +3,7 @@ library(data.table)
 source("../team/rain_utils.R")
 source("../team/data-prep.R")
 
-data <- train.sample1000
+data <- train
 par( mar=c(2,2,2,1))
 test_vv <- function( id = sample( unique(data$Id), 1), show_plot=TRUE, extend=TRUE, vname = "Ref" ) {
     print(id)
