@@ -5,7 +5,6 @@ library(dplyr)
 
 source( "../team/rain_utils.R")  ; tcheck(desc = "load dataset")
 
-rdata_file <- "train_10pct.RData"
 rdata_file <- "train_full.RData"
 load( rdata_file )
 setkey(train, Id, minutes_past)
@@ -21,10 +20,7 @@ add_t60 <- train[                 , .SD[.N], Id]   #no Id's have last = 60
 
 impute_steps_train$add_t0 <- ! impute_steps_train$Id %in% has_t0
 
-train <- train %>% 
-    bind_rows( add_t0 ) %>% 
-    bind_rows( add_t60) %>%
-    data.table();                           tcheck(desc = "add t0 and t60")
+train <- rbind( train, add_t0, add_t60);   tcheck(desc = "add t0 and t60")
 
 setkey(train, Id, minutes_past)
 
@@ -48,4 +44,32 @@ train$Kdp <- train[, .( impute = vimpute_var( Kdp, minutes_past, method=2)), Id]
 train$Kdp_5x5_10th <- train[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_past, method=2)), Id]$impute ; tcheck()
 train$Kdp_5x5_50th <- train[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 train$Kdp_5x5_90th <- train[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
+
+save(train,file="train_imputed.RData") ; tcheck(desc="save RData file")
+
+tdf <- get_tcheck()
+print( tdf )
+print( sum( tdf$delta))
+
+v_agg <- function( xvar, mph, fun=identity ) {
+    sum( fun(  (x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60  )
+}
+
+tcheck(0)
+train_agg <- train[, Ref = v_agg( Ref, minutes_past), Id]; tcheck()
+train_agg <- train[, .(
+    Ref = v_agg( Ref, minutes_past)
+    , Kdp = v_agg( Ref, minutes_past)
+    , Zdr = v_agg( Zdr, minutes_past)
+), Id ]                                                  ;tcheck()
+train_agg <- train[, .(
+    Ref = v_agg( Ref, minutes_past)
+    , Kdp = v_agg( Ref, minutes_past)
+    , rz = v_agg( Ref, minutes_past, ref_to_mm)
+    , rk = v_agg( Kdp, minutes_past, kdp_to_mm)
+), Id ]                                                  ;tcheck()
+
+
+
+
 
