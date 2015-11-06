@@ -17,7 +17,7 @@ if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n
 #def_cv_frac_trn <- 1   ## set this to 1 for no cross validation (maximize training for submission)
 def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
-def_rain_thresh <- 0.65
+def_rain_thresh <- 65
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
