@@ -4,8 +4,9 @@
 library(stringr)
 library(magrittr)
 
+if (! exists("tcheck.print")) tcheck.print = FALSE
 tcheck.tx <- list( proc.time())  #deprecated
-tcheck.df <- data.frame( stringsAsFactors = FALSE)
+if (! exists("tcheck.df")) tcheck.df <- data.frame( stringsAsFactors = FALSE)
 tcheck.default_string <- function() sprintf( "t=%d", nrow(tcheck.df))
 tcheck <- function(t=1, desc = tcheck.default_string() ) {
     # t=0 to reset counter, t=1 incremental time output,  t=n time difference from n intervals
@@ -28,11 +29,12 @@ tcheck <- function(t=1, desc = tcheck.default_string() ) {
         tcheck.df <<- rbind( tcheck.df, data.frame( elapsed = pt[3], desc = desc, stringsAsFactors = FALSE ) )
         tn <- nrow( tcheck.df )
         elapsed_delta <- diff( tcheck.df[ c(tn-t, tn),]$elapsed )
-       out_str <- ifelse ( t == 1
+        out_str <- ifelse ( t == 1
                             , sprintf("%f elapsed for %s", elapsed_delta
                                       , tcheck.df[tn, "desc"] )
                             , sprintf("%f elapsed from %s:%s", elapsed_delta
                                       , tcheck.df[tn, "desc"], tcheck.df[tn-t, "desc"]) )
+        if (tcheck.print) print( out_str)
         return( out_str )
 #         tn <- length(tcheck.tx)
 #         print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
@@ -255,6 +257,9 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
             y_t[n] <- y_t[ last_valid ]
         } 
     }
+    
+    #special cases
+    if ( length(xvar) == 2 ) return( y_t ) #only one value
     
     iseg <- 1
     for ( i in 2:(n-1)) {
