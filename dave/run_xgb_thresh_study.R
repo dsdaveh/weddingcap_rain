@@ -1,3 +1,5 @@
+library (ggvis)
+library (tidyr)
 rdata_file <- '../train_agg_10pct.RData'
 
 create_submission <- FALSE
@@ -15,3 +17,9 @@ for (set_seed in c(1999, 2015, 7)) {
         run_time <- c(run_time, sum( time_df$delta ))
     }
 }
+
+mae_res %>% group_by(seed) %>% 
+    ggvis( ~rain_thresh, ~mae_cv_test ) %>%
+    layer_points( fill = ~as.factor(seed)) %>%
+    layer_lines ( stroke = ~as.factor(seed)) 
+    
