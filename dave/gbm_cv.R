@@ -18,6 +18,9 @@ if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n
 def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
 def_rain_thresh <- 0.65
+def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
+
+if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
@@ -72,7 +75,6 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 
-cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 y<- log1p( tr$Expected )
 tr<-as.data.frame(tr)
 tr<-tr[,cs]
@@ -92,7 +94,7 @@ x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds =1955)          
 
 pr_trn  <- predict(x.mod.t,xgtrain)                                       ;tcheck( desc='predict logvals on scrubbed model data')
 mae_xgb <- mae( expm1(pr_trn), expm1(y) )
-cat( "MAE for model data =", mae_xgb_trn, "\n")
+cat( "MAE for model data =", mae_xgb, "\n")
 
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
