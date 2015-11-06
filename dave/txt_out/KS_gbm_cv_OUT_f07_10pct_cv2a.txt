@@ -1,0 +1,46 @@
+changed ref and ref1 to us vimpute_agg (were mean)
+
+> source('~/GitHub/weddingcap_rain/dave/KS_gbm_cv2.R')
+KS_gbm_cv.R runtime 2015-10-31 22:46:48 (seed = 1999)
+Training data will be loaded from  train_10pct.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = FALSE .  Submission file will NOT be created.
+mpalmer has been changed from default MPalmer signature =  0.1579368 
+loading train from RData file  train_10pct.RData 
+[1] "1.360000 elapsed for load data"
+[1] "0.980000 elapsed for partition cv_train"
+[1] "653.640000 elapsed for aggregate scrubbed cv_train"
+Variables for gbm: ref ref1 mp kdp kdprf rd records 
+[1] "0.020000 elapsed for construct train matrix"
+[1] "81.230000 elapsed for xgb.train cv_train"
+[1] "0.000000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.649071 
+[1] "1.180000 elapsed for reload data"
+[1] "813.410000 elapsed for aggregate cv_train"
+[1] "813.410000 elapsed for aggregate cv_train"
+[1] "0.010000 elapsed for construct cv_train matrix"
+[1] "15.100000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.93074 
+[1] "345.590000 elapsed for aggregate cv_test"
+[1] "345.590000 elapsed for aggregate cv_test"
+[1] "0.000000 elapsed for construct cv_test matrix"
+[1] "6.450000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 20.24597 
+                                     desc  delta
+1                                     t=0   0.00
+2                               load data   1.36
+3                      partition cv_train   0.98
+4             aggregate scrubbed cv_train 653.64
+5                  construct train matrix   0.02
+6                      xgb.train cv_train  81.23
+7  predict logvals on scrubbed model data   0.00
+8                             reload data   1.18
+9                      aggregate cv_train 813.41
+10                  prepare cv_train data   0.00
+11              construct cv_train matrix   0.01
+12            predict logvals on cv_train  15.10
+13                      aggregate cv_test 345.59
+14                   prepare cv_test data   0.00
+15               construct cv_test matrix   0.00
+16             predict logvals on cv_test   6.45
+[1] 1918.97

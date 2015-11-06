@@ -4,8 +4,9 @@
 library(stringr)
 library(magrittr)
 
+if (! exists("tcheck.print")) tcheck.print = FALSE
 tcheck.tx <- list( proc.time())  #deprecated
-tcheck.df <- data.frame( stringsAsFactors = FALSE)
+if (! exists("tcheck.df")) tcheck.df <- data.frame( stringsAsFactors = FALSE)
 tcheck.default_string <- function() sprintf( "t=%d", nrow(tcheck.df))
 tcheck <- function(t=1, desc = tcheck.default_string() ) {
     # t=0 to reset counter, t=1 incremental time output,  t=n time difference from n intervals
@@ -28,11 +29,12 @@ tcheck <- function(t=1, desc = tcheck.default_string() ) {
         tcheck.df <<- rbind( tcheck.df, data.frame( elapsed = pt[3], desc = desc, stringsAsFactors = FALSE ) )
         tn <- nrow( tcheck.df )
         elapsed_delta <- diff( tcheck.df[ c(tn-t, tn),]$elapsed )
-       out_str <- ifelse ( t == 1
+        out_str <- ifelse ( t == 1
                             , sprintf("%f elapsed for %s", elapsed_delta
                                       , tcheck.df[tn, "desc"] )
                             , sprintf("%f elapsed from %s:%s", elapsed_delta
                                       , tcheck.df[tn, "desc"], tcheck.df[tn-t, "desc"]) )
+        if (tcheck.print) print( out_str)
         return( out_str )
 #         tn <- length(tcheck.tx)
 #         print ( tcheck.tx[[tn]] - tcheck.tx[[tn-t]]) 
@@ -256,6 +258,9 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
         } 
     }
     
+    #special cases
+    if ( length(xvar) == 2 ) return( y_t ) #only one value
+    
     iseg <- 1
     for ( i in 2:(n-1)) {
         if (i < start_pt[iseg + 1] ) {
@@ -270,12 +275,15 @@ vimpute_var <- function( xvar, mph, allNA=xvar, method=1 ) {
 
 vimpute_agg <- function( xvar, mph, allNA=xvar, method=2, fun=identity ) {
     x2 <- extend_var_pair ( data.frame( xvar, mph ) )
-    if ( identical( xvar, allNA)) allNA = x2$xvar
+    if ( length( allNA != 1 )) allNA = x2$xvar    #this is an assumption, but faster than a check using identical()
     x2$imputed <- vimpute_var( x2$xvar, x2$mph, allNA=allNA, method=method )
     agg <- sum( fun(  (x2$imputed[-1] + x2$imputed[-nrow(x2)] ) /2 ) * diff( x2$mph )/60  )
     return( agg )
 }
 
-ref_to_mm <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
+ref_to_mm_kaggle <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
+ref_to_mm_lit <- function(dbz) 0.0365*(10**(0.0625*dbz))
+ref_to_mm <- ref_to_mm_kaggle
 kdp_to_mm <- function(kdp)  sign(kdp) * 40.6 * (abs(kdp)^0.866)
 
+EOD <- 1

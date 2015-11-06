@@ -1,0 +1,29 @@
+ref1, ref, mp, kdp, kdprf   calculated from vimpute_agg
+
+> cv_frac_trn <- 1
+> create_submission <- TRUE
+> source("KS_gbm_cv2.R")   #.txt
+KS_gbm_cv.R runtime 2015-11-01 03:56:07 (seed = 1999)
+Training data will be loaded from  train_full.RData 
+CV Fraction for training = 1 .  CV testing will NOT be performed.
+create_submission = TRUE .  Submission file will  be created.
+mpalmer has been changed from default MPalmer signature =  0.1579368 
+loading train from RData file  train_full.RData 
+[1] "11.760000 elapsed for load data"
+[1] "9236.540000 elapsed for aggregate scrubbed cv_train"
+Variables for gbm: ref ref1 mp kdp kdprf rd records 
+[1] "0.230000 elapsed for construct train matrix"
+[1] "1694.640000 elapsed for xgb.train cv_train"
+[1] "0.030000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.809705 
+[1] "11.630000 elapsed for reload data"
+[1] "8406.300000 elapsed for aggregate cv_train"
+[1] "8406.300000 elapsed for aggregate cv_train"
+[1] "0.190000 elapsed for construct cv_train matrix"
+[1] "207.610000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 22.77579 
+... creating submission file using  ../test.Rdata 
+
+Called from: identical(clabs, nmi)
+
+STOPPED due to long run time, and apparent lack of improvement

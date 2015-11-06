@@ -1,0 +1,41 @@
+ref1, ref, mp, kdp, kdprf   calculated from vimpute_agg
+
+KS_gbm_cv.R runtime 2015-11-01 13:49:45 (seed = 1999)
+Training data will be loaded from  train_10pct.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = FALSE .  Submission file will NOT be created.
+mpalmer has been changed from default MPalmer signature =  0.1579368 
+loading train from RData file  train_10pct.RData 
+[1] "3.220000 elapsed for load data"
+[1] "1.590000 elapsed for partition cv_train"
+[1] "832.950000 elapsed for aggregate scrubbed cv_train"
+Variables for gbm: ref ref1 mp kdp kdprf rd records 
+[1] "0.030000 elapsed for construct train matrix"
+[1] "171.820000 elapsed for xgb.train cv_train"
+[1] "0.020000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.642809 
+[1] "1.310000 elapsed for reload data"
+[1] "1016.720000 elapsed for aggregate cv_train"
+[1] "0.030000 elapsed for construct cv_train matrix"
+[1] "29.780000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.92506 
+[1] "432.900000 elapsed for aggregate cv_test"
+[1] "0.020000 elapsed for construct cv_test matrix"
+[1] "13.560000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 20.24536 
+                                     desc   delta
+1                                     t=0    0.00
+2                               load data    3.22
+3                      partition cv_train    1.59
+4             aggregate scrubbed cv_train  832.95
+5                  construct train matrix    0.03
+6                      xgb.train cv_train  171.82
+7  predict logvals on scrubbed model data    0.02
+8                             reload data    1.31
+9                      aggregate cv_train 1016.72
+10              construct cv_train matrix    0.03
+11            predict logvals on cv_train   29.78
+12                      aggregate cv_test  432.90
+13               construct cv_test matrix    0.02
+14             predict logvals on cv_test   13.56
+[1] 2503.95

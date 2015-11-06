@@ -1,0 +1,80 @@
+KS_gbm_cv.R runtime 2015-11-01 16:47:47 (seed = 1999)
+Training data will be loaded from  ../train.Rdata 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = FALSE .  Submission file will NOT be created.
+mpalmer has been changed from default MPalmer signature =  0.1579368 
+loading train from RData file  ../train.Rdata 
+[1] "19.972000 elapsed for load data"
+[1] "10.230000 elapsed for partition cv_train"
+[1] "training model..."
+[1] "702.622000 elapsed for construct train matrix"
+[1] "1784.316000 elapsed for xgb.train cv_train"
+[1] "0.043000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.814492 
+[1] "7.337000 elapsed for reload data"
+[1] "7.337000 elapsed for reload data"
+[1] "0.407000 elapsed for construct cv_train matrix"
+[1] "263.805000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 22.94872 
+[1] "263.805000 elapsed for predict logvals on cv_train"
+[1] "0.065000 elapsed for construct cv_test matrix"
+[1] "120.926000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 23.54993 
+                                    desc    delta
+1                                     t=0    0.000
+2                               load data   19.972
+3                      partition cv_train   10.230
+4                  construct train matrix  702.622
+5                      xgb.train cv_train 1784.316
+6  predict logvals on scrubbed model data    0.043
+7                             reload data    7.337
+8                   prepare cv_train data  968.163
+9               construct cv_train matrix    0.407
+10            predict logvals on cv_train  263.805
+11                   prepare cv_test data  383.593
+12               construct cv_test matrix    0.065
+13             predict logvals on cv_test  120.926
+
+jamesramadan [7:14 PM]
+that method 2
+
+jamesramadan [7:15 PM]
+KS_gbm_cv.R runtime 2015-11-01 18:06:17 (seed = 1999)
+Training data will be loaded from  ../train.Rdata 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = FALSE .  Submission file will NOT be created.
+mpalmer has been changed from default MPalmer signature =  0.1200834 
+loading train from RData file  ../train.Rdata 
+[1] "31.661000 elapsed for load data"
+[1] "11.555000 elapsed for partition cv_train"
+[1] "training model..."
+[1] "825.632000 elapsed for construct train matrix"
+[1] "2035.435000 elapsed for xgb.train cv_train"
+[1] "0.303000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.863751 
+[1] "16.840000 elapsed for reload data"
+[1] "16.840000 elapsed for reload data"
+[1] "0.348000 elapsed for construct cv_train matrix"
+[1] "284.729000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 22.99973 
+[1] "284.729000 elapsed for predict logvals on cv_train"
+[1] "0.188000 elapsed for construct cv_test matrix"
+[1] "197.694000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 23.60119 
+                                    desc    delta
+1                                     t=0    0.000
+2                               load data   31.661
+3                      partition cv_train   11.555
+4                  construct train matrix  825.632
+5                      xgb.train cv_train 2035.435
+6  predict logvals on scrubbed model data    0.303
+7                             reload data   16.840
+8                   prepare cv_train data  869.045
+9               construct cv_train matrix    0.348
+10            predict logvals on cv_train  284.729
+11                   prepare cv_test data  464.224
+12               construct cv_test matrix    0.188
+13             predict logvals on cv_test  197.694
+
+jamesramadan [7:15 PM]
+method 1
