@@ -1,4 +1,4 @@
-tcheck.print <- TRUE  # set to false to see summary only - true prints during execution
+if (! exists("silent_flag") ) tcheck.print <- TRUE  # set to false to see summary only - true prints during execution
 
 library(data.table)
 library(dplyr)
@@ -50,6 +50,7 @@ train$Kdp_5x5_90th <- train[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_pas
 
 save(train,file="../train_imputed.RData") ; tcheck(desc="save ../train_imputed.RData")
 
+set.seed(1999)
 id10 <- sample( unique(train$Id), round( length( unique(train$Id)) / 10))
 train <- train[ Id %in% id10, ]
 save(train,file="../train_imputed_10pct.RData") ; tcheck(desc="save ../train_imputed_10pct.RData")
@@ -117,6 +118,7 @@ test_time <- sum( tdf$delta)
 print( test_time )
 print( test_time + train_time)
 
+rm( add_t0, add_t60, test_time, train_time, has_t0, id10); gc()
 
 
 
