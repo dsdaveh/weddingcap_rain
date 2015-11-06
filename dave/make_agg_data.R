@@ -18,7 +18,7 @@ v_agg <- function( xvar, mph, allNA = mean(xvar), fun=identity ) {
     sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
 }
 
-rain_agg <- rain_data[, .( Id = max(Id), rd = max(radardist_km)
+rain_agg <- rain_data[, .( rd = max(radardist_km)
     , Ref = v_agg( Ref, minutes_past)
     , RefComposite = v_agg( RefComposite, minutes_past, -999)
     , RhoHV = v_agg( RhoHV, minutes_past, -999)
