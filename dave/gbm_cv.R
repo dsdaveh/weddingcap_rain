@@ -15,15 +15,17 @@ if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n
 
 
 #def_cv_frac_trn <- 1   ## set this to 1 for no cross validation (maximize training for submission)
-def_cv_frac_trn <- 0.7  # standard 70/30 split for CV
-
+def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
+def_rain_thresh <- 0.65
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
+rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
+
 
 ####################################################
 cat ( sprintf( "gbm_cv.R runtime %s (seed = %d)\n", format(Sys.time()), seed) )
@@ -33,6 +35,7 @@ cv_txt <- ifelse( cv_frac_trn < 1, "", "NOT")
 cs_txt <- ifelse( create_submission, "", "NOT")
 cat( "CV Fraction for training =", cv_frac_trn, ".  CV testing will", cv_txt, "be performed.\n")
 cat( "create_submission =", create_submission, ".  Submission file will", cs_txt, "be created.\n")
+cat( "Measured Rain Threshold for training data is", rain_thresh, "\n")
 
 if ( ! exists( "mp_func")) mp_func <- ref_to_mm
 cat(" Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )\n")
@@ -66,7 +69,7 @@ tr <- train_agg[ cv_ix_trn, ]
 train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this to 0
 
 #scrub tr
-tr <- tr[ Expected <= 65, ]
+tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 
 cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
@@ -88,7 +91,7 @@ gc()
 x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds =1955)          ;tcheck( desc='xgb.train cv_train')
 
 pr_trn  <- predict(x.mod.t,xgtrain)                                       ;tcheck( desc='predict logvals on scrubbed model data')
-mae_xgb_trn <- mae( expm1(pr_trn), expm1(y) )
+mae_xgb <- mae( expm1(pr_trn), expm1(y) )
 cat( "MAE for model data =", mae_xgb_trn, "\n")
 
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
@@ -106,16 +109,16 @@ res <- get_predictions( train_agg[ cv_ix_trn, ] )   ;tcheck( desc='predict logva
 
 #convert expected values to 0.01in values
 res$Expected <- round(res$Expected / 0.254) * 0.254
-mae_xgb <- mae( res$y, res$Expected )
-cat( "MAE for CV train data =", mae_xgb, "\n")
+mae_cv_trn <- mae( res$y, res$Expected )
+cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
 if (cv_frac_trn < 1) {
     res <- get_predictions( train_agg[  !cv_ix_trn, ] )   ;tcheck( desc='predict logvals on cv_test')
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
-    mae_xgb <- mae( res$y, res$Expected )
-    cat( "MAE for CV test data =", mae_xgb, "\n")
+    mae_cv_test <- mae( res$y, res$Expected )
+    cat( "MAE for CV test data =", mae_cv_test, "\n")
 }
 
 ######################
@@ -140,7 +143,7 @@ if ( create_submission) {
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
     
-    write.csv(res, "2gbm_cv.csv", row.names = FALSE)    ; tcheck( desc='write submission file')
+    write.csv(res, "gbm_cv.csv", row.names = FALSE)    ; tcheck( desc='write submission file')
     
 }
 
