@@ -1,4 +1,5 @@
 source( "../team/rain_utils.R") 
+tcheck.print <- T
 tcheck(0)
 
 load('../train_imputed_10pct.RData') 
@@ -25,3 +26,5 @@ test_agg <- rain_agg
 save( test_agg, file='../test_agg.RData')
 rm( rain_data, rain_agg, test, test_agg )
 tcheck(desc="created test agg")
+
+print( get_tcheck())
