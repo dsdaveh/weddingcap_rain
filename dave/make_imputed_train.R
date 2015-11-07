@@ -27,6 +27,14 @@ train <- rbind( train, add_t0, add_t60);   tcheck(desc = "add t0 and t60")
 
 setkey(train, Id, minutes_past)
 
+na_recs <- train[, .( 
+      naRef  = is.na(Ref)
+    , naRefC = is.na(RefComposite)
+    , naRho  = is.na(RhoHV)
+    , naZdr  = is.na(Zdr)
+    , naKdp  = is.na(Kdp)
+    )] ; tcheck(desc="record NA cells")
+
 train$Ref <- train[, .( impute = vimpute_var( Ref, minutes_past, method=2)), Id]$impute ; tcheck(desc="impute Ref")
 train$Ref_5x5_10th <- train[, .( impute = vimpute_var( Ref_5x5_10th, minutes_past, method=2)), Id]$impute ; tcheck()
 train$Ref_5x5_50th <- train[, .( impute = vimpute_var( Ref_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
@@ -48,6 +56,7 @@ train$Kdp_5x5_10th <- train[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_pas
 train$Kdp_5x5_50th <- train[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 train$Kdp_5x5_90th <- train[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
 
+train <- cbind( train, na_recs )
 save(train,file="../train_imputed.RData") ; tcheck(desc="save ../train_imputed.RData")
 
 set.seed(1999)
@@ -86,6 +95,14 @@ test <- rbind( test, add_t0, add_t60);   tcheck(desc = "add t0 and t60")
 
 setkey(test, Id, minutes_past)
 
+na_recs <- train[, .( 
+    naRef  = is.na(Ref)
+    , naRefC = is.na(RefComposite)
+    , naRho  = is.na(RhoHV)
+    , naZdr  = is.na(Zdr)
+    , naKdp  = is.na(Kdp)
+)] ; tcheck(desc="record NA cells")
+
 test$Ref <- test[, .( impute = vimpute_var( Ref, minutes_past, method=2)), Id]$impute ; tcheck(desc="impute Ref")
 test$Ref_5x5_10th <- test[, .( impute = vimpute_var( Ref_5x5_10th, minutes_past, method=2)), Id]$impute ; tcheck()
 test$Ref_5x5_50th <- test[, .( impute = vimpute_var( Ref_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
@@ -107,6 +124,7 @@ test$Kdp_5x5_10th <- test[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_past,
 test$Kdp_5x5_50th <- test[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 test$Kdp_5x5_90th <- test[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
 
+train <- cbind( test, na_recs )
 save(test,file="../test_imputed.RData") ; tcheck(desc="save ../test_imputed.RData")
 
 rm(test);gc(); tcheck(desc="purge test")
