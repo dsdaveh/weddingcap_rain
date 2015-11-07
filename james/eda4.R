@@ -4,17 +4,95 @@ library(dplyr)
 library(tidyr)
 library(ggvis)
 library(magrittr)
+library(mice)
 
-source('/Users/jamesramadan/Documents/Kaggle/Rain2/R Code')
+###List out plan###
+#1) Import training dataset
+#1.5) Remove NA Ref values
+#2) Impute missing values - a) vertically
+#3) Remove any unusable rows following vertical impute (i.e. those rows all blank horizontally)
+#4) Impute missing values - b) horizontally
+#5) Collapse data by id apply unique summarise functions
+#6) Divide data into >70mm Expected and <70mm Expected to separate true entries from errors
+#7) Divide collapsed data into training and validation sets
+#8) Model both training datasets with several models
+#9) Select best model for each - lowest MAE on validation set
+#10) Retrain models with entire training dataset
+#11) import testing data and collapse vis-a-vis training data
+#12) generate predictions for Expected columns
+#13) uncollapse data to have list of final predictions
 
-
-#summary of train dataset (no nulls)
+#1--Import Training dataset#
+setwd('/Users/jamesramadan/Documents/Kaggle/Rain2/weddingcap_rain:/james')
+source("../team/rain_utils.R")
+source("../team/data-prep.R")
 summary(train)
+summary(train.sample1000)
 
-###Remove any rows with only NAs i.e. if information on one variable is present row stays##
+#1.5 Remove all null Ref values
+train_noNARefs <- filter(train.sample1000, (Ref != "NA"))
+
+
+
+##2--Impute missing values##
+#a--vertically##
+#if prior and after are not null- impute with average. 
+#if prior is not null but after is - impute with prior value
+#if prior is null but after is not - impute with after value
+#repeat until all NAs are filled
+
+#Filtering out all IDs that just have all NA entries
+  train.ref.noVertAllNAs <- train.sample1000 %>%
+  group_by(Id) %>%
+  mutate( allNA = all( is.na(Ref))) %>%
+  filter(! allNA )
+
+
+test <- train.ref.noVertAllNAs
+#impute remaining values vertically by imputing surrounding values
+
+for (i in 2:nrow(test)){
+
+  if((is.na(test$Ref[i])== TRUE))
+  {
+   test$Ref[i]=50000000
+  }
+    else { 
+    test$Ref[i] = test$Ref[i]
+    }
+    
+    
+    n<- 1
+    while (is.na(test$Ref[i+n]))
+    {
+      n++
+    }
+    test$Ref[i] = test$Ref[i+n]
+  } else if( (is.na(test$Ref[i])== TRUE) && 
+               test$Id[i] = test$Id[i-1])
+{
+    test$Ref[i] = test$Ref[i-1]
+} else {
+  test$Ref[i] = test$Ref[i]
+}
+}
+    
+    
+   
+
+
+
+
+
+
+
+
+##3--Remove remaining all row NAs##
 Train_noNAonlys <- filter(train, (Ref != "NA") | (RhoHV != "NA")
                      & (Zdr != "NA") | (Kdp != "NA"))
 
+##4--Impute missing values##
+#b--horizontally##
 
 ####Imputing NaN Ref values ####
 #RhoHV, Zdr, and Kdp all exist, but no Ref
@@ -69,44 +147,31 @@ Train_noRef <-filter(Train_noNAonlys, (Ref == "NA"))
 
 
 
-
-
-
-###Summarise by ID###
-#Obtain Max
-Min_values <- train%>%
-  select(Id, Ref, RefComposite, RhoHV, Zdr, Kdp, Expected) %>%
+##5) Collapse data by id apply unique summarise functions##
+ID_grouped <- train%>%
+  select(Id, minutes_past,Ref, RefComposite, RhoHV, Zdr, Kdp, Expected) %>%
   group_by(Id) %>%
   summarise(Min_Ref = min(Ref, na.rm = TRUE), 
-            Min_RefComposite = min(RefComposite, na.rm = TRUE),
-            Min_RhoHV = min(RhoHV, na.rm = TRUE),
-            Min_Zdr = min(Zdr, na.rm = TRUE),
-            Min_Kdp = min(Kdp, na.rm = TRUE),
-            Expected = median(Expected)
-  )
-#Obtain Min
-Max_values <- train %>%
-  select(Id, Ref, RefComposite, minutes_past, RhoHV, Zdr, Kdp, Expected) %>%
-  group_by(Id) %>%
-  summarise(Max_Ref = max(Ref, na.rm = TRUE), 
+            Max_Ref = max(Ref, na.rm = TRUE),
             Mean_Ref = mean(Ref, na.rm = TRUE),
             mpalmer = mpalmer(Ref, minutes_past),
-            Max_RefComposite = max(RefComposite, na.rm = TRUE),
-            Mean_RefComposite = mean(RefComposite, na.rm= TRUE),
+            Min_RhoHV = min(RhoHV, na.rm = TRUE),
             Max_RhoHV = max(RhoHV, na.rm = TRUE),
             Mean_RhoHV = mean(RhoHV, na.rm=TRUE),
+            Min_Zdr = min(Zdr, na.rm = TRUE),
             Max_Zdr = max(Zdr, na.rm = TRUE),
             Mean_Zdr = mean(Zdr, na.rm = TRUE),
+            Min_Kdp = min(Kdp, na.rm = TRUE),
             Max_Kdp = max(Kdp, na.rm = TRUE),
-            Mean_Kdp = mean(Kdp, na.rm = TRUE))
-#Create spread from Max & Min
-Max_Min_values <- inner_join(Min_values, Max_values, by = "Id") %>%
+            Mean_Kdp = mean(Kdp, na.rm = TRUE),
+            Expected = median(Expected)) %>%
   mutate(Ref_spread = Max_Ref - Min_Ref, 
-         RefComposite_spread = Max_RefComposite - Min_RefComposite,
          RhoHV_spread = Max_RhoHV - Min_RhoHV,
          Zdr_spread = Max_Zdr - Min_Zdr,
          Kdp_spread = Max_Kdp - Min_Kdp)
 
+#6) Divide data into >70mm Expected and <70mm Expected to separate true entries from errors
+Train_wRef <- filter(ID_grouped, (Expected< 70))
 
 
 ###Building models to predict Expected###
