@@ -64,7 +64,7 @@ id10 <- sample( unique(train$Id), round( length( unique(train$Id)) / 10))
 train <- train[ Id %in% id10, ]
 save(train,file="../train_imputed_10pct.RData") ; tcheck(desc="save ../train_imputed_10pct.RData")
 
-rm(train);gc(); tcheck(desc="purge train")
+rm(train, na_recs);gc(); tcheck(desc="purge train")
 
 tdf <- get_tcheck()
 print( tdf )
@@ -95,7 +95,7 @@ test <- rbind( test, add_t0, add_t60);   tcheck(desc = "add t0 and t60")
 
 setkey(test, Id, minutes_past)
 
-na_recs <- train[, .( 
+na_recs <- test[, .( 
     naRef  = is.na(Ref)
     , naRefC = is.na(RefComposite)
     , naRho  = is.na(RhoHV)
@@ -124,7 +124,7 @@ test$Kdp_5x5_10th <- test[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_past,
 test$Kdp_5x5_50th <- test[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 test$Kdp_5x5_90th <- test[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
 
-train <- cbind( test, na_recs )
+test <- cbind( test )
 save(test,file="../test_imputed.RData") ; tcheck(desc="save ../test_imputed.RData")
 
 rm(test);gc(); tcheck(desc="purge test")
@@ -136,7 +136,7 @@ test_time <- sum( tdf$delta)
 print( test_time )
 print( test_time + train_time)
 
-rm( add_t0, add_t60, test_time, train_time, has_t0, id10); gc()
+rm( add_t0, add_t60, test_time, train_time, has_t0, id10, na_recs); gc()
 
 
 
