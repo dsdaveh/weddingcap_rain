@@ -18,17 +18,18 @@ v_agg <- function( xvar, mph, allNA = mean(xvar), fun=identity ) {
     sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
 }
 
-rain_agg <- rain_data[, .( Id = max(Id), rd = max(radardist_km)
+rain_agg <- rain_data[, .( rd = max(radardist_km)
     , Ref = v_agg( Ref, minutes_past)
     , RefComposite = v_agg( RefComposite, minutes_past, -999)
     , RhoHV = v_agg( RhoHV, minutes_past, -999)
     , Zdr = v_agg( Zdr, minutes_past, -999)
     , Kdp = v_agg( Kdp, minutes_past, -999)
     , nrec = .N
-    , naRef = sum( is.na(Ref))
-    , naRefC = sum( is.na(RefComposite))
-    , naRho = sum( is.na(RhoHV))
-    , naZdr = sum( is.na(Zdr))
+    , naRef = sum( naRef )
+    , naRefC = sum( naRefC )
+    , naRho = sum( naRho )
+    , naZdr = sum( naZdr )
+    , naKdp = sum( naKdp )
     , Ref_rz = v_agg( Ref, minutes_past, -999, ref_to_mm)
     , Kdp_rk = v_agg( Kdp, minutes_past, -999, kdp_to_mm)
 ), Id ]                                                  ;tcheck()

@@ -1,0 +1,30 @@
+> source('~/GitHub/weddingcap_rain/dave/gmb_cv.R')
+gbm_cv.R runtime 2015-11-06 01:52:00 (seed = 1999)
+Training data will be loaded from  ../train_agg.RData 
+CV Fraction for training = 1 .  CV testing will NOT be performed.
+create_submission = TRUE .  Submission file will  be created.
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  ../train_agg.RData 
+[1] "1.950000 elapsed for load data"
+[1] "1.780000 elapsed for construct train matrix"
+[1] "836.140000 elapsed for xgb.train cv_train"
+[1] "0.010000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.787921 
+[1] "0.770000 elapsed for reload data"
+[1] "24.390000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.10782 
+... creating submission file using  ../test_agg.Rdata 
+[1] "13.340000 elapsed for predict logvals on test dataset"
+[1] "2.050000 elapsed for write submission file"
+                                    desc  delta
+1                                    t=2   0.00
+2                              load data   1.95
+3                 construct train matrix   1.78
+4                     xgb.train cv_train 836.14
+5 predict logvals on scrubbed model data   0.01
+6                            reload data   0.77
+7            predict logvals on cv_train  24.39
+8        predict logvals on test dataset  13.34
+9                  write submission file   2.05
+[1] 880.43

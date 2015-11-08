@@ -61,7 +61,7 @@ vars.kdpcols <- c("Kdp", "Kdp_5x5_10th", "Kdp_5x5_50th", "Kdp_5x5_90th")
 if (!exists("train.sample1000")) {
   set.seed(498)
   Ids.sample1000 <- sample(unique(train$Id), 1000)
-  train.sample1000 <- train[Id==Ids.sample1000,]
+  train.sample1000 <- train[Id%in%Ids.sample1000,]
 }
 
 #load test
