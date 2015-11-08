@@ -124,7 +124,7 @@ test$Kdp_5x5_10th <- test[, .( impute = vimpute_var( Kdp_5x5_10th, minutes_past,
 test$Kdp_5x5_50th <- test[, .( impute = vimpute_var( Kdp_5x5_50th, minutes_past, method=2)), Id]$impute ; tcheck()
 test$Kdp_5x5_90th <- test[, .( impute = vimpute_var( Kdp_5x5_90th, minutes_past, method=2)), Id]$impute ; tcheck()
 
-test <- cbind( test )
+test <- cbind( test, na_recs )
 save(test,file="../test_imputed.RData") ; tcheck(desc="save ../test_imputed.RData")
 
 rm(test);gc(); tcheck(desc="purge test")
