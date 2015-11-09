@@ -4,11 +4,12 @@ library(zoo)
 library(Metrics)
 library(dplyr)
 library(h2o)
+library(ggvis)
 
 source( "../team/rain_utils.R")
 
 #TODO:  Doesn't handle all the parameters below (from gbm_cv.R)
-rdata_file <- 'train_10pct.RData'
+rdata_file <- 'train_full.RData'
 
 if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n")
 ######################################### params
@@ -127,7 +128,7 @@ trainHex<-as.h2o(train[,.(
 rfHex<-h2o.randomForest(x=c("dist", "refArea5", "refArea9", "meanRefcomp","meanRefcomp5","meanRefcomp9", "zdr",
                             "zdr5", "zdr9", "meanRef","sumRef", "records","naCounts"
 ),
-y="target",training_frame=trainHex,model_id="rfStarter.hex", ntrees=500, sample_rate = 0.7) ;tcheck('random forest')
+y="target",training_frame=trainHex,model_id="rfStarter.hex", ntrees=500, sample_rate = 0.7) ;tcheck(desc='random forest')
 print(rfHex)
 h2o.varimp(rfHex)
 rm(train)
@@ -144,7 +145,7 @@ test$Ref_5x5_90th[which(test$Ref_5x5_90th < 0)] <- NA
 test$RefComposite[which(test$RefComposite < 0)] <- NA
 test$RefComposite_5x5_50th[which(test$RefComposite_5x5_50th < 0)] <- NA
 test$RefComposite_5x5_90th[which(test$RefComposite_5x5_90th < 0)] <- NA
-test$Ref[which(test$Ref < 0)] <- NA
+test$Ref[which(test$Ref < 0)] <- NA              ;tcheck( desc='set cut off vals - test')
 
 
 testHex<-as.h2o(test[,.(
@@ -162,25 +163,45 @@ testHex<-as.h2o(test[,.(
     sumRef = sum(Ref,na.rm=T),
     records = .N,
     naCounts = sum(is.na(Ref))
-),Id],destination_frame="test.hex")
+),Id],destination_frame="test.hex")               ;tcheck( desc='create summary data frame - test')
 
 #summary(testHex)
 
-submission<-fread("../input/sample_solution.csv")
+#submission<-fread("../input/sample_solution.csv")
 predictions<-as.data.frame(h2o.predict(rfHex,testHex))
 
-res <- test[, .(y=Expected, yhat := predictions$predict)]
-mae_h2o <- mae( res$y, res$yhat)
-#submission$Expected<- 0.75 * expm1(predictions$predict) + 0.25 * submission$Expected
+res <- test[ , .(y=max(Expected), allNA = all(is.na(Ref))), Id]
+res$yhat <- predictions$predict
+res <- res %>% filter( allNA == FALSE )
 
 #convert expected values to 0.01in values
 res$yhat2 <- round(res$yhat / 0.254) * 0.254
-mae_h2o2 <- mae( res$y, res$yhat2)
+mae_h2o <- mae( res$y, res$yhat2)
+
+mp_baseline<-fread("KS_mpalmer-train.csv")  %>% rename( mp=Expected)
+res <- res %>% left_join( mp_baseline, by="Id")
+
+blend <- function( y1, y2, p ) round((p * y1 + (1-p) * y2)/ 0.254) * 0.254 
+
+res <- res %>% 
+    mutate( blend = round((0.75 * yhat + 0.25 * mp)/ 0.254) * 0.254 )
+
+mae_mp <- mae( res$y, res$mp)
+mae_blend <- mae( res$y, blend( res$yhat, res$mp, .75) )
 
 print(mae_h2o)
-print(mae_h2o2)
+print(mae_mp)
+print(mae_blend)
+tcheck(desc='complete')
 #summary(submission)
 #write.csv(submission,"rfv3cn3.csv",row.names=F)
+
+px <- seq(0,1,0.05)
+mae_rf.mp <- numeric( length(px))
+for ( i in 1:length(px)) mae_rf.mp[i] <- mae( res$y, blend( res$yhat, res$mp, px[i]))
+blend.rf.mp <- data.frame( px, mae_rf.mp)
+blend.rf.mp  %>% ggvis( ~px, ~mae_rf.mp) %>% layer_points()
+
 
 
 ####################################################################################

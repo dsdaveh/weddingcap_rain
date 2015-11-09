@@ -119,7 +119,7 @@ testHex<-as.h2o(test[,.(
 
 summary(testHex)
 
-submission<-fread("../input/sample_solution.csv")
+submission<-fread("../sample_solution.csv")
 predictions<-as.data.frame(h2o.predict(rfHex,testHex))
 submission$Expected<- 0.75 * expm1(predictions$predict) + 0.25 * submission$Expected
 
@@ -128,6 +128,12 @@ submission$Expected <- round(submission$Expected / 0.254) * 0.254
 
 summary(submission)
 write.csv(submission,"rfv3cn3.csv",row.names=F)
+
+submission$Expected<-  expm1(predictions$predict) 
+submission$Expected <- round(submission$Expected / 0.254) * 0.254
+
+write.csv(submission,"rfv3cn3_pure.csv",row.names=F)
+
 
 
 ####################################################################################
