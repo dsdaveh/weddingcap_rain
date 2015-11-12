@@ -1,4 +1,43 @@
-library (dplyr)
+library(data.table)
+library(fastmatch)
+library(zoo)
+library(Metrics)
+library(dplyr)
+library(h2o)
+library(ggvis)
+
+source( "../team/rain_utils.R")
+
+#TODO:  Doesn't handle all the parameters below (from gbm_cv.R)
+rdata_file <- 'train_full.RData'
+
+if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n")
+######################################### params
+#rdata_file <- "../train_agg.RData" # 
+#rdata_file <- "../train_agg_10pct.RData" # 
+
+
+#def_cv_frac_trn <- 1   ## set this to 1 for no cross validation (maximize training for submission)
+def_cv_frac_trn <- 0.7  # standard 70/30 split for C
+def_create_submission <- FALSE
+def_submission_file <- "gbm_cv.csv"    #should have used this for the flag, but too late now
+def_rain_thresh <- 65
+def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
+
+if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
+
+seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
+rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
+submission_file <- ifelse( exists("set_submission_file"), set_submission_file, def_submission_file)
+
+if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
+if (! exists( "create_submission")) create_submission <- def_create_submission
+if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
+
+
+####################################################
+cat ( sprintf( "gbm_cv.R runtime %s (seed = %d)\n", format(Sys.time()), seed) )
+cat ("Training data will be loaded from ", rdata_file, "\n")
 
 # H2ORF cleaned, cut 69 pur vars 3 n 3
 # last run 2 days ago by Bojan Tunguz in How Much Did It Rain? II 
@@ -11,7 +50,6 @@ library (dplyr)
 # rfv3cn3.csv
 # Submit to How Much Did It Rain? II
 
-# This is a preview of the first 1000 rows of data.
 ############################################
 ## Use H2O to create a random forest
 ##  against the entire data set in 
@@ -34,22 +72,28 @@ library (dplyr)
 ##  at the bottom of the script
 ###########################################
 
-library(h2o)
-library(data.table)
-library(Metrics)
 h2o.init(nthreads=-1)
+
+tcheck(0)
 
 ## use data table to only read the Estimated, Ref, and Id fields
 print(paste("reading training file:",Sys.time()))
 #train<-fread("../input/train.csv",select=c(1,2,3,4,6,7,8,10,11,16,18, 19, 24))
-load('train_full.RData')
-train <- train %>% select( c(1,2,3,4,6,7,8,10,11,16,18, 19, 24))
+load(rdata_file)
+train <- train %>% select( c(1,2,3,4,6,7,8,10,11,16,18, 19, 24))   ; tcheck(desc="load training data")
 
+if (cv_frac_trn < 1) {
+    ids <- unique(train$Id)
+    set.seed( seed )
+    cv_ids_trn <- sample( ids, round(cv_frac_trn * length(ids)) )
+    cv_ix_trn <- train$Id %in% cv_ids_trn
+    train <- train[ cv_ix_trn,  ]                            ;tcheck( desc='partition cv_train')
+}
 
 #Cut off outliers of Expected >= 69
 train <- subset(train, Expected < 69)
 
-summary(train)
+# summary(train)
 
 #Cut off Ref values < 0
 train$Ref_5x5_50th[which(train$Ref_5x5_50th < 0)] <- NA
@@ -57,10 +101,10 @@ train$Ref_5x5_90th[which(train$Ref_5x5_90th < 0)] <- NA
 train$RefComposite[which(train$RefComposite < 0)] <- NA
 train$RefComposite_5x5_50th[which(train$RefComposite_5x5_50th < 0)] <- NA
 train$RefComposite_5x5_90th[which(train$RefComposite_5x5_50th < 0)] <- NA
-train$Ref[which(train$Ref < 0)] <- NA
+train$Ref[which(train$Ref < 0)] <- NA                       ;tcheck( desc='set cut off vals')
 
-cor(train, use = "pairwise.complete.obs")
-summary(train)
+# cor(train, use = "pairwise.complete.obs")
+# summary(train)
 
 trainHex<-as.h2o(train[,.(
     dist   = mean(radardist_km, na.rm = T),
@@ -77,19 +121,23 @@ trainHex<-as.h2o(train[,.(
     sumRef = sum(Ref,na.rm=T),
     records = .N,
     naCounts = sum(is.na(Ref))
-),Id][records>naCounts,],destination_frame="train.hex")
+),Id][records>naCounts,],destination_frame="train.hex")    ;tcheck( desc='create summary data frame')
 
-summary(trainHex)
+# summary(trainHex)
 
 rfHex<-h2o.randomForest(x=c("dist", "refArea5", "refArea9", "meanRefcomp","meanRefcomp5","meanRefcomp9", "zdr",
                             "zdr5", "zdr9", "meanRef","sumRef", "records","naCounts"
 ),
-y="target",training_frame=trainHex,model_id="rfStarter.hex", ntrees=500, sample_rate = 0.7)
-rfHex
+y="target",training_frame=trainHex,model_id="rfStarter.hex", ntrees=500, sample_rate = 0.7) ;tcheck(desc='random forest')
+print(rfHex)
 h2o.varimp(rfHex)
 rm(train)
 
-test<-fread("../test.csv",select=c(1,2,3,4,6,7,8,10,11,16,18, 19))
+load(rdata_file)
+test <- train[ ! cv_ix_trn,  ] %>% select( c(1,2,3,4,6,7,8,10,11,16,18, 19, 24))   ; tcheck(desc="reload training data as CV test")
+rm(train)
+
+#test<-fread("../test.csv",select=c(1,2,3,4,6,7,8,10,11,16,18, 19))
 
 #Cut off Ref values < 0
 test$Ref_5x5_50th[which(test$Ref_5x5_50th < 0)] <- NA
@@ -97,7 +145,7 @@ test$Ref_5x5_90th[which(test$Ref_5x5_90th < 0)] <- NA
 test$RefComposite[which(test$RefComposite < 0)] <- NA
 test$RefComposite_5x5_50th[which(test$RefComposite_5x5_50th < 0)] <- NA
 test$RefComposite_5x5_90th[which(test$RefComposite_5x5_90th < 0)] <- NA
-test$Ref[which(test$Ref < 0)] <- NA
+test$Ref[which(test$Ref < 0)] <- NA              ;tcheck( desc='set cut off vals - test')
 
 
 testHex<-as.h2o(test[,.(
@@ -115,24 +163,44 @@ testHex<-as.h2o(test[,.(
     sumRef = sum(Ref,na.rm=T),
     records = .N,
     naCounts = sum(is.na(Ref))
-),Id],destination_frame="test.hex")
+),Id],destination_frame="test.hex")               ;tcheck( desc='create summary data frame - test')
 
-summary(testHex)
+#summary(testHex)
 
-submission<-fread("../sample_solution.csv")
+#submission<-fread("../input/sample_solution.csv")
 predictions<-as.data.frame(h2o.predict(rfHex,testHex))
-submission$Expected<- 0.75 * expm1(predictions$predict) + 0.25 * submission$Expected
+
+res <- test[ , .(y=max(Expected), allNA = all(is.na(Ref))), Id]
+res$yhat <- predictions$predict
+res <- res %>% filter( allNA == FALSE )
 
 #convert expected values to 0.01in values
-submission$Expected <- round(submission$Expected / 0.254) * 0.254
+res$yhat2 <- round(res$yhat / 0.254) * 0.254
+mae_h2o <- mae( res$y, res$yhat2)
 
-summary(submission)
-write.csv(submission,"rfv3cn3.csv",row.names=F)
+mp_baseline<-fread("KS_mpalmer-train.csv")  %>% rename( mp=Expected)
+res <- res %>% left_join( mp_baseline, by="Id")
 
-submission$Expected<-  expm1(predictions$predict) 
-submission$Expected <- round(submission$Expected / 0.254) * 0.254
+blend <- function( y1, y2, p ) round((p * y1 + (1-p) * y2)/ 0.254) * 0.254 
 
-write.csv(submission,"rfv3cn3_pure.csv",row.names=F)
+res <- res %>% 
+    mutate( blend = round((0.75 * yhat + 0.25 * mp)/ 0.254) * 0.254 )
+
+mae_mp <- mae( res$y, res$mp)
+mae_blend <- mae( res$y, blend( res$yhat, res$mp, .75) )
+
+print(mae_h2o)
+print(mae_mp)
+print(mae_blend)
+tcheck(desc='complete')
+#summary(submission)
+#write.csv(submission,"rfv3cn3.csv",row.names=F)
+
+px <- seq(0,1,0.05)
+mae_rf.mp <- numeric( length(px))
+for ( i in 1:length(px)) mae_rf.mp[i] <- mae( res$y, blend( res$yhat, res$mp, px[i]))
+blend.rf.mp <- data.frame( px, mae_rf.mp)
+blend.rf.mp  %>% ggvis( ~px, ~mae_rf.mp) %>% layer_points()
 
 
 

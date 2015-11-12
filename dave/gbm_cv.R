@@ -18,16 +18,20 @@ if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n
 def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
 def_rain_thresh <- 65
+def_rain_thresh_lower <- 0
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
+def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
+rain_thresh_lower <- ifelse( exists("set_rain_thresh_lower"), set_rain_thresh_lower, def_rain_thresh_lower)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
+if (! exists( "run_id") ) run_id <- def_run_id
 
 
 ####################################################
@@ -73,6 +77,7 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 
 #scrub tr
 tr <- tr[ Expected <= rain_thresh, ]
+tr <- tr[ Expected > rain_thresh_lower, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 
 y<- log1p( tr$Expected )
@@ -114,6 +119,8 @@ res$Expected <- round(res$Expected / 0.254) * 0.254
 mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
+blend <- function( y1, y2, p ) round((p * y1 + (1-p) * y2)/ 0.254) * 0.254
+
 if (cv_frac_trn < 1) {
     res <- get_predictions( train_agg[  !cv_ix_trn, ] )   ;tcheck( desc='predict logvals on cv_test')
     
@@ -121,6 +128,22 @@ if (cv_frac_trn < 1) {
     res$Expected <- round(res$Expected / 0.254) * 0.254
     mae_cv_test <- mae( res$y, res$Expected )
     cat( "MAE for CV test data =", mae_cv_test, "\n")
+    
+    if (create_submission) {
+        csv <- sprintf( "%s-cvtest.csv", run_id)
+        write.csv( res, csv, row.names = FALSE)
+    }
+    
+#     mp_baseline<-fread("KS_mpalmer-train.csv")  %>% rename( mp=Expected)
+#     res <- res %>% left_join( mp_baseline, by="Id") %>% rename( yhat_gbm=Expected)
+# 
+#     px <- seq(0,1,0.05)
+#     mae_gbm.mp <- numeric( length(px))
+#     for ( i in 1:length(px)) mae_gbm.mp[i] <- mae( res$y, blend( res$yhat_gbm, res$mp, px[i]))
+#     blend.gbm.mp <- data.frame( px, mae_gbm.mp)
+#     blend.gbm.mp  %>% ggvis( ~px, ~mae_gbm.mp) %>% layer_points()
+    
+    
 }
 
 ######################
@@ -144,8 +167,9 @@ if ( create_submission) {
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
-    
-    write.csv(res, "gbm_cv.csv", row.names = FALSE)    ; tcheck( desc='write submission file')
+
+    csv <- sprintf( "%s.csv", run_id)
+    write.csv(res, csv, row.names = FALSE)    ; tcheck( desc='write submission file')
     
 }
 
