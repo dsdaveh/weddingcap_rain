@@ -285,5 +285,33 @@ ref_to_mm_kaggle <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palm
 ref_to_mm_lit <- function(dbz) 0.0365*(10**(0.0625*dbz))
 ref_to_mm <- ref_to_mm_kaggle
 kdp_to_mm <- function(kdp)  sign(kdp) * 40.6 * (abs(kdp)^0.866)
+katsumata_ref_to_mm <- function(ref) 0.027366 * (ref^0.69444)
+refzdr_to_mm <- function(ref, zdr) 0.00746 * (ref^0.945) * (zdr^(-4.76))
+kdpzdr_to_mm <- function(kdp, zdr) sign(kdp) * 136 * (abs(kdp)^0.968) * (zdr^(-2.86))
+
+#####
+# hybrid selection by handrasekar, et al (1990), Chadrasekar, et al. (1993), and extended by Ryzhkov, et al., 2005
+# this func takes a single aggregated predicted rainfall for each, and uses thresholds
+# to select a single prediction.
+# MODIFIED from the original to use our MP calc rather than katsumata
+#####
+hybrid_to_mm <- function(ref_mm, refzdr_mm, kdpzdr_mm, kdp_mm) {
+  #Note: There is no clear support in the literature for the specific, chosen values of _hybrid_aa, bb or cc.
+  hybrid_aa = 10;
+  hybrid_bb = 75;
+  hybrid_cc = 100;
+  if (ref_mm <= hybrid_aa) { rateHybrid = ref_mm;
+  } else if (refzdr_mm <= hybrid_bb) { rateHybrid = refzdr_mm;
+  } else if (refzdr_mm < hybrid_cc) {
+    if (kdpzdr_mm < 0.5 * refzdr_mm) { rateHybrid = refzdr_mm;
+    } else if (kdpzdr_mm > refzdr_mm) { rateHybrid = refzdr_mm;
+    } else { rateHybrid = kdpzdr_mm; }
+  } else {
+    if (kdp_mm < 0.5 * refzdr_mm) { rateHybrid = refzdr_mm;
+    } else { rateHybrid = kdp_mm; }
+  }
+  
+  return(rateHybrid)
+}
 
 EOD <- 1
