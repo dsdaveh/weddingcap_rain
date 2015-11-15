@@ -15,8 +15,8 @@ source( "../team/rain_utils.R")
 if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n")
 ######################################### params
 # set rdata_file outside this script to a raw csv read (don't use data-prep)
-#rdata_file <- "../train_agg.RData" # 
-#rdata_file <- "../train_agg_10pct.RData" # 
+#rdata_file <- "../train_agg2.RData" # 
+#rdata_file <- "../train_agg2_10pct.RData" # 
 
 
 #def_cv_frac_trn <- 1   ## set this to 1 for no cross validation (maximize training for submission)
@@ -24,19 +24,23 @@ def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
 def_rain_thresh <- 65
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
+def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
+def_ntrees <- 500
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
+ntrees <- ifelse ( exists("set_ntrees"), set_ntrees, def_ntrees )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
+if (! exists( "run_id") ) run_id <- def_run_id
 
 
 ####################################################
-cat ( sprintf( "gbm_cv.R runtime %s (seed = %d)\n", format(Sys.time()), seed) )
+cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
 cat ("Training data will be loaded from ", rdata_file, "\n")
 
 cv_txt <- ifelse( cv_frac_trn < 1, "", "NOT")
@@ -81,12 +85,6 @@ tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 tr$target <- log1p( tr$Expected)
 
-# y<- log1p( tr$Expected )
-# tr<-as.data.frame(tr)
-# tr<-tr[,cs]
-
-#xgtrain = xgb.DMatrix(as.matrix(tr), label = y, missing = NA);    tcheck( desc='construct train matrix')
-
 h2orf.trn <- as.h2o( tr, destination_frame = "h2orf.trn")    ; tcheck( desc='convert to h2o df')
 
 true_y <- tr$Expected
@@ -94,14 +92,14 @@ rm(tr, train_agg)
 gc()
 rfmod<-h2o.randomForest(x=cs, y="target"
                         ,training_frame=h2orf.trn
-                        ,model_id="rfStarter.hex", ntrees=50, sample_rate = 0.7)  ;tcheck(desc='run random forest')
-rfmod
-h2o.varimp(rfmod)
+                        ,model_id="rfStarter.hex", ntrees=ntrees, sample_rate = 0.7)  ;tcheck(desc='run random forest')
+print(rfmod)
+print(h2o.varimp(rfmod))
 
-predictions<-as.data.frame(h2o.predict(rfmod, h2orf.trn))   ;tcheck(desc='predict on CV training data')
+predictions<-as.data.frame(h2o.predict(rfmod, h2orf.trn))   ;tcheck(desc='predict on scrubbed CV training data')
 
-mae_rf <- mae( expm1(predictions$predict), true_y )
-cat( "MAE for model data =", mae_rf, "\n")
+mae_scrub_trn <- mae( expm1(predictions$predict), true_y )
+cat( "MAE for model data =", mae_scrub_trn, "\n")
 
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
@@ -143,27 +141,23 @@ if (cv_frac_trn < 1) {
 
 ######################
 test_file <- "../test_agg.Rdata"
+mae_test <- NA
 if ( create_submission) {
     cat ("... creating submission file using ", test_file, "\n")
     load( test_file )
     
     test_NAs <- test_agg[  is.na(Ref), .(Id = Id, Expected = train_NA)]
 
-    te<-as.data.frame(test_agg[ ! is.na(Ref) ])
-    xgtest = xgb.DMatrix(as.matrix(te[,cs ]), missing = NA)
-    
-    pr  <- predict(x.mod.t,xgtest)                     ;tcheck( desc='predict logvals on test dataset')
-    te$xgb_prediction <- expm1(pr)
+    res <- get_predictions( test_agg )   ;tcheck( desc='predict logvals on test')
+    res$Expected <- round(res$Expected / 0.254) * 0.254
 
-    res <- te %>% 
+    res <- res %>% 
         select( Id, Expected = xgb_prediction ) %>%
         bind_rows( test_NAs) %>%
         arrange( Id )
     
-    #convert expected values to 0.01in values
-    res$Expected <- round(res$Expected / 0.254) * 0.254
-    
-    write.csv(res, "gbm_cv.csv", row.names = FALSE)    ; tcheck( desc='write submission file')
+    csv <- sprintf( "%s.csv", run_id)
+    write.csv(res, csv, row.names = FALSE)    ; tcheck( desc='write submission file')
     
 }
 

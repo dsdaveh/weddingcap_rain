@@ -37,7 +37,8 @@ library (dplyr)
 library(h2o)
 library(data.table)
 library(Metrics)
-h2o.init(nthreads=-1)
+h2o.init(nthreads=-1, max_mem_size = "2G")
+h2o.removeAll()
 
 ## use data table to only read the Estimated, Ref, and Id fields
 print(paste("reading training file:",Sys.time()))
@@ -45,11 +46,10 @@ print(paste("reading training file:",Sys.time()))
 load('train_full.RData')
 train <- train %>% select( c(1,2,3,4,6,7,8,10,11,16,18, 19, 24))
 
-
 #Cut off outliers of Expected >= 69
 train <- subset(train, Expected < 69)
 
-summary(train)
+#summary(train)
 
 #Cut off Ref values < 0
 train$Ref_5x5_50th[which(train$Ref_5x5_50th < 0)] <- NA
@@ -59,8 +59,8 @@ train$RefComposite_5x5_50th[which(train$RefComposite_5x5_50th < 0)] <- NA
 train$RefComposite_5x5_90th[which(train$RefComposite_5x5_50th < 0)] <- NA
 train$Ref[which(train$Ref < 0)] <- NA
 
-cor(train, use = "pairwise.complete.obs")
-summary(train)
+#cor(train, use = "pairwise.complete.obs")
+#summary(train)
 
 trainHex<-as.h2o(train[,.(
     dist   = mean(radardist_km, na.rm = T),
@@ -79,7 +79,7 @@ trainHex<-as.h2o(train[,.(
     naCounts = sum(is.na(Ref))
 ),Id][records>naCounts,],destination_frame="train.hex")
 
-summary(trainHex)
+#summary(trainHex)
 
 rfHex<-h2o.randomForest(x=c("dist", "refArea5", "refArea9", "meanRefcomp","meanRefcomp5","meanRefcomp9", "zdr",
                             "zdr5", "zdr9", "meanRef","sumRef", "records","naCounts"
