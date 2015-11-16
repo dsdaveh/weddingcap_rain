@@ -1,7 +1,6 @@
 library(data.table)
 library(fastmatch)
 library(zoo)
-library(xgboost)
 library(Metrics)
 library(dplyr)
 library(h2o)
@@ -42,6 +41,7 @@ if (! exists( "run_id") ) run_id <- def_run_id
 ####################################################
 cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
 cat ("Training data will be loaded from ", rdata_file, "\n")
+cat ("Run ID = ", run_id, "\n")
 
 cv_txt <- ifelse( cv_frac_trn < 1, "", "NOT")
 cs_txt <- ifelse( create_submission, "", "NOT")
@@ -109,7 +109,11 @@ get_predictions <- function( dt ) {
     h2orf.cv <- as.h2o( cv, destination_frame = "h2orf.cv") 
     predictions<-as.data.frame(h2o.predict(rfmod, h2orf.cv))
     cv$yhat <- expm1(predictions$predict)
-    cv %>% select( Id, Expected = yhat, y = Expected )
+    if ( any(  grepl ("Expected", colnames(cv)))) {
+        cv %>% select( Id, Expected = yhat, y = Expected )
+    } else {
+        cv %>% select( Id, Expected = yhat )
+    }
 }
 
 res <- get_predictions( train_agg[ cv_ix_trn, ] )   ;tcheck( desc='predict logvals on cv_train')
@@ -137,14 +141,15 @@ if (cv_frac_trn < 1) {
 #     blend.gbm.mp  %>% ggvis( ~px, ~mae_gbm.mp) %>% layer_points()
     
     
+} else { 
+    mae_cv_test <- NA
 }
 
 ######################
-test_file <- "../test_agg.Rdata"
 mae_test <- NA
 if ( create_submission) {
-    cat ("... creating submission file using ", test_file, "\n")
-    load( test_file )
+    cat ("... creating submission file using ", rtest_file, "\n")
+    load( rtest_file )
     
     test_NAs <- test_agg[  is.na(Ref), .(Id = Id, Expected = train_NA)]
 
@@ -152,7 +157,6 @@ if ( create_submission) {
     res$Expected <- round(res$Expected / 0.254) * 0.254
 
     res <- res %>% 
-        select( Id, Expected = xgb_prediction ) %>%
         bind_rows( test_NAs) %>%
         arrange( Id )
     
@@ -165,3 +169,4 @@ time_df <- get_tcheck()
 print( time_df )
 print( sum( time_df$delta ))
 
+rm(run_id)

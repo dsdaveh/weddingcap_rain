@@ -5,12 +5,14 @@ library (tidyr)
 # rdata_file <- 'train_agg_10pct-mod.RData'
 # load( '../train_agg2.RData' )
 # rdata_file <- 'train_agg-mod.RData'
-
-#TODO generate the local test test dataset and use string manipulation for the name in h2o_rf_cv.R
+# rtest_file <- gsub("^train", "test", rdata_file)
+rtest_file <- 'test_agg-mod.RData'
 
 # Use this code to create the modified dataset if it doesn't exist
 # load( '../train_agg2.RData' )
 # load( '../train_agg2_10pct.RData' )
+# load( '../test_agg2.RData' )
+
 # set_small_to_na <- function( df ) {
 #     with( df, {
 #         df$Ref <- ifelse( (Ref != -999) & (Ref < 0), NA, Ref )
@@ -23,11 +25,15 @@ library (tidyr)
 #     return(df)
 # }
 # train_agg <- set_small_to_na(train_agg) 
+# test_agg <- set_small_to_na(test_agg) 
 # save( train_agg, file=rdata_file)
+# save( test_agg, file=rtest_file)
 
-
-create_submission <- FALSE
-cv_frac_trn <- .7
+run_id_pref <- 'csv_out/rf_f10pct_3x'
+set_ntrees <- 50
+h2o_script <- '../dave/h2o_rf_cv.R'
+create_submission <- TRUE
+cv_frac_trn <- 1
 tcheck.print <- TRUE
 set_rain_thresh <- 65
 
@@ -43,12 +49,13 @@ set_cs <- c("rd"
 )
 cs_list <- list(   kaggle = set_cs )
 
-for (set_seed in c(1999)) { #}, 2015, 7)) {
+for (set_seed in c(1999, 2015, 7)) {
+    run_id <- paste( run_id_pref, set_seed, sep="_")
     mae_base <- -1 
     for (i in 1:length(cs_list)) {
         print( cs_list[i])
         set_cs <- cs_list[[i]]
-        source ('../dave/h2o_rf_cv.R')
+        source (h2o_script)
         elapsed <- sum( time_df$delta )
         mae_base <- ifelse( mae_base > 0 , mae_base, mae_cv_test)
         mae_res <- rbind( mae_res, data.frame( seed=set_seed, xSet=names(cs_list[i])
