@@ -36,7 +36,7 @@ summary(train.sample1000)
 
 
 ###2 Remove all null Ref values###
-train_noNARefs <- filter(train.sample5000, (Ref != "NA"))
+train_noNARefs <- filter(train.sample1000, (Ref != "NA"))
 
 
 
@@ -125,7 +125,7 @@ ID_grouped_greaterthan55 <- filter(ID_grouped, (greaterthan55flag == 1))
 
 #B - Building Classification model to predict errors
 set.seed(6)
-random_sample <- sample(878, 700)
+random_sample <- sample(875, 700)
 ID_grouped_train <- ID_grouped[random_sample,]
 ID_grouped_val <- ID_grouped[-random_sample,]
 summary(ID_grouped)
