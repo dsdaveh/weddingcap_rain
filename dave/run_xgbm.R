@@ -29,10 +29,10 @@ rtest_file <- 'test_agg-mod.RData'
 # save( train_agg, file=rdata_file)
 # save( test_agg, file=rtest_file)
 
-run_id_pref <- 'csv_out/xgbm_f70'
+run_id_pref <- 'csv_out/xgbm_f1_submit'
 solver_script <- '../dave/gbm_cv.R'
 create_submission <- TRUE
-cv_frac_trn <- .7
+cv_frac_trn <- 1
 tcheck.print <- TRUE
 set_rain_thresh <- 65
 

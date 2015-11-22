@@ -147,7 +147,7 @@ if (cv_frac_trn < 1) {
 }
 
 ######################
-if (! exists("rtest_file") rtest_file <- "../test_agg.Rdata"
+if (! exists("rtest_file")) rtest_file <- "../test_agg.Rdata"
 if ( create_submission) {
     cat ("... creating submission file using ", rtest_file, "\n")
     load( rtest_file )
