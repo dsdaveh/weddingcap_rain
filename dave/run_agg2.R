@@ -22,7 +22,6 @@ save( train_agg, file='../train_agg2.RData')
 rm( rain_data, rain_agg, train, train_agg )
 tcheck(desc="created train agg")
 
-
 load('../test_imputed.RData') 
 rain_data <- test
 source( agg_script)

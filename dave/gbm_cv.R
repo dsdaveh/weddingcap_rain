@@ -147,10 +147,10 @@ if (cv_frac_trn < 1) {
 }
 
 ######################
-test_file <- "../test_agg.Rdata"
+if (! exists("rtest_file")) rtest_file <- "../test_agg.Rdata"
 if ( create_submission) {
-    cat ("... creating submission file using ", test_file, "\n")
-    load( test_file )
+    cat ("... creating submission file using ", rtest_file, "\n")
+    load( rtest_file )
     
     test_NAs <- test_agg[  is.na(Ref), .(Id = Id, Expected = train_NA)]
 
