@@ -285,8 +285,8 @@ ref_to_mm_kaggle <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palm
 ref_to_mm_lit <- function(dbz) 0.0365*(10**(0.0625*dbz))
 ref_to_mm <- ref_to_mm_kaggle
 kdp_to_mm <- function(kdp)  sign(kdp) * 40.6 * (abs(kdp)^0.866)
-katsumata_ref_to_mm <- function(ref) 0.027366 * (ref^0.69444)
-refzdr_to_mm <- function(ref, zdr) 0.00746 * (ref^0.945) * (zdr^(-4.76))
+katsumata_ref_to_mm <- function(ref) 0.027366 * ((10**(ref/10))^0.69444)
+refzdr_to_mm <- function(ref, zdr) 0.00746 * ((10**(ref/10))^0.945) * (zdr^(-4.76))
 kdpzdr_to_mm <- function(kdp, zdr) sign(kdp) * 136 * (abs(kdp)^0.968) * (zdr^(-2.86))
 
 #####
