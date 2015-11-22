@@ -131,6 +131,11 @@ if (cv_frac_trn < 1) {
     mae_cv_test <- mae( res$y, res$Expected )
     cat( "MAE for CV test data =", mae_cv_test, "\n")
     
+    if (create_submission) {
+        csv <- sprintf( "%s-cvtest.csv", run_id)
+        write.csv( res, csv, row.names = FALSE)
+    }
+    
 #     mp_baseline<-fread("KS_mpalmer-train.csv")  %>% rename( mp=Expected)
 #     res <- res %>% left_join( mp_baseline, by="Id") %>% rename( yhat_gbm=Expected)
 #     
