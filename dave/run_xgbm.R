@@ -29,9 +29,8 @@ rtest_file <- 'test_agg-mod.RData'
 # save( train_agg, file=rdata_file)
 # save( test_agg, file=rtest_file)
 
-run_id_pref <- 'csv_out/rf_f70'
-set_ntrees <- 500
-h2o_script <- '../dave/h2o_rf_cv.R'
+run_id_pref <- 'csv_out/xgbm_f70'
+solver_script <- '../dave/gbm_cv.R'
 create_submission <- TRUE
 cv_frac_trn <- .7
 tcheck.print <- TRUE
@@ -55,12 +54,12 @@ for (set_seed in c(1999)) { #}, 2015, 7)) {
     for (i in 1:length(cs_list)) {
         print( cs_list[i])
         set_cs <- cs_list[[i]]
-        source (h2o_script)
+        source (solver_script)
         elapsed <- sum( time_df$delta )
         mae_base <- ifelse( mae_base > 0 , mae_base, mae_cv_test)
         mae_res <- rbind( mae_res, data.frame( seed=set_seed, xSet=names(cs_list[i])
                                                , xvars=paste(set_cs, collapse = ",")
-                                               , mae_scrub_trn, mae_cv_test, mae_cv_trn
+                                               , mae_xgb, mae_cv_test, mae_cv_trn
                                                , delta = mae_cv_test - mae_base
                                                , elapsed))
         run_time <- c(run_time, elapsed )
