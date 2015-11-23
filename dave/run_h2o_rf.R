@@ -45,11 +45,11 @@ set_cs <- c("rd"
             , "RefComposite", "RefComposite_5x5_50th", "RefComposite_5x5_90th"
             , "Zdr", "Zdr_5x5_50th", "Zdr_5x5_90th"
             , "nrec", "naRef" 
-            , "Ref_rz", "Kdp", "Kdp_rk"
+            , "Ref_rz", "Kdp", "Kdp_rk", "rr_Katsumata_ref", "rr_refzdr", "rr_kdpzdr"
 )
 cs_list <- list(   kaggle = set_cs )
 
-for (set_seed in c(1999, 2015, 7, 86, 99)) {
+for (set_seed in c(99)) { #} c(1999, 2015, 7, 86, 99)) {
     run_id <- paste( run_id_pref, set_seed, sep="_")
     mae_base <- -1 
     for (i in 1:length(cs_list)) {
