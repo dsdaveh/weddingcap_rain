@@ -1,0 +1,46 @@
+source('~/GitHub/weddingcap_rain/dave/run_xgbm.R')
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"                "rr_Katsumata_ref"     
+[17] "rr_refzdr"             "rr_kdpzdr"            
+
+gbm_cv.R runtime 2015-11-22 22:51:06 (seed = 99)
+Training data will be loaded from  ../train_agg-mod.RData 
+CV Fraction for training = 1 .  CV testing will NOT be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  ../train_agg-mod.RData 
+[1] "1.380000 elapsed for load data"
+[1] "2.580000 elapsed for construct train matrix"
+[1] "6162.610000 elapsed for xgb.train cv_train"
+[1] "0.060000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.725327 
+[1] "1.510000 elapsed for reload data"
+[1] "279.840000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.02808 
+... creating submission file using  ../test_agg-mod.RData 
+[1] "164.410000 elapsed for predict logvals on test dataset"
+[1] "3.460000 elapsed for write submission file"
+                                    desc   delta
+1                                   t=11    0.00
+2                              load data    1.38
+3                 construct train matrix    2.58
+4                     xgb.train cv_train 6162.61
+5 predict logvals on scrubbed model data    0.06
+6                            reload data    1.51
+7            predict logvals on cv_train  279.84
+8        predict logvals on test dataset  164.41
+9                  write submission file    3.46
+[1] 6615.85
+  seed   xSet
+1   99 kaggle
+                                                                                                                                                                                      xvars
+1 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk,rr_Katsumata_ref,rr_refzdr,rr_kdpzdr
+   mae_xgb mae_cv_test mae_cv_trn delta elapsed
+1 1.725327    NA(**)   23.02808     0 6615.85
+
+** (Actual value reported was 23.36106, but that was a remnant of the previous analysis -- I fixed gbm_cv.R to clear this value)

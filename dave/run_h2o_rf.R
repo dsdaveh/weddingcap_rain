@@ -6,7 +6,7 @@ library (tidyr)
 # load( '../train_agg2.RData' )
 # rdata_file <- 'train_agg-mod.RData'
 # rtest_file <- gsub("^train", "test", rdata_file)
-rtest_file <- 'test_agg-mod.RData'
+rtest_file <- '../test_agg-mod.RData'
 
 # Use this code to create the modified dataset if it doesn't exist
 # load( '../train_agg2.RData' )
