@@ -23,6 +23,13 @@ v_agg <- function( xvar, mph, allNA = mean(xvar), fun=identity ) {
     sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
 }
 
+v_agg2 <- function( xvar, xvar2, mph, allNA = mean(xvar), fun=identity ) {
+  if ( all( is.na(xvar ))) return (allNA)
+  if ( all( is.na(xvar2 ))) return (allNA)
+  sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2,
+             (xvar2[-1] + xvar2[-length(xvar2)] ) /2) * diff( mph )/60  )
+}
+
 rain_agg <- rain_data[, .( rd = max(radardist_km)
     , Ref = v_agg( Ref, minutes_past)
     , Ref_5x5_50th = v_agg( Ref_5x5_50th, minutes_past, -999)
@@ -43,6 +50,9 @@ rain_agg <- rain_data[, .( rd = max(radardist_km)
     , naKdp = sum( naKdp )
     , Ref_rz = v_agg( Ref, minutes_past, -999, ref_to_mm)
     , Kdp_rk = v_agg( Kdp, minutes_past, -999, kdp_to_mm)
+    , rr_Katsumata_ref = v_agg( Ref, minutes_past, -999, katsumata_ref_to_mm)
+    , rr_refzdr = v_agg2(Ref, Zdr, minutes_past, -999, refzdr_to_mm)
+    , rr_kdpzdr = v_agg2(Kdp, Zdr, minutes_past, -999, kdpzdr_to_mm)
 ), Id ]                                                  ;tcheck()
 
 with(rain_agg, {
