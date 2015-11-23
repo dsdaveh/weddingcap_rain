@@ -4,14 +4,14 @@ library (tidyr)
 
 # rdata_file <- 'train_agg_10pct-mod.RData'
 # load( '../train_agg2.RData' )
-# rdata_file <- 'train_agg-mod.RData'
-# rtest_file <- gsub("^train", "test", rdata_file)
-rtest_file <- 'test_agg-mod.RData'
-
-# Use this code to create the modified dataset if it doesn't exist
-# load( '../train_agg2.RData' )
-# load( '../train_agg2_10pct.RData' )
-# load( '../test_agg2.RData' )
+# rdata_file <- '../train_agg-mod.RData'
+# # rtest_file <- gsub("^train", "test", rdata_file)
+# rtest_file <- '../test_agg-mod.RData'
+# 
+# # Use this code to create the modified dataset if it doesn't exist
+#  load( '../train_agg2.RData' )
+# # load( '../train_agg2_10pct.RData' )
+#  load( '../test_agg2.RData' )
 # 
 # set_small_to_na <- function( df ) {
 #     with( df, {
@@ -28,7 +28,7 @@ rtest_file <- 'test_agg-mod.RData'
 # test_agg <- set_small_to_na(test_agg) 
 # save( train_agg, file=rdata_file)
 # save( test_agg, file=rtest_file)
-
+# 
 run_id_pref <- 'csv_out/xgbm_f70_5x_submit'
 solver_script <- '../dave/gbm_cv.R'
 create_submission <- TRUE
@@ -44,11 +44,11 @@ set_cs <- c("rd"
             , "RefComposite", "RefComposite_5x5_50th", "RefComposite_5x5_90th"
             , "Zdr", "Zdr_5x5_50th", "Zdr_5x5_90th"
             , "nrec", "naRef" 
-            , "Ref_rz", "Kdp", "Kdp_rk"
+            , "Ref_rz", "Kdp", "Kdp_rk", "rr_Katsumata_ref", "rr_refzdr", "rr_kdpzdr"
 )
 cs_list <- list(   kaggle = set_cs )
 
-for (set_seed in c(1999, 2015, 7, 86, 99)) {
+for (set_seed in c(99)) { #} c(1999, 2015, 7, 86, 99)) {
     run_id <- paste( run_id_pref, set_seed, sep="_")
     mae_base <- -1 
     for (i in 1:length(cs_list)) {
