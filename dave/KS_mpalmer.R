@@ -12,9 +12,6 @@
 library(dplyr)
 library(data.table)
 
-#test <- fread('../input/test.csv')
-source("../team/data-prep.R")
-
 mpalmer <- function(ref, minutes_past) {
     
     # order reflectivity values and minutes_past
@@ -50,6 +47,12 @@ mpalmer <- function(ref, minutes_past) {
     
 }
 
-results <- test %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
+csv <- fread('../test.csv')
+results <- csv %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
+write.csv(results, file='KS_mpalmer-test.csv', row.names=FALSE)
 
-write.csv(results, file='KS_mpalmer.csv', row.names=FALSE)
+csv <- fread('../train.csv')
+results <- csv %>% group_by(Id) %>% summarize(Expected=mpalmer(Ref, minutes_past))
+write.csv(results, file='KS_mpalmer-train.csv', row.names=FALSE)
+rm(csv)
+
