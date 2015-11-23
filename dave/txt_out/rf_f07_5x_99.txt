@@ -1,0 +1,509 @@
+ source('~/GitHub/weddingcap_rain/dave/run_h2o_rf.R')
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+Successfully connected to http://127.0.0.1:54321/ 
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         3 hours 51 minutes 
+    H2O cluster version:        3.6.0.3 
+    H2O cluster name:           319960 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   1.76 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+
+[1] 0
+h2o_rf_cv.R runtime 2015-11-21 23:32:43 (seed = 1999)
+ntrees=500
+Training data will be loaded from  train_agg-mod.RData 
+Run ID =  csv_out/rf_f07_5x_1999 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.250000 elapsed for load data"
+[1] "0.050000 elapsed for partition cv_train"
+  |==============================================================================================================| 100%
+[1] "8.330000 elapsed for convert to h2o df"
+  |==============================================================================================================| 100%
+[1] "179.520000 elapsed for run random forest"
+Model Details:
+==============
+
+H2ORegressionModel: drf
+Model ID:  rfStarter.hex 
+Model Summary: 
+  number_of_trees model_size_in_bytes min_depth max_depth mean_depth min_leaves max_leaves mean_leaves
+1             500            79554277        20        20   20.00000      12101      15637 13742.43400
+
+
+H2ORegressionMetrics: drf
+** Reported on training data. **
+Description: Metrics reported on Out-Of-Bag training samples
+
+MSE:  0.3549074
+R2 :  0.3354302
+Mean Residual Deviance :  0.3549074
+
+
+
+Variable Importances: 
+                variable relative_importance scaled_importance percentage
+1                 Ref_rz      1881195.750000          1.000000   0.200553
+2           Ref_5x5_90th      1344170.250000          0.714530   0.143301
+3  RefComposite_5x5_90th      1103770.875000          0.586739   0.117672
+4                     rd       820038.562500          0.435913   0.087424
+5                    Ref       740148.687500          0.393446   0.078907
+6           Ref_5x5_50th       663296.250000          0.352593   0.070714
+7                   nrec       546911.375000          0.290725   0.058306
+8                  naRef       542613.312500          0.288441   0.057848
+9  RefComposite_5x5_50th       465953.625000          0.247690   0.049675
+10          RefComposite       438258.781250          0.232968   0.046722
+11          Zdr_5x5_90th       275100.625000          0.146237   0.029328
+12                Kdp_rk       209170.312500          0.111190   0.022299
+13                   Zdr       146415.609375          0.077831   0.015609
+14          Zdr_5x5_50th       118706.312500          0.063102   0.012655
+15                   Kdp        84297.664062          0.044811   0.008987
+[1] "9.270000 elapsed for predict on scrubbed CV training data"
+MAE for model data = 1.16842 
+[1] "0.080000 elapsed for reload data"
+  |==============================================================================================================| 100%
+[1] "12.930000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 24.47429 
+  |==============================================================================================================| 100%
+[1] "12.420000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 20.84423 
+... creating submission file using  test_agg-mod.RData 
+  |==============================================================================================================| 100%
+[1] "80.290000 elapsed for predict logvals on test"
+[1] "2.470000 elapsed for write submission file"
+                                   desc  delta
+1                                  t=11   0.00
+2                             load data   0.25
+3                    partition cv_train   0.05
+4                     convert to h2o df   8.33
+5                     run random forest 179.52
+6  predict on scrubbed CV training data   9.27
+7                           reload data   0.08
+8           predict logvals on cv_train  12.93
+9            predict logvals on cv_test  12.42
+10              predict logvals on test  80.29
+11                write submission file   2.47
+[1] 305.61
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+Successfully connected to http://127.0.0.1:54321/ 
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         3 hours 56 minutes 
+    H2O cluster version:        3.6.0.3 
+    H2O cluster name:           319960 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   1.76 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+
+[1] 0
+h2o_rf_cv.R runtime 2015-11-21 23:37:49 (seed = 2015)
+ntrees=500
+Training data will be loaded from  train_agg-mod.RData 
+Run ID =  csv_out/rf_f07_5x_2015 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.220000 elapsed for load data"
+[1] "0.010000 elapsed for partition cv_train"
+  |==============================================================================================================| 100%
+[1] "7.290000 elapsed for convert to h2o df"
+  |==============================================================================================================| 100%
+[1] "189.930000 elapsed for run random forest"
+Model Details:
+==============
+
+H2ORegressionModel: drf
+Model ID:  rfStarter.hex 
+Model Summary: 
+  number_of_trees model_size_in_bytes min_depth max_depth mean_depth min_leaves max_leaves mean_leaves
+1             500            80671704        20        20   20.00000      12119      15486 13936.02400
+
+
+H2ORegressionMetrics: drf
+** Reported on training data. **
+Description: Metrics reported on Out-Of-Bag training samples
+
+MSE:  0.3562048
+R2 :  0.3286584
+Mean Residual Deviance :  0.3562048
+
+
+
+Variable Importances: 
+                variable relative_importance scaled_importance percentage
+1                 Ref_rz      1974683.000000          1.000000   0.210907
+2           Ref_5x5_90th      1313649.750000          0.665246   0.140305
+3  RefComposite_5x5_90th      1088185.500000          0.551068   0.116224
+4                     rd       802711.375000          0.406501   0.085734
+5                    Ref       692127.937500          0.350501   0.073923
+6           Ref_5x5_50th       684830.000000          0.346805   0.073144
+7                  naRef       558133.375000          0.282645   0.059612
+8                   nrec       549304.750000          0.278174   0.058669
+9           RefComposite       434800.000000          0.220187   0.046439
+10 RefComposite_5x5_50th       418745.468750          0.212057   0.044724
+11          Zdr_5x5_90th       289125.031250          0.146416   0.030880
+12                Kdp_rk       202836.593750          0.102719   0.021664
+13                   Zdr       151241.390625          0.076590   0.016153
+14          Zdr_5x5_50th       118667.203125          0.060094   0.012674
+15                   Kdp        83766.617188          0.042420   0.008947
+[1] "9.160000 elapsed for predict on scrubbed CV training data"
+MAE for model data = 1.158345 
+[1] "0.090000 elapsed for reload data"
+  |==============================================================================================================| 100%
+[1] "12.950000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 24.91521 
+  |==============================================================================================================| 100%
+[1] "8.870000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 19.78906 
+... creating submission file using  test_agg-mod.RData 
+  |==============================================================================================================| 100%
+[1] "58.140000 elapsed for predict logvals on test"
+[1] "7.450000 elapsed for write submission file"
+                                   desc  delta
+1                                  t=11   0.00
+2                             load data   0.22
+3                    partition cv_train   0.01
+4                     convert to h2o df   7.29
+5                     run random forest 189.93
+6  predict on scrubbed CV training data   9.16
+7                           reload data   0.09
+8           predict logvals on cv_train  12.95
+9            predict logvals on cv_test   8.87
+10              predict logvals on test  58.14
+11                write submission file   7.45
+[1] 294.11
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+Successfully connected to http://127.0.0.1:54321/ 
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         4 hours 1 minutes 
+    H2O cluster version:        3.6.0.3 
+    H2O cluster name:           319960 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   1.76 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+
+[1] 0
+h2o_rf_cv.R runtime 2015-11-21 23:42:43 (seed = 7)
+ntrees=500
+Training data will be loaded from  train_agg-mod.RData 
+Run ID =  csv_out/rf_f07_5x_7 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.250000 elapsed for load data"
+[1] "0.010000 elapsed for partition cv_train"
+  |==============================================================================================================| 100%
+[1] "7.550000 elapsed for convert to h2o df"
+  |==============================================================================================================| 100%
+[1] "166.940000 elapsed for run random forest"
+Model Details:
+==============
+
+H2ORegressionModel: drf
+Model ID:  rfStarter.hex 
+Model Summary: 
+  number_of_trees model_size_in_bytes min_depth max_depth mean_depth min_leaves max_leaves mean_leaves
+1             500            80386231        20        20   20.00000      11825      15488 13887.08400
+
+
+H2ORegressionMetrics: drf
+** Reported on training data. **
+Description: Metrics reported on Out-Of-Bag training samples
+
+MSE:  0.3558996
+R2 :  0.3314149
+Mean Residual Deviance :  0.3558996
+
+
+
+Variable Importances: 
+                variable relative_importance scaled_importance percentage
+1                 Ref_rz      1856594.125000          1.000000   0.198931
+2           Ref_5x5_90th      1468699.125000          0.791072   0.157368
+3  RefComposite_5x5_90th      1047530.562500          0.564222   0.112241
+4                     rd       818378.062500          0.440795   0.087688
+5                    Ref       718357.437500          0.386922   0.076971
+6           Ref_5x5_50th       624689.812500          0.336471   0.066934
+7                   nrec       551251.312500          0.296915   0.059066
+8                  naRef       544037.625000          0.293030   0.058293
+9           RefComposite       442766.750000          0.238483   0.047442
+10 RefComposite_5x5_50th       434279.781250          0.233912   0.046532
+11          Zdr_5x5_90th       279427.187500          0.150505   0.029940
+12                Kdp_rk       203709.937500          0.109722   0.021827
+13                   Zdr       144742.890625          0.077962   0.015509
+14          Zdr_5x5_50th       116915.101562          0.062973   0.012527
+15                   Kdp        81493.570312          0.043894   0.008732
+[1] "9.000000 elapsed for predict on scrubbed CV training data"
+MAE for model data = 1.167895 
+[1] "0.090000 elapsed for reload data"
+  |==============================================================================================================| 100%
+[1] "17.230000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 21.97691 
+  |==============================================================================================================| 100%
+[1] "8.670000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 26.64929 
+... creating submission file using  test_agg-mod.RData 
+  |==============================================================================================================| 100%
+[1] "77.630000 elapsed for predict logvals on test"
+[1] "2.120000 elapsed for write submission file"
+                                   desc  delta
+1                                  t=11   0.00
+2                             load data   0.25
+3                    partition cv_train   0.01
+4                     convert to h2o df   7.55
+5                     run random forest 166.94
+6  predict on scrubbed CV training data   9.00
+7                           reload data   0.09
+8           predict logvals on cv_train  17.23
+9            predict logvals on cv_test   8.67
+10              predict logvals on test  77.63
+11                write submission file   2.12
+[1] 289.49
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+Successfully connected to http://127.0.0.1:54321/ 
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         4 hours 5 minutes 
+    H2O cluster version:        3.6.0.3 
+    H2O cluster name:           319960 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   1.76 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+
+[1] 0
+h2o_rf_cv.R runtime 2015-11-21 23:47:33 (seed = 86)
+ntrees=500
+Training data will be loaded from  train_agg-mod.RData 
+Run ID =  csv_out/rf_f07_5x_86 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.090000 elapsed for load data"
+[1] "0.000000 elapsed for partition cv_train"
+  |==============================================================================================================| 100%
+[1] "3.010000 elapsed for convert to h2o df"
+  |==============================================================================================================| 100%
+[1] "81.690000 elapsed for run random forest"
+Model Details:
+==============
+
+H2ORegressionModel: drf
+Model ID:  rfStarter.hex 
+Model Summary: 
+  number_of_trees model_size_in_bytes min_depth max_depth mean_depth min_leaves max_leaves mean_leaves
+1             500            80494920        20        20   20.00000      12284      15693 13906.40200
+
+
+H2ORegressionMetrics: drf
+** Reported on training data. **
+Description: Metrics reported on Out-Of-Bag training samples
+
+MSE:  0.3559196
+R2 :  0.3357262
+Mean Residual Deviance :  0.3559196
+
+
+
+Variable Importances: 
+                variable relative_importance scaled_importance percentage
+1                 Ref_rz      1900134.000000          1.000000   0.202086
+2           Ref_5x5_90th      1499021.000000          0.788903   0.159426
+3  RefComposite_5x5_90th      1062276.000000          0.559053   0.112977
+4                     rd       811632.687500          0.427145   0.086320
+5                    Ref       724711.187500          0.381400   0.077076
+6           Ref_5x5_50th       636139.750000          0.334787   0.067656
+7                   nrec       544451.812500          0.286533   0.057904
+8                  naRef       540798.375000          0.284611   0.057516
+9           RefComposite       425673.625000          0.224023   0.045272
+10 RefComposite_5x5_50th       411552.218750          0.216591   0.043770
+11          Zdr_5x5_90th       280248.062500          0.147489   0.029805
+12                Kdp_rk       204693.859375          0.107726   0.021770
+13                   Zdr       149684.421875          0.078776   0.015919
+14          Zdr_5x5_50th       121663.617188          0.064029   0.012939
+15                   Kdp        89903.421875          0.047314   0.009562
+[1] "9.070000 elapsed for predict on scrubbed CV training data"
+MAE for model data = 1.169362 
+[1] "0.080000 elapsed for reload data"
+  |==============================================================================================================| 100%
+[1] "21.390000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 22.89678 
+  |==============================================================================================================| 100%
+[1] "18.990000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 24.49442 
+... creating submission file using  test_agg-mod.RData 
+  |==============================================================================================================| 100%
+[1] "75.140000 elapsed for predict logvals on test"
+[1] "2.200000 elapsed for write submission file"
+                                   desc delta
+1                                  t=11  0.00
+2                             load data  0.09
+3                    partition cv_train  0.00
+4                     convert to h2o df  3.01
+5                     run random forest 81.69
+6  predict on scrubbed CV training data  9.07
+7                           reload data  0.08
+8           predict logvals on cv_train 21.39
+9            predict logvals on cv_test 18.99
+10              predict logvals on test 75.14
+11                write submission file  2.20
+[1] 211.66
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+Successfully connected to http://127.0.0.1:54321/ 
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         4 hours 9 minutes 
+    H2O cluster version:        3.6.0.3 
+    H2O cluster name:           319960 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   1.76 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+
+[1] 0
+h2o_rf_cv.R runtime 2015-11-21 23:51:04 (seed = 99)
+ntrees=500
+Training data will be loaded from  train_agg-mod.RData 
+Run ID =  csv_out/rf_f07_5x_99 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.090000 elapsed for load data"
+[1] "0.020000 elapsed for partition cv_train"
+  |==============================================================================================================| 100%
+[1] "2.990000 elapsed for convert to h2o df"
+  |==============================================================================================================| 100%
+[1] "81.480000 elapsed for run random forest"
+Model Details:
+==============
+
+H2ORegressionModel: drf
+Model ID:  rfStarter.hex 
+Model Summary: 
+  number_of_trees model_size_in_bytes min_depth max_depth mean_depth min_leaves max_leaves mean_leaves
+1             500            79423596        20        20   20.00000      11977      15419 13720.13200
+
+
+H2ORegressionMetrics: drf
+** Reported on training data. **
+Description: Metrics reported on Out-Of-Bag training samples
+
+MSE:  0.3602489
+R2 :  0.3266533
+Mean Residual Deviance :  0.3602489
+
+
+
+Variable Importances: 
+                variable relative_importance scaled_importance percentage
+1                 Ref_rz      1680832.625000          1.000000   0.179852
+2           Ref_5x5_90th      1458401.875000          0.867666   0.156052
+3  RefComposite_5x5_90th      1033264.187500          0.614734   0.110561
+4                     rd       801866.250000          0.477065   0.085801
+5                    Ref       754938.625000          0.449146   0.080780
+6           Ref_5x5_50th       741545.812500          0.441178   0.079347
+7                  naRef       562567.687500          0.334696   0.060196
+8                   nrec       556651.375000          0.331176   0.059563
+9  RefComposite_5x5_50th       491055.843750          0.292150   0.052544
+10          RefComposite       409404.031250          0.243572   0.043807
+11          Zdr_5x5_90th       285709.937500          0.169981   0.030572
+12                Kdp_rk       207169.359375          0.123254   0.022168
+13                   Zdr       150813.718750          0.089726   0.016137
+14          Zdr_5x5_50th       124365.695312          0.073991   0.013307
+15                   Kdp        87041.859375          0.051785   0.009314
+[1] "8.960000 elapsed for predict on scrubbed CV training data"
+MAE for model data = 1.178357 
+[1] "0.070000 elapsed for reload data"
+  |==============================================================================================================| 100%
+[1] "14.640000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.55485 
+  |==============================================================================================================| 100%
+[1] "11.560000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 22.98054 
+... creating submission file using  test_agg-mod.RData 
+  |==============================================================================================================| 100%
+[1] "67.250000 elapsed for predict logvals on test"
+[1] "5.660000 elapsed for write submission file"
+                                   desc delta
+1                                  t=11  0.00
+2                             load data  0.09
+3                    partition cv_train  0.02
+4                     convert to h2o df  2.99
+5                     run random forest 81.48
+6  predict on scrubbed CV training data  8.96
+7                           reload data  0.07
+8           predict logvals on cv_train 14.64
+9            predict logvals on cv_test 11.56
+10              predict logvals on test 67.25
+11                write submission file  5.66
+[1] 192.72
+  seed   xSet
+1 1999 kaggle
+2 2015 kaggle
+3    7 kaggle
+4   86 kaggle
+5   99 kaggle
+                                                                                                                                                 xvars
+1 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+2 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+3 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+4 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+5 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+  mae_scrub_trn mae_cv_test mae_cv_trn delta elapsed
+1      1.168420    20.84423   24.47429     0  305.61
+2      1.158345    19.78906   24.91521     0  294.11
+3      1.167895    26.64929   21.97691     0  289.49
+4      1.169362    24.49442   22.89678     0  211.66
+5      1.178357    22.98054   23.55485     0  192.72

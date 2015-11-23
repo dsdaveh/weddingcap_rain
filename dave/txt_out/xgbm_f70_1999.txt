@@ -1,0 +1,103 @@
+> source('~/GitHub/weddingcap_rain/dave/run_xgbm.R')
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+
+Attaching package: ‘xgboost’
+
+The following object is masked from ‘package:dplyr’:
+
+    slice
+
+gbm_cv.R runtime 2015-11-21 20:16:08 (seed = 1999)
+Training data will be loaded from  train_agg-mod.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.250000 elapsed for load data"
+[1] "0.030000 elapsed for partition cv_train"
+[1] "0.370000 elapsed for construct train matrix"
+
+Warning message:
+package ‘xgboost’ was built under R version 3.2.2 
+> source('~/GitHub/weddingcap_rain/dave/run_xgbm.R')
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+gbm_cv.R runtime 2015-11-21 20:16:19 (seed = 1999)
+Training data will be loaded from  train_agg-mod.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.250000 elapsed for load data"
+[1] "0.020000 elapsed for partition cv_train"
+[1] "0.210000 elapsed for construct train matrix"
+[1] "68.600000 elapsed for xgb.train cv_train"
+[1] "0.000000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.56879 
+[1] "0.090000 elapsed for reload data"
+[1] "2.010000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 24.94158 
+[1] "0.940000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 20.85726 
+... creating submission file using  ../test_agg.Rdata 
+Error in `[.data.frame`(te, , cs) : undefined columns selected
+> rtest_file
+[1] "test_agg-mod.RData"
+> if ( create_submission) {
++     cat ("... creating submission file using ", rtest_file, "\n")
++     load( rtest_file )
++     
++     test_NAs <- test_agg[  is.na(Ref), .(Id = Id, Expected = train_NA)]
++ 
++     te<-as.data.frame(test_agg[ ! is.na(Ref) ])
++     xgtest = xgb.DMatrix(as.matrix(te[,cs ]), missing = NA)
++     
++     pr  <- predict(x.mod.t,xgtest)                     ;tcheck( desc='predict logvals on test dataset')
++     te$xgb_prediction <- expm1(pr)
++ 
++     res <- te %>% 
++         select( Id, Expected = xgb_prediction ) %>%
++         bind_rows( test_NAs) %>%
++         arrange( Id )
++     
++     #convert expected values to 0.01in values
++     res$Expected <- round(res$Expected / 0.254) * 0.254
++ 
++     csv <- sprintf( "%s.csv", run_id)
++     write.csv(res, csv, row.names = FALSE)    ; tcheck( desc='write submission file')
++     
++ }
+... creating submission file using  test_agg-mod.RData 
+[1] "308.370000 elapsed for predict logvals on test dataset"
+[1] "2.650000 elapsed for write submission file"
+[1] "2.650000 elapsed for write submission file"
+> 
+> time_df <- get_tcheck()
+> print( time_df )
+                                     desc  delta
+1                                     t=4   0.00
+2                               load data   0.25
+3                      partition cv_train   0.02
+4                  construct train matrix   0.21
+5                      xgb.train cv_train  68.60
+6  predict logvals on scrubbed model data   0.00
+7                             reload data   0.09
+8             predict logvals on cv_train   2.01
+9              predict logvals on cv_test   0.94
+10        predict logvals on test dataset 308.37
+11                  write submission file   2.65
+> print( sum( time_df$delta ))
+[1] 383.14

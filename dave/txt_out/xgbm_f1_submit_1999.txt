@@ -1,0 +1,46 @@
+LB Score 23.78424  (up 15 on 11/21)
+
+source('~/GitHub/weddingcap_rain/dave/run_xgbm.R')
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"               
+
+gbm_cv.R runtime 2015-11-21 20:54:00 (seed = 1999)
+Training data will be loaded from  train_agg-mod.RData 
+CV Fraction for training = 1 .  CV testing will NOT be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  train_agg-mod.RData 
+[1] "0.250000 elapsed for load data"
+[1] "0.290000 elapsed for construct train matrix"
+[1] "144.550000 elapsed for xgb.train cv_train"
+[1] "0.000000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.607318 
+[1] "0.090000 elapsed for reload data"
+[1] "2.510000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 23.67559 
+... creating submission file using  test_agg-mod.RData 
+[1] "14.660000 elapsed for predict logvals on test dataset"
+[1] "4.700000 elapsed for write submission file"
+                                    desc  delta
+1                                   t=11   0.00
+2                              load data   0.25
+3                 construct train matrix   0.29
+4                     xgb.train cv_train 144.55
+5 predict logvals on scrubbed model data   0.00
+6                            reload data   0.09
+7            predict logvals on cv_train   2.51
+8        predict logvals on test dataset  14.66
+9                  write submission file   4.70
+[1] 167.05
+  seed   xSet
+1 1999 kaggle
+                                                                                                                                                 xvars
+1 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk
+   mae_xgb mae_cv_test mae_cv_trn delta elapsed
+1 1.607318    20.85726   23.67559     0  167.05
+>
