@@ -1,5 +1,5 @@
-rdata_file <- 'train_agg-mod.RData'
-rtest_file <- 'test_agg-mod.RData'
+rdata_file <- '../train_agg-mod.RData'
+rtest_file <- '../test_agg-mod.RData'
 
 load( '../train_agg2.RData' )
 load( '../test_agg2.RData' )
