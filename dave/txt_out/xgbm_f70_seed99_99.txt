@@ -1,0 +1,70 @@
+> source('~/GitHub/weddingcap_rain/dave/run_xgbm.R')
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:magrittr’:
+
+    extract
+
+$kaggle
+ [1] "rd"                    "Ref"                   "Ref_5x5_50th"          "Ref_5x5_90th"         
+ [5] "RefComposite"          "RefComposite_5x5_50th" "RefComposite_5x5_90th" "Zdr"                  
+ [9] "Zdr_5x5_50th"          "Zdr_5x5_90th"          "nrec"                  "naRef"                
+[13] "Ref_rz"                "Kdp"                   "Kdp_rk"                "rr_Katsumata_ref"     
+[17] "rr_refzdr"             "rr_kdpzdr"            
+
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+
+Attaching package: ‘xgboost’
+
+The following object is masked from ‘package:dplyr’:
+
+    slice
+
+gbm_cv.R runtime 2015-11-22 21:26:02 (seed = 99)
+Training data will be loaded from  ../train_agg-mod.RData 
+CV Fraction for training = 0.7 .  CV testing will  be performed.
+create_submission = TRUE .  Submission file will  be created.
+Measured Rain Threshold for training data is 65 
+ Marshal Palmer function printed below.  Map to mp_func to change this (eg mp_func <- ref_to_mm_kaggle )
+function(dbz)  ((10**(dbz/10))/200) ** 0.625
+loading train from RData file  ../train_agg-mod.RData 
+[1] "1.420000 elapsed for load data"
+[1] "0.460000 elapsed for partition cv_train"
+[1] "2.050000 elapsed for construct train matrix"
+[1] "4343.390000 elapsed for xgb.train cv_train"
+[1] "0.060000 elapsed for predict logvals on scrubbed model data"
+MAE for model data = 1.720596 
+[1] "1.630000 elapsed for reload data"
+[1] "202.520000 elapsed for predict logvals on cv_train"
+MAE for CV train data = 22.89535 
+[1] "82.300000 elapsed for predict logvals on cv_test"
+MAE for CV test data = 23.36106 
+... creating submission file using  ../test_agg-mod.RData 
+[1] "164.130000 elapsed for predict logvals on test dataset"
+[1] "3.730000 elapsed for write submission file"
+                                     desc   delta
+1                                     t=7    0.00
+2                               load data    1.42
+3                      partition cv_train    0.46
+4                  construct train matrix    2.05
+5                      xgb.train cv_train 4343.39
+6  predict logvals on scrubbed model data    0.06
+7                             reload data    1.63
+8             predict logvals on cv_train  202.52
+9              predict logvals on cv_test   82.30
+10        predict logvals on test dataset  164.13
+11                  write submission file    3.73
+[1] 4801.69
+  seed   xSet
+1   99 kaggle
+                                                                                                                                                                                      xvars
+1 rd,Ref,Ref_5x5_50th,Ref_5x5_90th,RefComposite,RefComposite_5x5_50th,RefComposite_5x5_90th,Zdr,Zdr_5x5_50th,Zdr_5x5_90th,nrec,naRef,Ref_rz,Kdp,Kdp_rk,rr_Katsumata_ref,rr_refzdr,rr_kdpzdr
+   mae_xgb mae_cv_test mae_cv_trn delta elapsed
+1 1.720596    23.36106   22.89535     0 4801.69

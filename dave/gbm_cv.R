@@ -6,6 +6,7 @@ library(Metrics)
 library(dplyr)
 
 source( "../team/rain_utils.R")
+mae_xgb <- mae_cv_trn <- mae_cv_test <- NA
 
 if (! tcheck.print) cat ("Silent Mode ... for Verbose set tcheck.print <- TRUE\n")
 ######################################### params

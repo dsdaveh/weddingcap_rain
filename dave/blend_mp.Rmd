@@ -1,0 +1,56 @@
+---
+title: "Blend Models with Marshall Palmer predictions"
+author: "Dave Hurst"
+date: "November 23, 2015"
+output: html_document
+---
+
+Most of the kaggle scripts and discussions have proposed that blending model results with the sample submission file would yield better MAE's than the model results alone.  Some early experimentation with basic models proved that to be true for our results (ref plots submitted to Slack and my weekly status).  Unfortunately, we don't seem to be getting a boost anymore from this ... here are the xgbm and random forest models blended with M-P.
+
+Method:  Use KS_mpalmer.R to produce a Marshall-Palmer prediction for the training set.  Note that running this script on the test set produces a file identical to the sample_submission.csv file to 6 decimal places.
+
+Use weighted average to blend the M-P predictions with the model predictions, and plot the MAE results for different weights.
+
+## xgbm 
+
+```{r libs, echo=FALSE, warning=FALSE, message=FALSE}
+library(data.table)
+library(Metrics)
+library(dplyr)
+
+plot_mae_blend <- function( model_trn, basel_trn , desc ) {
+    model <- read.csv( model_trn) %>% rename( yhat = Expected )
+    basel <- read.csv( basel_trn) %>% rename( basel = Expected )
+    
+    model <- model %>% left_join( basel, by="Id") 
+    mae_p <- numeric()
+    x_p <- seq(0,1,.05)
+    for (p in x_p ) {
+        blend <- model %>% transmute( Expected = model$basel * p + model$yhat * (1-p) )
+        mae_p <- c(mae_p, mae( blend$Expected, model$y))
+    }
+    
+    plot( x_p , mae_p , type="b")
+    x_min <- x_p[ which.min(mae_p)]
+    title( sprintf( "Blended MAE for %s and Marshall Palmer\nmin(MAE) at %4.2f = %10.6f"
+                    , desc, x_min, min(mae_p)))
+    points( x_min, min(mae_p), col="red", pch=15)
+}
+```
+
+```{r xgbm}
+#input
+model_trn <- "csv_out/xgbm_f70_seed99_99-cvtest.csv"
+basel_trn <- "csv_out/KS_mpalmer-train.csv"
+
+plot_mae_blend( model_trn, basel_trn, "xgbm")
+```
+
+## H2O Random Forest
+
+```{r h2orf}
+#input
+model_trn <- "csv_out/rf_brazil_f70_1-cvtest.csv"
+
+plot_mae_blend( model_trn, basel_trn, "h2o Random Forest")
+```
