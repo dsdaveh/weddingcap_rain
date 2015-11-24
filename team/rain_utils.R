@@ -281,6 +281,18 @@ vimpute_agg <- function( xvar, mph, allNA=xvar, method=2, fun=identity ) {
     return( agg )
 }
 
+v_agg <- function( xvar, mph, allNA = mean(xvar), fun=identity ) {
+    if ( all( is.na(xvar ))) return (allNA)
+    sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
+}
+
+v_agg2 <- function( xvar, xvar2, mph, allNA = mean(xvar), fun=identity ) {
+    if ( all( is.na(xvar ))) return (allNA)
+    if ( all( is.na(xvar2 ))) return (allNA)
+    sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2,
+               (xvar2[-1] + xvar2[-length(xvar2)] ) /2) * diff( mph )/60  )
+}
+
 ref_to_mm_kaggle <- function(dbz)  ((10**(dbz/10))/200) ** 0.625   #marshal_palmer
 ref_to_mm_lit <- function(dbz) 0.0365*(10**(0.0625*dbz))
 ref_to_mm <- ref_to_mm_kaggle
