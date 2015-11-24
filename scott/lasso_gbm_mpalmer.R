@@ -23,6 +23,7 @@ setnames(ensemble.frame, "y", "Expected")
 setcolorder(ensemble.frame, c("Id", "Expected", "pred_gbm"))
 
 # add mpalmer predictions
+# TODO: use a different mpalmer here; see dave/KS_mpalmer_MAE.R
 ensemble.frame <- inner_join(ensemble.frame, select(train_agg, Id, Ref), by="Id")
 ensemble.frame$pred_mpalmer <- ref_to_mm(ensemble.frame$Ref)
 ensemble.frame <- ensemble.frame[,Ref:=NULL]
@@ -36,7 +37,7 @@ cv.lasso.fit <- cv.glmnet(x,y,alpha=1)
 best_lambda <- cv.lasso.fit$lambda.min
 best_lambda
 lasso.coef <- predict(lasso.fit,type="coefficients",s=best_lambda)
-ensemble.frame$LASSO_Pred <- predict(lasso.fit,s=best_lambda,type="class",newx=x)
+ensemble.frame$LASSO_Pred <- predict(lasso.fit,s=best_lambda,type="link",newx=x)
 lasso.coef
 plot(cv.lasso.fit$lambda)
 
