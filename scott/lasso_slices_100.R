@@ -36,7 +36,7 @@ cv.lasso.fit <- cv.glmnet(x,y,alpha=1)
 best_lambda <- cv.lasso.fit$lambda.min
 best_lambda
 lasso.coef <- predict(lasso.fit,type="coefficients",s=best_lambda)
-ensemble.frame$LASSO_Pred <- predict(lasso.fit,s=best_lambda,type="class",newx=x)
+ensemble.frame$LASSO_Pred <- predict(lasso.fit,s=best_lambda,type="link",newx=x)
 lasso.coef
 plot(cv.lasso.fit$lambda)
 
