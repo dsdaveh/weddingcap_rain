@@ -18,7 +18,6 @@ calc_file <- "../rainfall_calculations.RData"
 load(file=calc_file)
 rain_calcs <- rain_calcs %>% select(Id, Ref_rz, Kdp_rk, rr_Katsumata_ref)
 
-setkey(kaggle_mpalmer, Id)
 setkey(xgbm, Id)
 setkey(h2orf, Id)
 setkey(rain_calcs, Id)
@@ -26,23 +25,32 @@ setkey(rain_calcs, Id)
 ensemble.frame <- xgbm %>%
     left_join( h2orf, by="Id") %>%
     left_join( rain_calcs, by="Id") %>%
-    mutate(target = log1p(y))
-    
+    mutate(target = log1p(y))    # not used (yet)
+ensemble.clean <- ensemble.frame[ y <= 65]
+
 #fit a LASSO
-x <- model.matrix(y ~ xgbm + h2orf + Ref_rz + Kdp_rk + rr_Katsumata_ref , ensemble.frame)
-y <- ensemble.frame$y
-lasso.fit <- glmnet(x,y,alpha=1, family="gaussian")
-plot(lasso.fit)
-cv.lasso.fit <- cv.glmnet(x,y,alpha=1)
+x <- model.matrix(y ~ xgbm + h2orf + Ref_rz + Kdp_rk + rr_Katsumata_ref , ensemble.clean)
+y <- ensemble.clean$y
+cv.lasso.fit <- cv.glmnet(x,y,alpha=1, type.measure = "mae")
+#plot(cv.lasso.fit)
 best_lambda <- cv.lasso.fit$lambda.min
 best_lambda
-lasso.coef <- predict(lasso.fit,type="coefficients",s=best_lambda)
-ensemble.frame$LASSO_Pred <- predict(lasso.fit,s=best_lambda,type="class",newx=x)
-ensemble.frame$final <- round( ensemble.frame$LASSO_Pred / .0254 ) * .0254
+lasso.coef <- predict(cv.lasso.fit,type="coefficients",s=best_lambda)
 lasso.coef
-plot(cv.lasso.fit$lambda)
+#plot(cv.lasso.fit$lambda)
+ensemble.clean$LASSO_Pred <- predict(cv.lasso.fit,s=best_lambda,type="response",newx=x)
+ensemble.clean$final <- round( ensemble.clean$LASSO_Pred / .0254 ) * .0254
 
-mae(ensemble.frame$y, ensemble.frame$final) # 41.90745
+mae(ensemble.clean$y, ensemble.clean$LASSO_Pred) # 2.335976
+mae(ensemble.clean$y, ensemble.clean$final) # 2.336021
+
+x <- model.matrix(y ~ xgbm + h2orf + Ref_rz + Kdp_rk + rr_Katsumata_ref , ensemble.frame)
+ensemble.frame$LASSO_Pred <- predict(cv.lasso.fit,s=best_lambda,type="response",newx=x)
+ensemble.frame$final <- round( ensemble.frame$LASSO_Pred / .0254 ) * .0254
+
+mae(ensemble.frame$y, ensemble.frame$LASSO_Pred) # 23.36415
+mae(ensemble.frame$y, ensemble.frame$final) # 23.36419
+
 mae(ensemble.frame$y, ensemble.frame$xgbm) # 23.36106
 mae(ensemble.frame$y, ensemble.frame$h2orf) # 23.16974
 mae(ensemble.frame$y, ensemble.frame$Ref_rz) # 23.66663
