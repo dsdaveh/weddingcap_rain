@@ -26,7 +26,7 @@ nonpolar <- c("rd"
             , "nrec", "naRef" 
             , "Ref_rz", "rr_Katsumata_ref"
 )
-cs_list <- list(   kaggle, nonpolar )
+cs_list <- list(   kaggle = kaggle )
 
 
 for (set_seed in c(99)) { #} c(1999, 2015, 7, 86, 99)) {
