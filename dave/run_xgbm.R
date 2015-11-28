@@ -1,37 +1,12 @@
 library (ggvis)
 library (tidyr)
 
+rdata_file <- '../train_agg-mod.RData'
+rtest_file <- '../test_agg-mod.RData'
 
-# rdata_file <- 'train_agg_10pct-mod.RData'
-# load( '../train_agg2.RData' )
-# rdata_file <- '../train_agg-mod.RData'
-# # rtest_file <- gsub("^train", "test", rdata_file)
-# rtest_file <- '../test_agg-mod.RData'
-# 
-# # Use this code to create the modified dataset if it doesn't exist
-#  load( '../train_agg2.RData' )
-# # load( '../train_agg2_10pct.RData' )
-#  load( '../test_agg2.RData' )
-# 
-# set_small_to_na <- function( df ) {
-#     with( df, {
-#         df$Ref <- ifelse( (Ref != -999) & (Ref < 0), NA, Ref )
-#         df$Ref_5x5_50th <- ifelse( (Ref_5x5_50th != -999) & (Ref_5x5_50th < 0), NA, Ref_5x5_50th )
-#         df$Ref_5x5_90th <- ifelse( (Ref_5x5_90th != -999) & (Ref_5x5_90th < 0), NA, Ref_5x5_90th )
-#         df$RefComposite <- ifelse( (RefComposite != -999) & (RefComposite < 0), NA, RefComposite )
-#         df$RefComposite_5x5_50th <- ifelse( (RefComposite_5x5_50th != -999) & (RefComposite_5x5_50th < 0), NA, RefComposite_5x5_50th )
-#         df$RefComposite_5x5_90th <- ifelse( (RefComposite_5x5_90th != -999) & (RefComposite_5x5_90th < 0), NA, RefComposite_5x5_90th )
-#     })
-#     return(df)
-# }
-# train_agg <- set_small_to_na(train_agg) 
-# test_agg <- set_small_to_na(test_agg) 
-# save( train_agg, file=rdata_file)
-# save( test_agg, file=rtest_file)
-# 
 run_id_pref <- 'csv_out/xgbm_f07'
 solver_script <- '../dave/gbm_cv.R'
-create_submission <- TRUE
+create_submission <- FALSE
 cv_frac_trn <- 0.7
 tcheck.print <- TRUE
 set_rain_thresh <- 65
@@ -39,14 +14,20 @@ set_rain_thresh <- 65
 mae_res <- data.frame()
 run_time <- numeric() 
 
-set_cs <- c("rd"
+kaggle <- c("rd"
             , "Ref", "Ref_5x5_50th", "Ref_5x5_90th"
             , "RefComposite", "RefComposite_5x5_50th", "RefComposite_5x5_90th"
             , "Zdr", "Zdr_5x5_50th", "Zdr_5x5_90th"
             , "nrec", "naRef" 
             , "Ref_rz", "Kdp", "Kdp_rk", "rr_Katsumata_ref", "rr_refzdr", "rr_kdpzdr"
 )
-cs_list <- list(   kaggle = set_cs )
+nonpolar <- c("rd"
+            , "Ref", "Ref_5x5_50th", "Ref_5x5_90th"
+            , "nrec", "naRef" 
+            , "Ref_rz", "rr_Katsumata_ref"
+)
+cs_list <- list(   kaggle, nonpolar )
+
 
 for (set_seed in c(99)) { #} c(1999, 2015, 7, 86, 99)) {
     run_id <- paste( run_id_pref, set_seed, sep="_")
