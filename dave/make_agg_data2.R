@@ -18,18 +18,6 @@ if (!exists("rain_data")) {
 setkey( rain_data, Id )
 
 
-v_agg <- function( xvar, mph, allNA = mean(xvar), fun=identity ) {
-    if ( all( is.na(xvar ))) return (allNA)
-    sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2 ) * diff( mph )/60  )
-}
-
-v_agg2 <- function( xvar, xvar2, mph, allNA = mean(xvar), fun=identity ) {
-  if ( all( is.na(xvar ))) return (allNA)
-  if ( all( is.na(xvar2 ))) return (allNA)
-  sum( fun(  (xvar[-1] + xvar[-length(xvar)] ) /2,
-             (xvar2[-1] + xvar2[-length(xvar2)] ) /2) * diff( mph )/60  )
-}
-
 rain_agg <- rain_data[, .( rd = max(radardist_km)
     , Ref = v_agg( Ref, minutes_past)
     , Ref_5x5_50th = v_agg( Ref_5x5_50th, minutes_past, -999)

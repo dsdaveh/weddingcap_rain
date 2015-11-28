@@ -29,9 +29,9 @@ rtest_file <- '../test_agg-mod.RData'
 # save( train_agg, file=rdata_file)
 # save( test_agg, file=rtest_file)
 
-run_id_pref <- 'csv_out/rf_f07_5x'
-set_ntrees <- 500
-h2o_script <- '../dave/h2o_rf_cv.R'
+run_id_pref <- 'rf_f07_dell2'
+set_ntrees <- 250
+h2o_script <- '../dave/h2o_rf250t_cv.R'
 create_submission <- TRUE
 cv_frac_trn <- .7
 tcheck.print <- TRUE
@@ -50,7 +50,7 @@ set_cs <- c("rd"
 cs_list <- list(   kaggle = set_cs )
 
 for (set_seed in c(99)) { #} c(1999, 2015, 7, 86, 99)) {
-    run_id <- paste( run_id_pref, set_seed, sep="_")
+    run_id <- run_id_pref # paste( run_id_pref, set_seed, sep="_")
     mae_base <- -1 
     for (i in 1:length(cs_list)) {
         print( cs_list[i])

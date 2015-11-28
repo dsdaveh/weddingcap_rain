@@ -25,6 +25,7 @@ def_rain_thresh <- 65
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
 def_ntrees <- 500
+def_csv_dir <- 'csv_out'
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
@@ -36,7 +37,8 @@ if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
 if (! exists( "run_id") ) run_id <- def_run_id
-
+if (! exists( "csv_dir")) csv_dir <- def_csv_dir
+run_id <- gsub("^.*/", "", run_id)   #legacy runs had the directory embedded
 
 ####################################################
 cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
@@ -85,7 +87,8 @@ tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 tr$target <- log1p( tr$Expected)
 
-h2orf.trn <- as.h2o( tr, destination_frame = "h2orf.trn")    ; tcheck( desc='convert to h2o df')
+df_trn <- paste0( run_id, ".trn")
+h2orf.trn <- as.h2o( tr, destination_frame = df_trn)    ; tcheck( desc='convert to h2o df')
 
 true_y <- tr$Expected
 rm(tr, train_agg)
@@ -104,9 +107,9 @@ cat( "MAE for model data =", mae_scrub_trn, "\n")
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
 
-get_predictions <- function( dt ) {
+get_predictions <- function( dt, dfname = "h2orf.cv" ) {
     cv <- dt[ ! is.na(Ref), ] %>% as.data.frame()
-    h2orf.cv <- as.h2o( cv, destination_frame = "h2orf.cv") 
+    h2orf.cv <- as.h2o( cv, destination_frame = dfname) 
     predictions<-as.data.frame(h2o.predict(rfmod, h2orf.cv))
     cv$yhat <- expm1(predictions$predict)
     if ( any(  grepl ("Expected", colnames(cv)))) {
@@ -116,7 +119,7 @@ get_predictions <- function( dt ) {
     }
 }
 
-res <- get_predictions( train_agg[ cv_ix_trn, ] )   ;tcheck( desc='predict logvals on cv_train')
+res <- get_predictions( train_agg[ cv_ix_trn, ], dfname = "cv_train" )   ;tcheck( desc='predict logvals on cv_train')
 
 #convert expected values to 0.01in values
 res$Expected <- round(res$Expected / 0.254) * 0.254
@@ -124,7 +127,7 @@ mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
 if (cv_frac_trn < 1) {
-    res <- get_predictions( train_agg[  !cv_ix_trn, ] )   ;tcheck( desc='predict logvals on cv_test')
+    res <- get_predictions( train_agg[  !cv_ix_trn, "cv_test"] )   ;tcheck( desc='predict logvals on cv_test')
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
@@ -132,7 +135,7 @@ if (cv_frac_trn < 1) {
     cat( "MAE for CV test data =", mae_cv_test, "\n")
     
     if (create_submission) {
-        csv <- sprintf( "%s-cvtest.csv", run_id)
+        csv <- sprintf( "%s/%s-cvtest.csv", csv_dir, run_id)
         write.csv( res, csv, row.names = FALSE)
     }
     
@@ -158,16 +161,15 @@ if ( create_submission) {
     
     test_NAs <- test_agg[  is.na(Ref), .(Id = Id, Expected = train_NA)]
 
-    res <- get_predictions( test_agg )   ;tcheck( desc='predict logvals on test')
+    res <- get_predictions( test_agg, "df_test" )   ;tcheck( desc='predict logvals on test')
     res$Expected <- round(res$Expected / 0.254) * 0.254
 
     res <- res %>% 
         bind_rows( test_NAs) %>%
         arrange( Id )
     
-    csv <- sprintf( "%s.csv", run_id)
+    csv <- sprintf( "%s/%s.csv", csv_dir, run_id)
     write.csv(res, csv, row.names = FALSE)    ; tcheck( desc='write submission file')
-    
 }
 
 time_df <- get_tcheck()

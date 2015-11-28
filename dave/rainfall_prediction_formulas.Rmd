@@ -1,0 +1,42 @@
+---
+title: "MAE of Rainfall Prediction Formulas"
+author: "Dave Hurst & Scott Mark"
+date: "November 23, 2015"
+output: html_document
+---
+
+
+```{r calcs, results='asis'}
+calc_file <- "../rainfall_calculations.RData"
+if (file.exists(calc_file) ) {
+    load(file=calc_file)
+} else {
+    source("../dave/rainfall_prediction_formulas.R")
+}
+
+library(xtable)
+library(data.table)
+library(dplyr)
+library(Metrics)
+
+source( "../team/rain_utils.R") 
+
+
+# replace NaN with median Expected for those values
+suppress <- rain_calcs[ is.nan(rr_refzdr), rr_refzdr := median(Expected)]
+suppress <- rain_calcs[ is.nan(rr_kdpzdr), rr_kdpzdr := median(Expected)]
+
+mae_table <- data.frame( stringsAsFactors = FALSE)
+
+# output MAEs of the rainfall prediction formulas
+score_filter <- rain_calcs[ noRef == FALSE, ]
+attach( score_filter)
+    mae_table <- rbind(mae_table, data.frame( Formula="Kaggle baseline script", MAE = mae(Expected, kaggle_mp))) 
+    mae_table <- rbind(mae_table, data.frame( Formula="Marshall-Palmer", MAE = mae(Expected, Ref_rz))) 
+    mae_table <- rbind(mae_table, data.frame( Formula="Katzumata", MAE = mae(Expected, rr_Katsumata_ref))) 
+    mae_table <- rbind(mae_table, data.frame( Formula="Rainrate Kdp", MAE = mae(Expected, Kdp_rk))) 
+detach( score_filter)
+
+print( xtable( mae_table), type="html")
+```
+
