@@ -127,7 +127,7 @@ mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
 if (cv_frac_trn < 1) {
-    res <- get_predictions( train_agg[  !cv_ix_trn, "cv_test"] )   ;tcheck( desc='predict logvals on cv_test')
+    res <- get_predictions( train_agg[  !cv_ix_trn], "cv_test" )   ;tcheck( desc='predict logvals on cv_test')
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
