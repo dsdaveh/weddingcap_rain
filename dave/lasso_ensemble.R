@@ -9,6 +9,11 @@ library(glmnet)
 
 source( "../team/rain_utils.R")
 
+###### parameters 
+def_rain_thresh <- 65
+rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
+###############
+
 # load predictions
 # TODO: add generation info
 xgbm <- fread("csv_out/xgbm_f70_seed99_99-cvtest.csv") %>% rename( xgbm = Expected)
@@ -26,7 +31,7 @@ ensemble.frame <- xgbm %>%
     left_join( h2orf, by="Id") %>%
     left_join( rain_calcs, by="Id") %>%
     mutate(target = log1p(y))    # not used (yet)
-ensemble.clean <- ensemble.frame[ y <= 65]
+ensemble.clean <- ensemble.frame[ y <= rain_thresh]
 
 #fit a LASSO
 x <- model.matrix(y ~ xgbm + h2orf + Ref_rz + Kdp_rk + rr_Katsumata_ref , ensemble.clean)
