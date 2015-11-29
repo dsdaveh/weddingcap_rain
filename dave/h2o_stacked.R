@@ -134,4 +134,4 @@ res <- data.frame(learner, mae_cv_test = mae_base ) %>%
 out_file <- sprintf( "txt_out/%s-MAE.txt", run_id  )
 write.csv(res, file=out_file, row.names = F)
 print(res)
-print(tcheck.df)
+print(get_tcheck)
