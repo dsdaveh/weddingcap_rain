@@ -21,25 +21,29 @@ h2o.removeAll() # Clean slate - just in case the cluster was already running
 #
 tcheck(0)
 ##### parameters 
-run_id <- 'stack_defaults'
-rdata_file <- '../train_agg2.RData'
-rtest_file <- '../test_agg2.RData'
-
-cv_frac_trn <- .7
-seed <- 99 
-rain_thresh <- 70
-
-cs <- c("rd"
-  , "Ref", "Ref_5x5_50th", "Ref_5x5_90th"
-  , "RefComposite", "RefComposite_5x5_50th", "RefComposite_5x5_90th"
-  , "Zdr", "Zdr_5x5_50th", "Zdr_5x5_90th"
-  , "nrec", "naRef" 
-  , "Ref_rz", "Kdp", "Kdp_rk", "rr_Katsumata_ref", "rr_refzdr", "rr_kdpzdr"
-)
-
-learner <- c("h2o.glm.wrapper", "h2o.randomForest.wrapper", 
-             "h2o.gbm.wrapper", "h2o.deeplearning.wrapper")
-metalearner <- "h2o.glm.wrapper"
+if ( ! exists("use_external_params") ) {
+    run_id <-format(Sys.time(), "stack_%Y_%m_%d_%H%M%S")
+    rdata_file <- '../train_agg2_10pct.RData'
+    rtest_file <- '../test_agg2.RData'
+    
+    cv_frac_trn <- .7
+    seed <- 99 
+    rain_thresh <- 70
+    
+    cs <- c("rd"
+            , "Ref", "Ref_5x5_50th", "Ref_5x5_90th"
+            , "RefComposite", "RefComposite_5x5_50th", "RefComposite_5x5_90th"
+            , "Zdr", "Zdr_5x5_50th", "Zdr_5x5_90th"
+            , "nrec", "naRef" 
+            , "Ref_rz", "Kdp", "Kdp_rk", "rr_Katsumata_ref", "rr_refzdr", "rr_kdpzdr"
+    )
+    
+    learner <- c("h2o.glm.wrapper", "h2o.randomForest.wrapper", 
+                 "h2o.gbm.wrapper", "h2o.deeplearning.wrapper")
+    metalearner <- "h2o.glm.wrapper"
+} else {
+    rm( use_external_params)   # so that it must get set next time
+}
 
 ######Training Data############
 cat("loading train from RData file ", rdata_file, "\n")
