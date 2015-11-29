@@ -41,7 +41,7 @@ if (! exists( "csv_dir")) csv_dir <- def_csv_dir
 run_id <- gsub("^.*/", "", run_id)   #legacy runs had the directory embedded
 
 ####################################################
-cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
+cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\n\n", format(Sys.time()), seed) )
 cat ("Training data will be loaded from ", rdata_file, "\n")
 cat ("Run ID = ", run_id, "\n")
 
@@ -88,18 +88,22 @@ tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 tr$target <- log1p( tr$Expected)
 
 df_trn <- paste0( run_id, ".trn")
-h2orf.trn <- as.h2o( tr, destination_frame = df_trn)    ; tcheck( desc='convert to h2o df')
+h2o.trn <- as.h2o( tr, destination_frame = df_trn)    ; tcheck( desc='convert to h2o df')
 
 true_y <- tr$Expected
 rm(tr, train_agg)
 gc()
-rfmod<-h2o.randomForest(x=cs, y="target"
-                        ,training_frame=h2orf.trn
-                        ,model_id="rfStarter.hex", ntrees=ntrees, sample_rate = 0.7)  ;tcheck(desc='run random forest')
-print(rfmod)
-print(h2o.varimp(rfmod))
+h2o.mod<-h2o.deeplearning(x=cs, y="target"
+                        ,training_frame=h2o.trn
+                        ,model_id="dlnn1", nfolds=0, seed=99
+                        ,activation="RectifierWithDropout"
+                        ,hidden=c(250,250)
+                        ,epochs=20
+                        ,variable_importances = TRUE );tcheck(desc='run random forest')
+print(h2o.mod)
+print(h2o.varimp(h2o.mod))
 
-predictions<-as.data.frame(h2o.predict(rfmod, h2orf.trn))   ;tcheck(desc='predict on scrubbed CV training data')
+predictions<-as.data.frame(h2o.predict(h2o.mod, h2o.trn))   ;tcheck(desc='predict on scrubbed CV training data')
 
 mae_scrub_trn <- mae( expm1(predictions$predict), true_y )
 cat( "MAE for model data =", mae_scrub_trn, "\n")
@@ -107,10 +111,10 @@ cat( "MAE for model data =", mae_scrub_trn, "\n")
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
 
-get_predictions <- function( dt, dfname = "h2orf.cv" ) {
+get_predictions <- function( dt, dfname = "h2o.cv" ) {
     cv <- dt[ ! is.na(Ref), ] %>% as.data.frame()
-    h2orf.cv <- as.h2o( cv, destination_frame = dfname) 
-    predictions<-as.data.frame(h2o.predict(rfmod, h2orf.cv))
+    h2o.cv <- as.h2o( cv, destination_frame = dfname) 
+    predictions<-as.data.frame(h2o.predict(h2o.mod, h2o.cv))
     cv$yhat <- expm1(predictions$predict)
     if ( any(  grepl ("Expected", colnames(cv)))) {
         cv %>% select( Id, Expected = yhat, y = Expected )
@@ -127,7 +131,7 @@ mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
 if (cv_frac_trn < 1) {
-    res <- get_predictions( train_agg[  !cv_ix_trn], "cv_test" )   ;tcheck( desc='predict logvals on cv_test')
+    res <- get_predictions( train_agg[  !cv_ix_trn, "cv_test"] )   ;tcheck( desc='predict logvals on cv_test')
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254

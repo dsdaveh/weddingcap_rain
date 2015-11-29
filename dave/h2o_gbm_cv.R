@@ -23,13 +23,13 @@ def_cv_frac_trn <- 0.7  # standard 70/30 split for C
 def_create_submission <- FALSE
 def_rain_thresh <- 65
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
-def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
-def_ntrees <- 500
+def_run_id <- format(Sys.time(), "gbm_%Y_%m_%d_%H%M%S")
+def_ntrees <- 50
 def_csv_dir <- 'csv_out'
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
-seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
+seed <- ifelse ( exists("set_seed"), set_seed, 99 )
 ntrees <- ifelse ( exists("set_ntrees"), set_ntrees, def_ntrees )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 
@@ -41,7 +41,7 @@ if (! exists( "csv_dir")) csv_dir <- def_csv_dir
 run_id <- gsub("^.*/", "", run_id)   #legacy runs had the directory embedded
 
 ####################################################
-cat ( sprintf( "h2o_rf_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
+cat ( sprintf( "h2o_gbm_cv.R runtime %s (seed = %d)\nntrees=%d\n", format(Sys.time()), seed, ntrees) )
 cat ("Training data will be loaded from ", rdata_file, "\n")
 cat ("Run ID = ", run_id, "\n")
 
@@ -88,18 +88,23 @@ tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 tr$target <- log1p( tr$Expected)
 
 df_trn <- paste0( run_id, ".trn")
-h2orf.trn <- as.h2o( tr, destination_frame = df_trn)    ; tcheck( desc='convert to h2o df')
+h2o.trn <- as.h2o( tr, destination_frame = df_trn)    ; tcheck( desc='convert to h2o df')
 
 true_y <- tr$Expected
 rm(tr, train_agg)
 gc()
-rfmod<-h2o.randomForest(x=cs, y="target"
-                        ,training_frame=h2orf.trn
-                        ,model_id="rfStarter.hex", ntrees=ntrees, sample_rate = 0.7)  ;tcheck(desc='run random forest')
-print(rfmod)
-print(h2o.varimp(rfmod))
+h2o.mod<-h2o.gbm(x=cs, y="target"
+                        ,training_frame=h2o.trn
+                        ,model_id="gbm1"
+                , ntrees=ntrees
+                , max_depth=8
+#                 , stopping_metric = "MSE"
+#                 , stopping_tolerance = .0001
+                , nfolds=0 )  ;tcheck(desc='build h2o model')
+print(h2o.mod)
+print(h2o.varimp(h2o.mod))
 
-predictions<-as.data.frame(h2o.predict(rfmod, h2orf.trn))   ;tcheck(desc='predict on scrubbed CV training data')
+predictions<-as.data.frame(h2o.predict(h2o.mod, h2o.trn))   ;tcheck(desc='predict on scrubbed CV training data')
 
 mae_scrub_trn <- mae( expm1(predictions$predict), true_y )
 cat( "MAE for model data =", mae_scrub_trn, "\n")
@@ -107,10 +112,10 @@ cat( "MAE for model data =", mae_scrub_trn, "\n")
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
 
-get_predictions <- function( dt, dfname = "h2orf.cv" ) {
+get_predictions <- function( dt, dfname = "h2o.cv" ) {
     cv <- dt[ ! is.na(Ref), ] %>% as.data.frame()
-    h2orf.cv <- as.h2o( cv, destination_frame = dfname) 
-    predictions<-as.data.frame(h2o.predict(rfmod, h2orf.cv))
+    h2o.cv <- as.h2o( cv, destination_frame = dfname) 
+    predictions<-as.data.frame(h2o.predict(h2o.mod, h2o.cv))
     cv$yhat <- expm1(predictions$predict)
     if ( any(  grepl ("Expected", colnames(cv)))) {
         cv %>% select( Id, Expected = yhat, y = Expected )
@@ -126,8 +131,8 @@ res$Expected <- round(res$Expected / 0.254) * 0.254
 mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
-if (cv_frac_trn < 1) {
-    res <- get_predictions( train_agg[  !cv_ix_trn], "cv_test" )   ;tcheck( desc='predict logvals on cv_test')
+if (cv_frac_trn < 1) { 
+    res <- get_predictions( train_agg[  !cv_ix_trn, ], dfname = "cv_test" )   ;tcheck( desc='predict logvals on cv_test')
     
     #convert expected values to 0.01in values
     res$Expected <- round(res$Expected / 0.254) * 0.254
