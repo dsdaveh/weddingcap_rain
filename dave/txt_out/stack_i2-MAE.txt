@@ -1,0 +1,11 @@
+"learner","mae_cv_test"
+"h2o.glm.wrapper",22.7254324978757
+"h2o.randomForest.1",22.2626776402501
+"h2o.randomForest.2",22.2398312018746
+"h2o.gbm.1",22.5673491104266
+"h2o.gbm.6",22.5676043330678
+"h2o.gbm.8",22.5961553113918
+"h2o.deeplearning.1",22.5588126710958
+"h2o.deeplearning.6",22.5911895956491
+"h2o.deeplearning.7",22.5896854502666
+"H2O Ensemble:stack_i2",22.2284367532396

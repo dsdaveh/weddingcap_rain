@@ -14,7 +14,7 @@ library(h2oEnsemble)  # This will load the `h2o` R package as well
 
 h2o.init(
     nthreads=-1,            ## -1: use all available threads
-    max_mem_size = "2G")    ## specify the memory size for the H2O cloud
+    max_mem_size = "4G")    ## specify the memory size for the H2O cloud
 h2o.removeAll() # Clean slate - just in case the cluster was already running
 
 #
@@ -104,29 +104,25 @@ fit <- h2o.ensemble(x = x, y = y,
 #
 tcheck( desc='h2o ensemble')
 
-#### Predict on the scrubbed train set
-pred <- predict(fit, h2o.trn)
-mae_scrub_trn <- calc_mae( pred$pred, y_trn )
-tcheck( desc= sprintf("MAE on scrubbed train = %10.6f", mae_scrub_trn))
-
-#### Predict on the unscrubbed train set
-pred <- predict(fit, h2o.mtr)
-mae_cv_trn <- calc_mae( pred$pred, y_mtr )
-tcheck( desc= sprintf("MAE on CV train = %10.6f", mae_cv_trn))
-
-#### Predict 
-#Generate predictions on the test set.
-pred <- predict(fit, h2o.tst)
-mae_cv_test <- calc_mae( pred$pred, y_tst )
-tcheck( desc= sprintf("MAE on CV test = %10.6f", mae_cv_test))
-
 calc_mae <- function (h2o_pred, y, l=1) {
     yhat <- expm1( as.data.frame(h2o_pred)[,l] )
     yhat <- ifelse( is.na(yhat), train_NA, yhat)  #fix the NA's (GLM only)
     mae( yhat, y)
 }
-
-
+    
+#### Predict on the scrubbed train set
+pred <- predict(fit, h2o.trn)
+mae_scrub_trn <- calc_mae( pred$pred, y_trn )
+tcheck( desc= sprintf("MAE on scrubbed train = %10.6f", mae_scrub_trn))
+#### Predict on the unscrubbed CV train set
+pred <- predict(fit, h2o.mtr)
+mae_cv_trn <- calc_mae( pred$pred, y_mtr )
+tcheck( desc= sprintf("MAE on CV train = %10.6f", mae_cv_trn))
+#### Predict 
+#Generate predictions on the CV test set.
+pred <- predict(fit, h2o.tst)
+mae_cv_test <- calc_mae( pred$pred, y_tst )
+tcheck( desc= sprintf("MAE on CV test = %10.6f", mae_cv_test))
 ##### Base learners test set
 #We can compare the performance of the ensemble to the performance of the individual learners in the ensemble.  Again, we use the `AUC` utility function to calculate performance.
 #
@@ -134,8 +130,26 @@ L <- length(learner)
 mae_base <- sapply(seq(L), function(l) (MAE =calc_mae(pred$basepred, y_tst, l=l)) )
 res <- data.frame(learner, mae_cv_test = mae_base ) %>% 
     rbind( data.frame( learner = paste ('H2O Ensemble', run_id, sep=':'), mae_cv_test))
-
 out_file <- sprintf( "txt_out/%s-MAE.txt", run_id  )
 write.csv(res, file=out_file, row.names = F)
 print(res)
-print(get_tcheck)
+
+######Testing Data############
+cat("loading test from RData file ", rtest_file, "\n")
+load( rtest_file )
+setkey( test_agg, Id)   ; tcheck( desc='load test data')
+test_NAs <- which( is.na(test_agg$Ref))
+#### Load Data into H2O Cluster
+df_test <- paste0( run_id, ".test")
+h2o.test <- as.h2o( test_agg[ ! test_NAs], destination_frame = df_test)    
+
+#### Predict 
+pred <- predict(fit, h2o.test)
+yhat <- expm1( as.data.frame(pred$pred)[,1] )
+yhat <- ifelse( is.na(yhat), train_NA, yhat)  #fix the NA's (GLM only)
+submission <- data.frame( Id = test_agg[ ! test_NAs]$Id, Expected = yhat ) %>%
+    bind_rows(data.frame( Id = test_agg[   test_NAs]$Id, Expected = train_NA))
+write.csv( submission, file= sprintf("csv_out/%s.csv", run_id), row.names = F)
+tcheck( desc= sprintf("created submission file csv_out/%s.csv", run_id))
+print(get_tcheck())
+

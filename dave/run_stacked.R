@@ -24,8 +24,8 @@ h2o.deeplearning.7 <- function(..., hidden = c(100,100), activation = "Rectifier
 
 use_external_params <- TRUE
 
-run_id <- 'stack_i2_10pct'
-rdata_file <- '../train_agg2_10pct.RData'
+run_id <- 'stack_i2'
+rdata_file <- '../train_agg2.RData'
 rtest_file <- '../test_agg2.RData'
 
 cv_frac_trn <- .7
