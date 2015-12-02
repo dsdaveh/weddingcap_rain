@@ -5,6 +5,7 @@ h2o.randomForest.1 <- function(..., ntrees = 200, nbins = 50, seed = 1) h2o.rand
 h2o.randomForest.2 <- function(..., ntrees = 200, sample_rate = 0.75, seed = 1) h2o.randomForest.wrapper(..., ntrees = ntrees, sample_rate = sample_rate, seed = seed)
 h2o.randomForest.3 <- function(..., ntrees = 200, sample_rate = 0.85, seed = 1) h2o.randomForest.wrapper(..., ntrees = ntrees, sample_rate = sample_rate, seed = seed)
 h2o.randomForest.4 <- function(..., ntrees = 200, nbins = 50, balance_classes = TRUE, seed = 1) h2o.randomForest.wrapper(..., ntrees = ntrees, nbins = nbins, balance_classes = balance_classes, seed = seed)
+h2o.randomForest.5d <- function(..., ntrees = 500, seed = 1) h2o.randomForest.wrapper(..., ntrees = ntrees, nbins = nbins, balance_classes = balance_classes, seed = seed)
 h2o.gbm.1 <- function(..., ntrees = 100, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, seed = seed)
 h2o.gbm.2 <- function(..., ntrees = 100, nbins = 50, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, nbins = nbins, seed = seed)
 h2o.gbm.3 <- function(..., ntrees = 100, max_depth = 10, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, max_depth = max_depth, seed = seed)
@@ -13,6 +14,7 @@ h2o.gbm.5 <- function(..., ntrees = 100, col_sample_rate = 0.7, seed = 1) h2o.gb
 h2o.gbm.6 <- function(..., ntrees = 100, col_sample_rate = 0.6, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, col_sample_rate = col_sample_rate, seed = seed)
 h2o.gbm.7 <- function(..., ntrees = 100, balance_classes = TRUE, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, balance_classes = balance_classes, seed = seed)
 h2o.gbm.8 <- function(..., ntrees = 100, max_depth = 3, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, max_depth = max_depth, seed = seed)
+h2o.gbm.9d <- function(..., ntrees = 100, max_depth = 8, learn_rate = .007, col_sample_rate = 0.8, seed = 1) h2o.gbm.wrapper(..., ntrees = ntrees, max_depth = max_depth, seed = seed)
 h2o.deeplearning.1 <- function(..., hidden = c(500,500), activation = "Rectifier", epochs = 50, seed = 1)  h2o.deeplearning.wrapper(..., hidden = hidden, activation = activation, seed = seed)
 h2o.deeplearning.2 <- function(..., hidden = c(200,200,200), activation = "Tanh", epochs = 50, seed = 1)  h2o.deeplearning.wrapper(..., hidden = hidden, activation = activation, seed = seed)
 h2o.deeplearning.3 <- function(..., hidden = c(500,500), activation = "RectifierWithDropout", epochs = 50, seed = 1)  h2o.deeplearning.wrapper(..., hidden = hidden, activation = activation, seed = seed)
@@ -44,9 +46,9 @@ cs <- c("rd"
 #                  "h2o.gbm.wrapper", "h2o.deeplearning.wrapper")
 
 learner <- c("h2o.glm.wrapper",
-             "h2o.randomForest.1", "h2o.randomForest.2",
-             "h2o.gbm.1", "h2o.gbm.6", "h2o.gbm.8",
-             "h2o.deeplearning.1", "h2o.deeplearning.6", "h2o.deeplearning.7")
+             "h2o.randomForest.1", "h2o.randomForest.5d",
+             "h2o.gbm.1", "h2o.gbm.6", "h2o.gbm.9d",
+             "h2o.deeplearning.2", "h2o.deeplearning.3", "h2o.deeplearning.5")
 
 #     learner <- c("h2o.randomForest.1", "h2o.randomForest.2",
 #                  "h2o.gbm.1", "h2o.gbm.6", "h2o.gbm.8")
