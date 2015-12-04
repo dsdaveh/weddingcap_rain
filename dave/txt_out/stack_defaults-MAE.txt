@@ -1,6 +1,6 @@
 "learner","mae_cv_test"
 "h2o.glm.wrapper",22.7254324978757
-"h2o.randomForest.wrapper",22.2755266253563
+"h2o.randomForest.wrapper",22.2734976186007
 "h2o.gbm.wrapper",22.585237205715
-"h2o.deeplearning.wrapper",22.5717109738604
-"H2O Ensemble:stack_defaults",22.2614179558201
+"h2o.deeplearning.wrapper",22.5712187464694
+"H2O Ensemble:stack_defaults",22.2589344655883
