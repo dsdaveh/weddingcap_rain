@@ -11,7 +11,7 @@ rtest_file <- '../test_agg3.RData'
 
 run_id_pref <- 'csv_out/xgbm3_f70_sat1b'
 solver_script <- '../dave/gbm_cv.R'
-create_submission <- FALSE
+create_submission <- TRUE
 cv_frac_trn <- .7
 tcheck.print <- TRUE
 set_rain_thresh <- 69
