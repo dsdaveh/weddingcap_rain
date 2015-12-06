@@ -22,12 +22,14 @@ def_rain_thresh <- 65
 def_rain_thresh_lower <- 0
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
+def_rm_refna <- FALSE # remove ref=NA's in training set (default=FALSE because it was added on 12/5 )
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 rain_thresh_lower <- ifelse( exists("set_rain_thresh_lower"), set_rain_thresh_lower, def_rain_thresh_lower)
+rm_refna <- ifelse( exists("set_rm_refna"), set_rm_refna, def_rm_refna)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
@@ -79,6 +81,7 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 #scrub tr
 tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[ Expected > rain_thresh_lower, ]
+if ( rm_refna ) tr <- tr[ !is.na(Ref) ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 trn_ids <- tr$Id
 
