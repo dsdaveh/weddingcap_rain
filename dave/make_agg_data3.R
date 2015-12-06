@@ -55,16 +55,14 @@ rain_agg <- rain_data[, .( rd = max(radardist_km)
     , rr_kdpzdr = v_agg2(Kdp, Zdr, minutes_past, -999, kdpzdr_to_mm)
 ), Id ]                                                  ;tcheck()
 
-with(rain_agg, {
-    rain_agg$Ref2 <- Ref^2
-    rain_agg$RefComposite2 <- RefComposite^2
-    rain_agg$Zdr <- Zdr^2
-    rain_agg$Kdp <- Kdp^2
-    rain_agg$rd_Ref <- rd*Ref
-    rain_agg$rd_RefComposite <- rd*RefComposite
-    rain_agg$rd_Kdp <- rd*Kdp
-} )
-         
+rain_agg$Ref2 <- rain_agg$Ref^2
+rain_agg$RefComposite2 <- rain_agg$RefComposite^2
+rain_agg$Zdr2 <- rain_agg$Zdr^2
+rain_agg$Kdp2 <- rain_agg$Kdp^2
+rain_agg$rd_Ref <- rain_agg$rd*rain_agg$Ref
+rain_agg$rd_RefComposite <- rain_agg$rd*rain_agg$RefComposite
+rain_agg$rd_Kdp <- rain_agg$rd*rain_agg$Kdp
+
 if ( any( grepl( "^Expected$", colnames(rain_data)))) {
     rain_agg$Expected <- rain_data[, max(Expected), Id]$V1
 } 
