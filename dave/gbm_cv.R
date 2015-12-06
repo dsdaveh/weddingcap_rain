@@ -22,12 +22,14 @@ def_rain_thresh <- 65
 def_rain_thresh_lower <- 0
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
+def_rm_refna <- FALSE # remove ref=NA's in training set (default=FALSE because it was added on 12/5 )
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
 seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 rain_thresh_lower <- ifelse( exists("set_rain_thresh_lower"), set_rain_thresh_lower, def_rain_thresh_lower)
+rm_refna <- ifelse( exists("set_rm_refna"), set_rm_refna, def_rm_refna)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
@@ -79,7 +81,9 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 #scrub tr
 tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[ Expected > rain_thresh_lower, ]
+if ( rm_refna ) tr <- tr[ !is.na(Ref) ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
+trn_ids <- tr$Id
 
 y<- log1p( tr$Expected )
 tr<-as.data.frame(tr)
@@ -101,6 +105,10 @@ x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds =1955)          
 pr_trn  <- predict(x.mod.t,xgtrain)                                       ;tcheck( desc='predict logvals on scrubbed model data')
 mae_xgb <- mae( expm1(pr_trn), expm1(y) )
 cat( "MAE for model data =", mae_xgb, "\n")
+
+res <- data.frame( Id = trn_ids, yhat = expm1(pr_trn), y = expm1(y) ) %>% tbl_df()
+csv <- sprintf( "%s-train.csv", run_id)
+write.csv( res, csv, row.names = FALSE)
 
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
