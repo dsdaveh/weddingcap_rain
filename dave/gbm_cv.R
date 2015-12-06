@@ -80,6 +80,7 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 tr <- tr[ Expected <= rain_thresh, ]
 tr <- tr[ Expected > rain_thresh_lower, ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
+trn_ids <- tr$Id
 
 y<- log1p( tr$Expected )
 tr<-as.data.frame(tr)
@@ -101,6 +102,10 @@ x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds =1955)          
 pr_trn  <- predict(x.mod.t,xgtrain)                                       ;tcheck( desc='predict logvals on scrubbed model data')
 mae_xgb <- mae( expm1(pr_trn), expm1(y) )
 cat( "MAE for model data =", mae_xgb, "\n")
+
+res <- data.frame( Id = trn_ids, yhat = expm1(pr_trn), y = expm1(y) ) %>% tbl_df()
+csv <- sprintf( "%s-train.csv", run_id)
+write.csv( res, csv, row.names = FALSE)
 
 #reload train to look at fit for the training dataset  (TODO: should probably roll some of this into a function)
 load( rdata_file )                ; tcheck( desc='reload data')
