@@ -85,7 +85,6 @@ train_NA <- tr[ ! is.na(Ref), median(Expected)]    #probably could just set this
 
 #scrub tr
 tr <- tr[ Expected <= rain_thresh, ]
-tr <- tr[ Expected > rain_thresh_lower, ]
 tr <- tr[ !is.na(Ref) ]
 tr <- tr[round(Expected, 4) %fin% valid_vals, ]
 tr_ids <- tr$Id
@@ -112,7 +111,7 @@ xgb.out  <- xgb.cv(params = param0, data = xgtrain
 
 
 csv <- sprintf( "%s-cvtrain.csv", run_id)
-write.csv( data.frame( Id = tr_ids, Expected = xgb.out$pred)
+write.csv( data.frame( Id = tr_ids, ln1py = xgb.out$pred)
            , csv, row.names = FALSE)
 
 time_df <- get_tcheck()
