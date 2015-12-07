@@ -128,6 +128,9 @@ res$Expected <- round(res$Expected / 0.254) * 0.254
 mae_cv_trn <- mae( res$y, res$Expected )
 cat( "MAE for CV train data =", mae_cv_trn, "\n")
 
+csv <- sprintf( "%s-train_unscrub.csv", run_id)
+write.csv( res, csv, row.names = FALSE)
+
 blend <- function( y1, y2, p ) round((p * y1 + (1-p) * y2)/ 0.254) * 0.254
 
 if (cv_frac_trn < 1) {
