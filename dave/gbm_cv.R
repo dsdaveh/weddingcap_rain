@@ -23,6 +23,8 @@ def_rain_thresh_lower <- 0
 def_cs <- c("Ref", "RefComposite",   "Ref_rz",  "rd", "nrec")
 def_run_id <- format(Sys.time(), "%Y_%m_%d_%H%M%S")
 def_rm_refna <- FALSE # remove ref=NA's in training set (default=FALSE because it was added on 12/5 )
+def_nrounds <- 1955
+def_maxdepth <- 3
 
 if ( exists("set_cs") ) { cs <- set_cs } else { cs <- def_cs }
 
@@ -30,12 +32,13 @@ seed <- ifelse ( exists("set_seed"), set_seed, 1999 )
 rain_thresh <- ifelse( exists("set_rain_thresh"), set_rain_thresh, def_rain_thresh)
 rain_thresh_lower <- ifelse( exists("set_rain_thresh_lower"), set_rain_thresh_lower, def_rain_thresh_lower)
 rm_refna <- ifelse( exists("set_rm_refna"), set_rm_refna, def_rm_refna)
+nrounds <- ifelse( exists("set_nrounds"), set_nrounds, def_nrounds)
+maxdepth <- ifelse( exists("set_maxdepth"), set_maxdepth, def_maxdepth)
 
 if (! exists( "cv_frac_trn")) cv_frac_trn <- def_cv_frac_trn
 if (! exists( "create_submission")) create_submission <- def_create_submission
 if (  exists( "chg_mpalmer"))  mpalmer <- chg_mpalmer
 if (! exists( "run_id") ) run_id <- def_run_id
-
 
 ####################################################
 cat ( sprintf( "gbm_cv.R runtime %s (seed = %d)\n", format(Sys.time()), seed) )
@@ -100,7 +103,7 @@ xgtrain = xgb.DMatrix(as.matrix(tr), label = y, missing = NA);    tcheck( desc='
 rm(tr, train_agg)
 gc()
 
-x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds =1955)          ;tcheck( desc='xgb.train cv_train')
+x.mod.t  <- xgb.train(params = param0, data = xgtrain , nrounds = nrounds, max.depth = maxdepth)          ;tcheck( desc='xgb.train cv_train')
 
 pr_trn  <- predict(x.mod.t,xgtrain)                                       ;tcheck( desc='predict logvals on scrubbed model data')
 mae_xgb <- mae( expm1(pr_trn), expm1(y) )
