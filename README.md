@@ -1,7 +1,7 @@
 # weddingcap_rain
 kaggle competition: How Much Did It Rain? II  - MSPA Capstone Project
 
-Team *It's Raining Wildcats"  Placed 68th of 618 teams
+Team *It's Raining Wildcats"  Placed 59th of 587 teams  ( top 10.05% )
 
 The repo is still  a bit messy.  Instructions to compile our best submission are here
 https://docs.google.com/document/d/1Vx1TB4J9KrDsAXqwnyuANl2qxw_BBux_1gDeBm1bfQE/edit?usp=sharing
